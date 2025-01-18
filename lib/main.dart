@@ -3,6 +3,7 @@ import 'package:civitante/App/utilse/widgets.dart'; // Make sure the file path i
 void main() {
   runApp(CivitanteApp());
 }
+
 class CivitanteApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
