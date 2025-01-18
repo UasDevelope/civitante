@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 
 import '../../../shared/app_textform_field.dart';
 import '../../../shared/validators.dart';
+import '../../members/view/members.dart';
 import '../controller/meeting_controller.dart';
 import '../widget/meeting_widgets.dart';
 
@@ -100,6 +101,7 @@ class NewMeetingView extends StatelessWidget {
               title: AppText(text: AppStrings.Add_Members),
               onTap: () {
                 // Add members logic
+                Get.to(Members());
               },
             ),
             SizedBox(height: 20),

@@ -41,6 +41,8 @@ class AppImages {
   static String get tick => "tick".png;
   static String get chatCamera => "chatCamera".png;
   static String get emojie => "emojie".png;
+  static String get user => "user".png;
+  static String get chat => "chat".png;
 }
 
 extension on String {
