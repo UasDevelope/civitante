@@ -36,4 +36,6 @@ class AppRoutes {
   static get communityDetail => "/communityDetails";
 
   static get editMycommunity => "/editMycommunityDetails";
+
+  static get Allcommunities => "/Allcommunities";
 }

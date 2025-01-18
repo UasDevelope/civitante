@@ -88,7 +88,7 @@ class CustomDrawer extends StatelessWidget {
             imageColor: AppColors.appColor,
             imagePath: AppImages.community,
             title: AppStrings.communities,
-            routeName: '/profile',
+            routeName: AppRoutes.Allcommunities,
           ),
           MenuItem(
             imageColor: AppColors.appColor,
