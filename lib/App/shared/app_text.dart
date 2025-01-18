@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-
 import '../utilse/widgets.dart';
-
 Widget AppText({
-  required String text, // Text to display
-  double fontSize = 16.0, // Font size (default is 16)
-  Color color = Colors.black, // Text color (default is black)
-  FontWeight fontWeight = FontWeight.normal, // Font weight (default is normal)
-  TextAlign textAlign = TextAlign.start, // Text alignment (default is start)
+  required String text,
+  double fontSize = 16.0,
+  Color color = Colors.black,
+  FontWeight fontWeight = FontWeight.normal,
+  TextAlign textAlign = TextAlign.start,
 }) {
   return Text(
     text,

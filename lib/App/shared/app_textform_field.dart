@@ -4,12 +4,10 @@ import 'package:flutter/material.dart';
 
 Widget customTextFormField({
   required TextEditingController controller, // TextController for managing text
-  TextInputType keyboardType =
-      TextInputType.text, // Default keyboard type is text
+  TextInputType keyboardType = TextInputType.text, // Default keyboard type is text
   String? hintText, // Optional hint text
   String? labelText, // Optional label text
-  bool obscureText =
-      false, // Whether the text should be obscured (e.g. for passwords)
+  bool obscureText = false, // Whether the text should be obscured (e.g. for passwords)
   Icon? prefixIcon, // Optional prefix icon
   Icon? suffixIcon, // Optional suffix icon (e.g., for showing/hiding password)
   Color borderColor = Colors.black, // Border color
@@ -20,21 +18,28 @@ Widget customTextFormField({
   Function(String)? onChanged, // Function for onChanged callback
   Function()? obsecureonTap, // Function for onTap callback
   bool isPasswordField = false, // Is it a password field
+  String? Function(String?)? validatore,
+  IconData? icon,
+  int? maxLines, // Optional maxLines parameter (null for unlimited lines)
 }) {
   return TextFormField(
     controller: controller,
-    keyboardType: keyboardType,
+    keyboardType: keyboardType == TextInputType.text
+        ? TextInputType.multiline // Allow multiline input
+        : keyboardType,
     obscureText: isPasswordField ? obscureText : false,
     onChanged: onChanged,
+    validator: validatore,
+    maxLines: isPasswordField ? 1 : maxLines ?? null, // Single line for passwords, multiline otherwise
     decoration: InputDecoration(
       hintText: hintText,
       labelText: labelText,
       prefixIcon: prefixIcon,
-      suffixIcon: isPasswordField
+      suffixIcon: icon != null
           ? IconButton(
-              icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
-              onPressed:obsecureonTap,
-            )
+        icon: Icon(icon),
+        onPressed: obsecureonTap,
+      )
           : null,
       filled: true,
       fillColor: fillColor,
@@ -65,3 +70,4 @@ Widget customTextFormField({
     ),
   );
 }
+

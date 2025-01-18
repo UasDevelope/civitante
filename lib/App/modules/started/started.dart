@@ -12,8 +12,9 @@ class StartedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        width:Get.width+20,
         decoration: BoxDecoration(
-            image: DecorationImage(image: AssetImage(AppImages.splash))),
+            image: DecorationImage(image: AssetImage(AppImages.splash,),fit:BoxFit.cover)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

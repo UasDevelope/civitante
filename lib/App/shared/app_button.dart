@@ -13,6 +13,7 @@ Widget AppButton({
   bool hasBorder = false, // Flag to add a border
   Color borderColor = Colors.black, // Border color
   Color textColor = Colors.black, // Text color
+  double borderWidht = 0.0,
 }) {
   return ElevatedButton(
     style: ElevatedButton.styleFrom(
@@ -25,26 +26,28 @@ Widget AppButton({
             : BorderSide.none,
       ),
       elevation: 5, // Elevation of the button
-      padding: EdgeInsets.zero, // Remove padding to handle the gradient properly
+      padding:
+          EdgeInsets.zero, // Remove padding to handle the gradient properly
     ),
     onPressed: onPressed,
     child: Ink(
-      decoration: useGradient
-          ? BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color(0xFFBEBEBE), // Gradient start color
-            Color(0xFF9E9E9E), // Gradient end color
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(radius),
-      )
-          : null,
       child: Container(
         width: width,
         height: height,
+        decoration: BoxDecoration(
+          border: Border.all(width: borderWidht, color: borderColor),
+          gradient: useGradient
+              ? LinearGradient(
+                  colors: [
+                    Color(0xFFBEBEBE), // Gradient start color
+                    Color(0xFF9E9E9E), // Gradient end color
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
+          borderRadius: BorderRadius.circular(radius),
+        ),
         alignment: Alignment.center,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

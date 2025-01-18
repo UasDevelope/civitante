@@ -3,6 +3,7 @@ import 'package:civitante/App/utilse/widgets.dart'; // Make sure the file path i
 void main() {
   runApp(CivitanteApp());
 }
+
 class CivitanteApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -10,7 +11,7 @@ class CivitanteApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       getPages: AppPages.pages,
       initialRoute:
-          AppRoutes.splash, // Ensure AppRoutes.splash is defined correctly.
+          AppRoutes.bottomNav, // Ensure AppRoutes.splash is defined correctly.
       initialBinding:
           InitialBinding(), // Ensure InitialBinding() is correctly set up.
       defaultTransition:

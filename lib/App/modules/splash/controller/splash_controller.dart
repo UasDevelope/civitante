@@ -8,7 +8,6 @@ class SplashController extends GetxController {
     super.onInit();
     _navigate();
   }
-
   void _navigate() {
     try {
       // Using Timer to simulate a delay (3 seconds)
