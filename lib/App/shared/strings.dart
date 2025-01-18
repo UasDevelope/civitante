@@ -173,4 +173,6 @@ class AppStrings {
   static String get Add_Members => "Add Members";
 
   static String get MEETING_LINK => "MEETING LINK";
+
+  static String get Members => "Members";
 }
