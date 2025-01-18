@@ -1,3 +1,4 @@
+import 'package:civitante/App/modules/PostsDetails/view/posts_details_screen.dart';
 import 'package:civitante/App/modules/home/widgets/filter_menues.dart';
 import 'package:civitante/App/shared/app_text.dart';
 import 'package:civitante/App/shared/color.dart';
@@ -32,7 +33,11 @@ class RandomSizedPostsScreen extends StatelessWidget {
                 shrinkWrap: true,
                 itemCount: 5, // Replace with your dynamic item count
                 itemBuilder: (BuildContext context, int index) {
-                  return CustomCard();
+                  return GestureDetector(
+                      onTap: () {
+                        Get.to(PostsDetailsScreen());
+                      },
+                      child: CustomCard());
                 },
               ),
             ),
@@ -44,6 +49,9 @@ class RandomSizedPostsScreen extends StatelessWidget {
 }
 
 class CustomCard extends StatelessWidget {
+  const CustomCard({super.key,this.haveComments = false});
+  final bool haveComments;
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -111,6 +119,7 @@ class CustomCard extends StatelessWidget {
                         color: AppColors.white, // Add custom color to the icon
                       ),
                       label: '25',
+                      textColor: AppColors.white,
                     ),
                     SizedBox(
                       width: 10,
@@ -123,6 +132,7 @@ class CustomCard extends StatelessWidget {
                         color: AppColors.white, // Add custom color to the icon
                       ),
                       label: '25',
+                      textColor: AppColors.white,
                     ),
                     SizedBox(
                       width: 10,
@@ -135,6 +145,7 @@ class CustomCard extends StatelessWidget {
                         color: AppColors.white,  // Add custom color to the icon
                       ),
                       label: '25',
+                      textColor: AppColors.white,
                     ),
                     SizedBox(
                       width: 10,
@@ -145,6 +156,122 @@ class CustomCard extends StatelessWidget {
             ),
           ),
           Container(height: Get.height * 0.1, child: SliderWithLabels()),
+          haveComments? SizedBox(height: 8,): SizedBox.shrink(),
+          haveComments? Column(
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: 2,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            CircleAvatar(
+                              radius: 26,
+                              backgroundImage: AssetImage(AppImages.person),
+                            ),
+                            SizedBox(width: 8,),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 2,),
+                                Row(children: [
+                                  Text("kiero_d",style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      color: AppColors.appColor,
+                                      fontWeight: FontWeight.w600
+                                  ),),
+                                  SizedBox(width: 4,),
+                                  Text("@kiero_d ·2d",style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      color: AppColors.Slate_gray,
+                                      fontWeight: FontWeight.w400
+                                  ),),
+                                ],),
+                                Row(children: [
+                                  Text("Replying to",style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      color: AppColors.Slate_gray,
+                                      fontWeight: FontWeight.w400
+                                  ),),
+                                  SizedBox(width: 4,),
+                                  Text("@karennne",style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      color: AppColors.blue,
+                                      fontWeight: FontWeight.w400
+                                  ),),
+                                ],),
+                                SizedBox(height: 4,),
+                                SizedBox(
+                                  width: Get.width * 0.6,
+                                  child: Text(
+                                    maxLines: 3,
+                                    textAlign: TextAlign.start,
+                                    overflow: TextOverflow.ellipsis,
+                                    "Interesting Nicola that not one reply or tag on this #UX talent shout out in the 24hrs since your tweet here......🤔",style: GoogleFonts.poppins(
+                                      fontSize: 15,
+                                      color: AppColors.appColor,
+                                      fontWeight: FontWeight.w400
+                                  ),),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.end, // Spread items evenly
+                                    children: [
+                                      // Views Row
+                                      buildStatItem(
+                                        icon: Image.asset(
+                                          AppImages.like, // Replace with AppImages.view
+                                          height: 20,
+                                          color: AppColors.Slate_gray, // Add custom color to the icon
+                                        ),
+                                        label: '25',
+                                        textColor: AppColors.Slate_gray,
+
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      // Likes Row
+                                      buildStatItem(
+                                        icon: Image.asset(
+                                          AppImages.chat, // Replace with AppImages.view
+                                          height: 28,
+                                          color: AppColors.Slate_gray, // Add custom color to the icon
+                                        ),
+                                        label: '25',
+                                        textColor: AppColors.Slate_gray,
+
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                              ],
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 12,)
+                      ],
+                    ),
+                  );
+                },
+              ),
+
+
+            ],
+          ):SizedBox.shrink(),
         ],
       ),
     );

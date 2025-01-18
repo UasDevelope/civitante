@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../utilse/widgets.dart';
 
-Widget buildStatItem({required Widget icon, required String label}) {
+Widget buildStatItem({required Widget icon, required String label,required Color textColor}) {
   return Row(
     children: [
       icon,
@@ -11,7 +11,7 @@ Widget buildStatItem({required Widget icon, required String label}) {
           text: label,
           fontSize: 10,
           fontWeight: FontWeight.w400,
-          color: AppColors.white)
+          color: textColor)
     ],
   );
 }

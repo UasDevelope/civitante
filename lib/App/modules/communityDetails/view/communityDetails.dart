@@ -1,3 +1,4 @@
+import 'package:civitante/App/modules/CommunityPost/view/community_post_screen.dart';
 import 'package:civitante/App/modules/editMyCommunity/view/edityMyCommunity.dart';
 import 'package:flutter/material.dart';
 
@@ -148,7 +149,11 @@ class MyCommunityDetail extends StatelessWidget {
                       child: ListView.builder(
                         itemCount: 5, // Replace with your dynamic item count
                         itemBuilder: (BuildContext context, int index) {
-                          return CustomCard();
+                          return GestureDetector(
+                              onTap: () {
+                                Get.to(CommunityPostScreen());
+                              },
+                              child: CustomCard());
                         },
                       ),
                     ),

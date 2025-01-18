@@ -245,6 +245,7 @@ class GridItem extends StatelessWidget {
                       color: AppColors.white, // Add custom color to the icon
                     ),
                     label: '25',
+                    textColor: AppColors.white,
                   ),
                   SizedBox(
                     width: 10,
@@ -257,6 +258,7 @@ class GridItem extends StatelessWidget {
                       color: AppColors.white, // Add custom color to the icon
                     ),
                     label: '25',
+                    textColor: AppColors.white,
                   ),
                   SizedBox(
                     width: 10,
@@ -269,6 +271,7 @@ class GridItem extends StatelessWidget {
                       color: AppColors.white, // Add custom color to the icon
                     ),
                     label: '25',
+                    textColor: AppColors.white,
                   ),
                   SizedBox(
                     width: 10,
