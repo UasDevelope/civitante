@@ -16,6 +16,7 @@ import 'package:civitante/App/modules/splash/view/splash.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 
 import '../modules/AddCommunity/view/addCommunity.dart';
+import '../modules/AllCommunities/view/Allcommunities.dart';
 import '../modules/fqas/view/fqa.dart';
 import '../modules/started/started.dart';
 import '../testing.dart';
@@ -93,6 +94,10 @@ class AppPages {
     GetPage(
         name: AppRoutes.editMycommunity,
         page: () => EditCommunityScreen(),
+        binding: InitialBinding()),
+    GetPage(
+        name: AppRoutes.Allcommunities,
+        page: () => AllCommunitiesScreen(),
         binding: InitialBinding()),
   ];
 }
