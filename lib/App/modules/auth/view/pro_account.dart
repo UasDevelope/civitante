@@ -111,7 +111,8 @@ class ProAccountScren extends StatelessWidget {
                                 width: Get.width,
                                 radius: 30,
                                 onPressed: () {
-                                  controller.goToNext(AppRoutes.bottomNav);
+                                  controller.registerProUser();
+
                                 }),
                           ),
                         ]))))));
