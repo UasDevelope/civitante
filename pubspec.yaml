@@ -48,6 +48,7 @@ dependencies:
   steps_widget: ^0.0.3
   convex_bottom_bar: ^3.2.0
   image_picker: ^1.1.2
+  fluttertoast:
   fl_chart: ^0.70.1
   intl: ^0.20.1
 dev_dependencies:

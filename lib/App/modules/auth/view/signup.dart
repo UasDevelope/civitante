@@ -122,7 +122,9 @@ class SignupScreen extends StatelessWidget {
                               height: 60.0,
                               width: Get.width,
                               radius: 30,
-                              onPressed: () {}),
+                              onPressed: () {
+                                controller.registerNormalUser();
+                              }),
                         ),
                         SizedBox(
                           height: Get.height * 0.005,
@@ -140,7 +142,6 @@ class SignupScreen extends StatelessWidget {
                                 //     .validate()) {
                                 controller.goToNext(AppRoutes.proAccound);
                                 // }
-
                               }),
                         ),
                         Row(

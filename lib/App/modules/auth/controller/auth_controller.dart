@@ -1,5 +1,10 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/widgets.dart';
+import 'package:flutter/material.dart';
+
+import '../../../utilse/toast_util.dart';
 
 class AuthController extends GetxController {
   RxBool obSecureText = RxBool(false);
@@ -10,13 +15,6 @@ class AuthController extends GetxController {
   ///<Login> Controllers
   TextEditingController loginEmailController = TextEditingController();
   TextEditingController loginPassworedController = TextEditingController();
-  GlobalKey<FormState> signupGlobalKey = GlobalKey<FormState>();
-
-  RxBool loading = false.obs;
-  RxBool prAccountloading = false.obs;
-  RxString drivingLicense = RxString("");
-  RxString passport = RxString("");
-
   // <Forgot> Controlooers
   TextEditingController forgotPasswordController = TextEditingController();
 
@@ -26,6 +24,15 @@ class AuthController extends GetxController {
   TextEditingController signupPasswordController = TextEditingController();
   TextEditingController SignupConfirmPasswordController =
       TextEditingController();
+
+  GlobalKey<FormState> signupGlobalKey = GlobalKey<FormState>();
+  HttpService httpService = HttpService();
+
+  RxBool loading = false.obs;
+  RxBool prAccountloading = false.obs;
+  RxString drivingLicense = RxString("");
+  RxString passport = RxString("");
+
   TextEditingController ssNumber = TextEditingController();
   void changeObsecure() {
     obSecureText.value = !obSecureText.value;
@@ -112,6 +119,79 @@ class AuthController extends GetxController {
       log("Error fetching location: $e");
     } finally {
       isLocationFetched.value = false;
+    }
+  }
+
+// Register Normal User
+  void registerNormalUser() async {
+    loading.value = true;
+    var data = {
+      "email": signupEmailController.text,
+      "location": {
+        "long": positioned.value!.longitude,
+        "lat": positioned.value!.latitude
+      },
+      "password": signupPasswordController.text,
+      "costPoints": 10
+    };
+
+    var response = await HttpService.post('/register', data);
+
+    if (response != null && response['error'] == null) {
+      ToastUtil.showToast(
+        message: response['message'] ?? "Registration successful!",
+        backgroundColor: Colors.green,
+      );
+    } else {
+      String errorMsg = response['details'] != null
+          ? jsonDecode(response['details'])['message']
+          : "Unknown error occurred";
+
+      ToastUtil.showToast(
+        message: "Error: $errorMsg",
+        backgroundColor: Colors.red,
+      );
+    }
+    loading.value = false;
+  }
+
+// Register Pro User
+  void registerProUser() async {
+    loading.value = true;
+    var data = {
+      "email": signupEmailController.text,
+      "location": {
+        "long": positioned.value!.longitude,
+        "lat": positioned.value!.latitude
+      },
+      "password": signupPasswordController.text,
+      "isPro": true,
+      "ssn": ssNumber.text,
+      "accountType": "test1",
+      "drivingLicenseImage": "https://example.com/driving-license.jpg",
+      "passportImage": "https://example.com/passport.jpg"
+    };
+
+    var response = await HttpService.post('/register', data);
+
+    if (response != null && response['error'] == null) {
+      ToastUtil.showToast(
+        message: response['message'] ?? "Registration successful!",
+        backgroundColor: Colors.green,
+      );
+      loading.value = false;
+      goToNext(AppRoutes.bottomNav);
+    } else {
+      String errorMsg = response['details'] != null
+          ? jsonDecode(response['details'])['message']
+          : "Unknown error occurred";
+
+      ToastUtil.showToast(
+        message: "Error: $errorMsg",
+        backgroundColor: Colors.red,
+      );
+      loading.value = false;
+      goToNext(AppRoutes.bottomNav);
     }
   }
 }
