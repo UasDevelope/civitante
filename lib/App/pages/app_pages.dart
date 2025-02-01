@@ -1,4 +1,5 @@
 import 'package:civitante/App/modules/AddCommunity/controller/add_community.dart';
+import 'package:civitante/App/modules/auth/view/card.dart';
 import 'package:civitante/App/modules/auth/view/login.dart';
 import 'package:civitante/App/modules/auth/view/pro_account.dart';
 import 'package:civitante/App/modules/auth/view/signup.dart';
@@ -79,7 +80,8 @@ class AppPages {
       name: AppRoutes.fqa,
       page: () => FAQPage(),
       binding: InitialBinding(),
-    ),    GetPage(
+    ),
+    GetPage(
         name: AppRoutes.post,
         page: () => PostScreen(),
         binding: InitialBinding()),
@@ -98,6 +100,10 @@ class AppPages {
     GetPage(
         name: AppRoutes.Allcommunities,
         page: () => AllCommunitiesScreen(),
+        binding: InitialBinding()),
+    GetPage(
+        name: AppRoutes.MyCard,
+        page: () => MyCard(),
         binding: InitialBinding()),
   ];
 }

@@ -1,4 +1,3 @@
-import 'package:civitante/App/modules/post/view/post.dart';
 import 'package:civitante/App/routes/routes.dart';
 import 'package:civitante/App/shared/color.dart';
 import 'package:civitante/App/shared/image.dart';

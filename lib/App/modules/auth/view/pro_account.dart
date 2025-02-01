@@ -15,16 +15,34 @@ class ProAccountScren extends StatelessWidget {
                 child: SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: Column(
-                        spacing: 10,
+                        // spacing: 10,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        // mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            height: Get.height * 0.01,
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                top: 50.0, // Adjusted for positioning the arrow
+                                left: 15,
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Get.back();
+
+                                  // Get.back(); // Close the drawer when tapping the arrow
+                                },
+                                child: Image.asset(
+                                  AppImages.arrowback,
+                                  height: 30,
+                                  width: 30,
+                                ),
+                              ),
+                            ),
                           ),
                           Image.asset(
                             AppImages.logo,
-                            height: 200,
+                            height: 150,
                             fit: BoxFit.cover,
                           ),
                           SizedBox(
@@ -48,7 +66,7 @@ class ProAccountScren extends StatelessWidget {
                                   fontWeight: FontWeight.w500,
                                   color: AppColors.appColor),
                               AppText(
-                                  text: "\$10",
+                                  text: "\$1",
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                   color: AppColors.appColor)
@@ -76,9 +94,11 @@ class ProAccountScren extends StatelessWidget {
                                   ? Image.asset(
                                       AppImages.dotted,
                                     )
-                                  : Image.file(File(controller
-                                      .drivingLicense.value
-                                      .toString())),
+                                  : Image.network(
+                                      controller.drivingLicense.value
+                                          .toString(),
+                                      fit: BoxFit.fitWidth,
+                                    ),
                             ),
                           ),
                           SizedBox(
@@ -94,9 +114,10 @@ class ProAccountScren extends StatelessWidget {
                                   ? Image.asset(
                                       AppImages.driving,
                                     )
-                                  : Image.file(File(controller
-                                      .drivingLicense.value
-                                      .toString())),
+                                  : Image.network(
+                                      controller.passport.toString(),
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
                           ),
                           SizedBox(
@@ -112,7 +133,6 @@ class ProAccountScren extends StatelessWidget {
                                 radius: 30,
                                 onPressed: () {
                                   controller.registerProUser();
-
                                 }),
                           ),
                         ]))))));

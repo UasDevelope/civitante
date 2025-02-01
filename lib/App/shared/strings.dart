@@ -85,7 +85,7 @@ class AppStrings {
 
   static String get Post => "Post";
 
-  static String get What_happening => "What’s happening?";
+  static String get Add_title => "Add title";
 
   static String get Wallet => "Wallet";
 
