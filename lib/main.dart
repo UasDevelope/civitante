@@ -2,7 +2,6 @@ import 'package:civitante/App/utilse/widgets.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
-import 'App/modules/auth/view/card.dart'; // Make sure the file path is correct.
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

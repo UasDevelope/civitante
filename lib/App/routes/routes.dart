@@ -1,6 +1,3 @@
-import 'package:civitante/App/modules/auth/view/card.dart';
-import 'package:civitante/App/modules/forget/view/verify_otp.dart';
-
 class AppRoutes {
   static get splash => '/splash';
 

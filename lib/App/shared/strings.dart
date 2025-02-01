@@ -15,6 +15,8 @@ class AppStrings {
 
   static String get enterUsernameEmail => 'Enter Your Username / Email';
 
+  static String get enterFullName => 'Enter Your Full Name';
+
   static String get enterYourPassword => 'Enter Your Password';
 
   static String get forgetPassword => 'Forgot Password?';
