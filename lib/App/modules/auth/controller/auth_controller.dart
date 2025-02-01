@@ -24,6 +24,7 @@ class AuthController extends GetxController {
 
   ///<Signup> Controllers
   TextEditingController signupEmailController = TextEditingController();
+  TextEditingController fullNameController = TextEditingController();
   TextEditingController signupLocationController = TextEditingController();
   TextEditingController signupPasswordController = TextEditingController();
   TextEditingController SignupConfirmPasswordController =
@@ -148,6 +149,7 @@ class AuthController extends GetxController {
     loading.value = true;
     var data = {
       "email": signupEmailController.text,
+      "name": fullNameController.text,
       "location": {
         "long": positioned.value!.longitude,
         "lat": positioned.value!.latitude
@@ -189,6 +191,7 @@ class AuthController extends GetxController {
     // Prepare data for the API request
     var data = {
       "email": signupEmailController.text,
+      "name": fullNameController.text,
       "location": {
         "long": positioned.value?.longitude, // Safely access longitude
         "lat": positioned.value?.latitude, // Safely access latitude

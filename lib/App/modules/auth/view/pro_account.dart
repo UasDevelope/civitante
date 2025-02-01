@@ -82,14 +82,15 @@ class ProAccountScren extends StatelessWidget {
                               borderColor: AppColors.textFieldHintColor,
                               controller: controller.ssNumber),
                           SizedBox(
-                            height: Get.height * 0.002,
+                            height: Get.height * 0.009,
                           ),
                           InkWell(
                             onTap: () {
                               controller.pickImage("1");
                             },
                             child: Container(
-                              height: 125,
+                              height: 150,
+                              width: 400,
                               child: controller.drivingLicense.value.isEmpty
                                   ? Image.asset(
                                       AppImages.dotted,
@@ -97,19 +98,20 @@ class ProAccountScren extends StatelessWidget {
                                   : Image.network(
                                       controller.drivingLicense.value
                                           .toString(),
-                                      fit: BoxFit.fitWidth,
+                                      fit: BoxFit.cover,
                                     ),
                             ),
                           ),
                           SizedBox(
-                            height: Get.height * 0.0,
+                            height: Get.height * 0.009,
                           ),
                           InkWell(
                             onTap: () {
                               controller.pickImage("2");
                             },
                             child: Container(
-                              height: 125,
+                              height: 150,
+                              width: 400,
                               child: controller.passport.value.isEmpty
                                   ? Image.asset(
                                       AppImages.driving,
@@ -121,7 +123,7 @@ class ProAccountScren extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            height: Get.height * 0.006,
+                            height: Get.height * 0.009,
                           ),
                           Center(
                             child: AppButton(

@@ -44,6 +44,16 @@ class SignupScreen extends StatelessWidget {
                           height: Get.height * 0.01,
                         ),
                         customTextFormField(
+
+                            width: Get.width / 2,
+                            borderRadius: 25,
+                            hintText: AppStrings.enterFullName,
+                            borderColor: AppColors.textFieldHintColor,
+                            controller: controller.fullNameController),
+                        SizedBox(
+                          height: Get.height * 0.008,
+                        ),
+                        customTextFormField(
                             validatore: (value) {
                               return Validators.emailValidator(value!);
                             },

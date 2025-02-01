@@ -1,12 +1,10 @@
-import 'package:civitante/App/modules/AddCommunity/controller/add_community.dart';
-import 'package:civitante/App/modules/auth/view/card.dart';
+
 import 'package:civitante/App/modules/auth/view/login.dart';
 import 'package:civitante/App/modules/auth/view/pro_account.dart';
 import 'package:civitante/App/modules/auth/view/signup.dart';
 import 'package:civitante/App/modules/bottom/view/bottom_nav.dart';
 import 'package:civitante/App/modules/communities/view/community.dart';
 import 'package:civitante/App/modules/communityDetails/view/communityDetails.dart';
-import 'package:civitante/App/modules/contactadmin/view/admin_contact.dart';
 import 'package:civitante/App/modules/editMyCommunity/view/edityMyCommunity.dart';
 import 'package:civitante/App/modules/forget/view/new_password.dart';
 import 'package:civitante/App/modules/forget/view/send_otp.dart';
@@ -101,9 +99,6 @@ class AppPages {
         name: AppRoutes.Allcommunities,
         page: () => AllCommunitiesScreen(),
         binding: InitialBinding()),
-    GetPage(
-        name: AppRoutes.MyCard,
-        page: () => MyCard(),
-        binding: InitialBinding()),
+
   ];
 }

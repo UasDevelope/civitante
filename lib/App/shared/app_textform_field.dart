@@ -30,7 +30,7 @@ Widget customTextFormField({
     obscureText: isPasswordField ? obscureText : false,
     onChanged: onChanged,
     validator: validatore,
-    maxLines: isPasswordField ? 1 : maxLines ?? null, // Single line for passwords, multiline otherwise
+   // maxLines: isPasswordField ? 1 : maxLines ?? null, // Single line for passwords, multiline otherwise
     decoration: InputDecoration(
       hintText: hintText,
       labelText: labelText,
