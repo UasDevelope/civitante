@@ -23,7 +23,7 @@ export 'package:loading_overlay/loading_overlay.dart';
 export 'package:civitante/App/modules/profile/view/profile.dart';
 export 'package:civitante/App/modules/home/view/home.dart';
 export 'package:civitante/App/modules/explorer/view/explorer.dart';
-export 'package:civitante/App/modules/post/view/post.dart';
+export 'package:civitante/App/modules/Addpost/view/post.dart';
 export 'package:image_picker/image_picker.dart';
 export 'package:civitante/App/modules/drawer/view/drawer.dart';
 export 'package:civitante/App/modules/home/widgets/homeAppbar.dart';

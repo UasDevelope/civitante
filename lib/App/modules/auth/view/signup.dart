@@ -9,10 +9,14 @@ class SignupScreen extends StatelessWidget {
     return Obx(() => LoadingOverlay(
         isLoading: controller.loading.value,
         child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: AppColors.white,
+            ),
             backgroundColor: AppColors.white,
             body: Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.only(right: 15, left: 15),
               child: SingleChildScrollView(
+                padding: EdgeInsets.zero,
                 scrollDirection: Axis.vertical,
                 child: Form(
                     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -22,17 +26,15 @@ class SignupScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: Get.height * 0.01,
-                        ),
                         Image.asset(
                           AppImages.logo,
-                          height: 200,
-                          fit: BoxFit.cover,
+                          height: 150,
+                          width: 300,
+                          fit: BoxFit.contain,
                         ),
-                        SizedBox(
-                          height: Get.height * 0.0010,
-                        ),
+                        // SizedBox(
+                        //   height: Get.height * 0.0010,
+                        // ),
                         AppText(
                             text: AppStrings.signUpPro,
                             color: AppColors.appColor,

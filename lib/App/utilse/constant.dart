@@ -1,5 +1,24 @@
 class AppConstant {
+  // Private constructor
+  AppConstant._privateConstructor();
+  // Single shared instance
+  static final AppConstant _instance = AppConstant._privateConstructor();
+
+  // Factory constructor to return the same instance
+  factory AppConstant() {
+    return _instance;
+  }
+
+  String? userID;
   String baseUrl = 'https://civitante.vercel.app/user';
+
+  // Cloudinary
+  String Cloudinary_API_KEY = "239661546466672";
+  String Cloudinary_Secret_KEY = "qtBd8gIDExqgVVyIxrtJC3HgmF0";
+  String Cloud_Name = "dqv0rpgrw";
+  String Upload_Preset = "Here_now";
+  //Stripe public keys
+  String stripepublishableKey = 'your_publishable_key';
 
 // Method: POST
   String login = '/login';
@@ -12,4 +31,7 @@ class AppConstant {
   String addCommentToPost = '/addCommentToPost/';
   String addLikeToComment = '/addLikeToComment/';
   String addReplyToComment = '/addReplyToComment/';
+  String savePaymentMethod = '/savePaymentMethod';
+  String charge = '/charge';
+  String upgradeToPro = '/upgradeToPro';
 }

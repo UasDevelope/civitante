@@ -1,3 +1,4 @@
+import 'package:civitante/App/modules/auth/view/card.dart';
 import 'package:civitante/App/modules/forget/view/verify_otp.dart';
 
 class AppRoutes {
@@ -38,4 +39,6 @@ class AppRoutes {
   static get editMycommunity => "/editMycommunityDetails";
 
   static get Allcommunities => "/Allcommunities";
+
+  static get MyCard => "/MyCard";
 }

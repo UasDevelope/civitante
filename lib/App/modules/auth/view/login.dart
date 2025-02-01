@@ -88,7 +88,7 @@ class LoginScreen extends StatelessWidget {
                           radius: 30,
                           onPressed: () {
                             if (loginGlobalKey.currentState!.validate()) {
-                              controller.goToNext(AppRoutes.bottomNav);
+                              controller.loginUser();
                             }
                           },
                         ),
@@ -155,7 +155,7 @@ class LoginScreen extends StatelessWidget {
                           // color: Colors.,
                           radius: 30,
                           onPressed: () {
-                            controller.goToNext(AppRoutes.signup);
+                            controller.loginUser();
                             // Get.toNamed(AppRoutes.login);
                           },
                         ),

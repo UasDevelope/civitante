@@ -3,13 +3,13 @@ import 'package:civitante/App/modules/auth/controller/auth_controller.dart';
 import 'package:civitante/App/modules/bottom/controller/bottom_nave_controller.dart';
 import 'package:civitante/App/modules/forget/controller/forget_controller.dart';
 import 'package:civitante/App/modules/home/controller/home_controller.dart';
-import 'package:civitante/App/modules/post/controller/post.dart';
 import 'package:civitante/App/modules/setting/controller/setting.dart';
 import 'package:civitante/App/modules/wallet/controller/wallet_controller.dart';
 import 'package:civitante/App/shared/validators.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 
+import '../modules/Addpost/controller/post.dart';
 import '../modules/communityDetails/controller/communityDetailsController.dart';
 import '../modules/drawer/controller/drawer.dart';
 import '../modules/editMyCommunity/controller/editCommunityController.dart';
