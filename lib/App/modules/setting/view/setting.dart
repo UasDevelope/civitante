@@ -41,7 +41,7 @@ class SettingScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: Column(
-        spacing:14,
+        spacing: 14,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Card(
@@ -50,7 +50,7 @@ class SettingScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(left: 8.0, bottom: 8, top: 8),
               child: Column(
-                spacing:10,
+                spacing: 10,
                 children: [
                   buildDivider(),
                   buildSectionRow(
@@ -76,18 +76,16 @@ class SettingScreen extends StatelessWidget {
                   buildSectionRow(title: AppStrings.Privacy_and_safety),
                   buildDivider(),
                   buildSectionRow(
-                      onTap:(){
+                      onTap: () {
                         Get.to(EditProfileScreen());
                       },
                       title: AppStrings.Edit_Profile),
-
                   buildDivider(),
                   buildSectionRow(
-                      onTap:(){
+                      onTap: () {
                         Get.to(BucketScreen());
                       },
                       title: AppStrings.Bucket),
-
                   buildDivider(),
                   buildSectionRow(title: AppStrings.Notifications),
                 ],
@@ -104,7 +102,7 @@ class SettingScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(top: 8.0, left: 8, bottom: 8),
               child: Column(
-                spacing:10,
+                spacing: 10,
                 children: [
                   buildDivider(),
                   buildSectionRow(title: AppStrings.Display_and_sound),
@@ -152,20 +150,15 @@ class SettingScreen extends StatelessWidget {
     );
   }
 
-
-
-
-
   Widget _buildSectionHeader({required String title}) {
     return Padding(
       padding: const EdgeInsets.symmetric(
           vertical: 4), // Reduce the vertical padding for section headers
-      child: AppText(text:
-        title,
-       color:AppColors.appColor,
-        fontWeight:FontWeight.w500,
-        fontSize:18
-      ),
+      child: AppText(
+          text: title,
+          color: AppColors.appColor,
+          fontWeight: FontWeight.w500,
+          fontSize: 18),
     );
   }
 }
