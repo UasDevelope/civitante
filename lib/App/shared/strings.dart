@@ -89,6 +89,9 @@ class AppStrings {
 
   static String get Add_title => "Add title";
 
+  static String get Add_Desc => "Add description...";
+
+
   static String get Wallet => "Wallet";
 
   static String get Current_Points => 'Current Points';

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
 
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../service/http_service.dart';
 import '../../../utilse/constant.dart';
 import '../../../utilse/toast_util.dart';
+import '../../../utilse/uploadImage.dart';
 
 class PostController extends GetxController {
   RxString selectedLanguage = 'English'.obs;
@@ -16,6 +19,8 @@ class PostController extends GetxController {
       ['General', 'Tech', 'Lifestyle', 'Business', 'Health'].obs;
   final TextEditingController tagController = TextEditingController();
   final titleController = TextEditingController();
+  final descController = TextEditingController();
+  RxBool isloading = false.obs;
 
   RxList<String> tags = [""].obs;
   var images = <String>[].obs; // Observable list of image paths
@@ -31,14 +36,40 @@ class PostController extends GetxController {
     }
   }
 
-  // Method to pick images
-  Future<void> pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  // Reactive list to hold image URLs (e.g., using GetX, Provider, etc.)
 
-    if (pickedFile != null) {
-      images.add(pickedFile.path); // Add the picked image path to the list
+  Future<void> pickImage() async {
+    isloading.value = true;
+    try {
+      final ImagePicker picker = ImagePicker();
+      // Pick image from gallery
+      final XFile? pickedFile =
+          await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        // Compress the image
+        final XFile? compressedImage =
+            await ImageUtils.compressImage(pickedFile);
+
+        if (compressedImage != null) {
+          // Upload to Firebase Storage
+          String imageUrl = await ImageUtils.uploadImageToFirebase(
+              File(compressedImage.path));
+
+          // Assign URL to the list (and optionally handle type-specific logic)
+          images.add(imageUrl); // Add to general list
+          isloading.value = false;
+          log("Image uploaded! URL: $imageUrl");
+        } else {
+          log("Image compression failed.");
+        }
+      } else {
+        log("No image selected.");
+      }
+    } catch (e) {
+      log("Error during image pick/upload: $e");
     }
+    isloading.value = false;
   }
 
   // Method to trigger permission check and image pick
@@ -46,47 +77,105 @@ class PostController extends GetxController {
     await _checkPermissions();
   }
 
-  void addPost({
-    required String title,
-    required String description,
-    required List<String> media,
-  }) async {
-    String? userID = AppConstant().userID;
+  void addPost() async {
+    try {
+      isloading.value = true;
 
-    if (userID == null) {
+      // 1. Validate User ID
+      final userID = AppConstant().userID;
+      if (userID == null || userID.isEmpty) {
+        ToastUtil.showToast(
+          message: "User authentication failed. Please login again.",
+          backgroundColor: Colors.red,
+        );
+        return;
+      }
+
+      // 2. Validate Required Fields
+      if (titleController.text.trim().isEmpty) {
+        ToastUtil.showToast(
+          message: "Please enter a title",
+          backgroundColor: Colors.orange,
+        );
+        return;
+      }
+
+      if (descController.text.trim().isEmpty) {
+        ToastUtil.showToast(
+          message: "Please enter a description",
+          backgroundColor: Colors.orange,
+        );
+        return;
+      }
+
+      if (images.isEmpty) {
+        ToastUtil.showToast(
+          message: "Please add at least one image",
+          backgroundColor: Colors.orange,
+        );
+        return;
+      }
+
+      // 3. Prepare Post Data
+      final data = {
+        "title": titleController.text.trim(),
+        "description": descController.text.trim(),
+        "tags": tags.whereType<String>().toList(), // Ensure valid tags
+        "category": "test1",
+        "media": ["image"],
+        "mediaUrls": images,
+        "createdBy": userID,
+      };
+
+      print('Post Data: $data');
+
+      // 4. Submit to API
+      final response = await HttpService.post('/addPosts', data);
+
+      // 5. Handle Response
+      if (response != null && response['error'] == null) {
+        ToastUtil.showToast(
+          message: response['message'] ?? "Post created successfully!",
+          backgroundColor: Colors.green,
+        );
+
+        // Clear all input fields
+        _clearForm();
+        Get.back();
+      } else {
+        final errorMessage = _parseErrorMessage(response);
+        ToastUtil.showToast(
+          message: errorMessage,
+          backgroundColor: Colors.red,
+        );
+      }
+    } catch (e) {
       ToastUtil.showToast(
-        message: "User ID is not set.",
+        message: "Network error: Please check your connection",
         backgroundColor: Colors.red,
       );
-      return;
+    } finally {
+      isloading.value = false;
     }
+  }
 
-    var data = {
-      "title": title,
-      "description": description,
-      "tags": tags,
-      "category": selectCatagory.value,
-      "media": ["image"],
-      "mediaUrls": images,
-      "createdBy": userID,
-    };
+  void _clearForm() {
+    titleController.clear();
+    descController.clear();
+    tags.clear();
+    images.clear();
+    // Add other field resets if needed
+  }
 
-    var response = await HttpService.post('/addPost', data);
-
-    if (response != null && response['error'] == null) {
-      ToastUtil.showToast(
-        message: response['message'] ?? "Post added successfully!",
-        backgroundColor: Colors.green,
-      );
-    } else {
-      String errorMsg = response['details'] != null
-          ? jsonDecode(response['details'])['message']
-          : "Unknown error occurred";
-
-      ToastUtil.showToast(
-        message: "Error: $errorMsg",
-        backgroundColor: Colors.red,
-      );
+  String _parseErrorMessage(dynamic response) {
+    try {
+      if (response == null) return "Unknown error occurred";
+      if (response['details'] != null) {
+        return jsonDecode(response['details'])['message'] ?? "Operation failed";
+      }
+      return response['message'] ?? "Something went wrong";
+    } catch (e) {
+      return "Failed to process error message";
     }
   }
 

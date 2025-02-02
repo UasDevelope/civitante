@@ -11,9 +11,7 @@ class ImageListView extends StatelessWidget {
       // Use Obx to reactively rebuild the widget when images change
       return Container(
         height: 400,
-        decoration:BoxDecoration(
-            borderRadius:BorderRadius.circular(20)
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: controller.images.length,
@@ -22,9 +20,10 @@ class ImageListView extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(10), // Set border radius for each image
-                child: Image.file(
-                  File(controller.images[index]), // Load local image
+                borderRadius: BorderRadius.circular(
+                    10), // Set border radius for each image
+                child: Image.network(
+                  controller.images[index], // Load local image
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,

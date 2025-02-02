@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../utilse/widgets.dart';
 import '../../notification/view/notification.dart';
+import '../controller/home_controller.dart';
 import '../widgets/home_search.dart';
 import '../widgets/tab_bar.dart';
 
@@ -10,6 +11,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final homeController = Get.find<HomeController>();
     return Scaffold(
       backgroundColor: Colors.white, // Change the background color
       appBar: HomeAppbar(
@@ -17,6 +19,7 @@ class HomeScreen extends StatelessWidget {
         imagePath: AppImages.location, // Optional, can be null
         rightIcon: AppImages.notification,
         onRightIconPressed: () {
+          homeController.fetchAndAssignPosts();
           Get.to(NotificationsScreen());
         },
       ),

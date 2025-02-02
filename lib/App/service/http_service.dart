@@ -25,6 +25,7 @@ class HttpService {
 
   static Future<dynamic> get(String endpoint) async {
     final url = Uri.parse('$_baseUrl$endpoint');
+    print('here is url $url');
     try {
       final response = await http.get(url);
       return _processResponse(response);

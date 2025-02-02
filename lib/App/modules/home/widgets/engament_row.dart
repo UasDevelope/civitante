@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../utilse/widgets.dart';
 
-Widget buildStatItem({required Widget icon, required String label,required Color textColor}) {
+Widget buildStatItem({required Widget icon, required String label,  Color textColor = AppColors.Slate_gray, // Add default color
+}) {
   return Row(
     children: [
       icon,
