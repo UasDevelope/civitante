@@ -2,7 +2,6 @@ import 'package:civitante/App/utilse/widgets.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Stripe.publishableKey = 'pk_test_I71hW1HMRNeKcsF2IRuQk3ga00ZtdU01e5';
@@ -20,7 +19,7 @@ class CivitanteApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       getPages: AppPages.pages,
       initialRoute:
-          AppRoutes.login, // Ensure AppRoutes.splash is defined correctly.
+          AppRoutes.splash, // Ensure AppRoutes.splash is defined correctly.
       initialBinding:
           InitialBinding(), // Ensure InitialBinding() is correctly set up.
       defaultTransition:

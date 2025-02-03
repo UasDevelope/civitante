@@ -10,6 +10,7 @@ import '../../../service/http_service.dart';
 import '../../../utilse/constant.dart';
 import '../../../utilse/toast_util.dart';
 import '../../../utilse/uploadImage.dart';
+import '../../home/controller/home_controller.dart';
 
 class PostController extends GetxController {
   RxString selectedLanguage = 'English'.obs;
@@ -134,6 +135,8 @@ class PostController extends GetxController {
 
       // 5. Handle Response
       if (response != null && response['error'] == null) {
+        final homeController = Get.find<HomeController>();
+        homeController.fetchAndAssignPosts();
         ToastUtil.showToast(
           message: response['message'] ?? "Post created successfully!",
           backgroundColor: Colors.green,

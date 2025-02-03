@@ -12,6 +12,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeController = Get.find<HomeController>();
+    homeController.fetchAndAssignPosts();
     return Scaffold(
       backgroundColor: Colors.white, // Change the background color
       appBar: HomeAppbar(
@@ -19,7 +20,6 @@ class HomeScreen extends StatelessWidget {
         imagePath: AppImages.location, // Optional, can be null
         rightIcon: AppImages.notification,
         onRightIconPressed: () {
-          homeController.fetchAndAssignPosts();
           Get.to(NotificationsScreen());
         },
       ),
