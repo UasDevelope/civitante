@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 
 Widget customTextFormField({
   required TextEditingController controller, // TextController for managing text
-  TextInputType keyboardType = TextInputType.text, // Default keyboard type is text
+  TextInputType keyboardType =
+      TextInputType.text, // Default keyboard type is text
   String? hintText, // Optional hint text
   String? labelText, // Optional label text
-  bool obscureText = false, // Whether the text should be obscured (e.g. for passwords)
+  bool obscureText =
+      false, // Whether the text should be obscured (e.g. for passwords)
   Icon? prefixIcon, // Optional prefix icon
   Icon? suffixIcon, // Optional suffix icon (e.g., for showing/hiding password)
   Color borderColor = Colors.black, // Border color
@@ -23,6 +25,7 @@ Widget customTextFormField({
   int? maxLines, // Optional maxLines parameter (null for unlimited lines)
 }) {
   return TextFormField(
+    maxLines: maxLines,
     controller: controller,
     keyboardType: keyboardType == TextInputType.text
         ? TextInputType.multiline // Allow multiline input
@@ -30,16 +33,16 @@ Widget customTextFormField({
     obscureText: isPasswordField ? obscureText : false,
     onChanged: onChanged,
     validator: validatore,
-   // maxLines: isPasswordField ? 1 : maxLines ?? null, // Single line for passwords, multiline otherwise
+    // maxLines: isPasswordField ? 1 : maxLines ?? null, // Single line for passwords, multiline otherwise
     decoration: InputDecoration(
       hintText: hintText,
       labelText: labelText,
       prefixIcon: prefixIcon,
       suffixIcon: icon != null
           ? IconButton(
-        icon: Icon(icon),
-        onPressed: obsecureonTap,
-      )
+              icon: Icon(icon),
+              onPressed: obsecureonTap,
+            )
           : null,
       filled: true,
       fillColor: fillColor,
@@ -70,4 +73,3 @@ Widget customTextFormField({
     ),
   );
 }
-

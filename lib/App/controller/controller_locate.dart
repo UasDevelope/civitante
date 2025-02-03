@@ -6,6 +6,7 @@ import 'package:civitante/App/modules/home/controller/home_controller.dart';
 import 'package:civitante/App/modules/setting/controller/setting.dart';
 import 'package:civitante/App/modules/wallet/controller/wallet_controller.dart';
 import 'package:civitante/App/shared/validators.dart';
+import 'package:civitante/App/utilse/location_controller.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -27,10 +28,16 @@ class LocateController {
   static HomeController get homeController => Get.find<HomeController>();
   static PostController get postController => Get.find<PostController>();
   static WalletController get walletController => Get.find<WalletController>();
-  static SettingController get  settingController => Get.find<SettingController>();
-  static MyCommunityController get  myCommunityController => Get.find<MyCommunityController>();
-  static CommunityDetailController get  communityDetailController => Get.find<CommunityDetailController>();
-  static EditCommunityController get  editCommunityDetailController => Get.find<EditCommunityController>();
-  static  AddCommunityController get addCommunityController => Get.find<AddCommunityController>();
-
+  static SettingController get settingController =>
+      Get.find<SettingController>();
+  static MyCommunityController get myCommunityController =>
+      Get.find<MyCommunityController>();
+  static CommunityDetailController get communityDetailController =>
+      Get.find<CommunityDetailController>();
+  static EditCommunityController get editCommunityDetailController =>
+      Get.find<EditCommunityController>();
+  static AddCommunityController get addCommunityController =>
+      Get.find<AddCommunityController>();
+  static LocationController get locationController =>
+      Get.find<LocationController>();
 }

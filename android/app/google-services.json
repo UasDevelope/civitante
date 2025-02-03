@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "452022753540",
+    "project_id": "civitante",
+    "storage_bucket": "civitante.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:452022753540:android:ee82b951b1392876d8d851",
+        "android_client_info": {
+          "package_name": "com.app.civitante"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDa__zEouUu4yUGV7U2Tv2MmCjKvJJD2Fg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:452022753540:android:52ea001680268515d8d851",
+        "android_client_info": {
+          "package_name": "com.example.civitante"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDa__zEouUu4yUGV7U2Tv2MmCjKvJJD2Fg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

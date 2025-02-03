@@ -8,6 +8,7 @@ import 'package:civitante/App/modules/mycommunites/controller/my_community.dart'
 import 'package:civitante/App/modules/setting/controller/setting.dart';
 import 'package:civitante/App/modules/splash/controller/splash_controller.dart';
 import 'package:civitante/App/modules/wallet/controller/wallet_controller.dart';
+import 'package:civitante/App/utilse/location_controller.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 
 import '../modules/AddCommunity/controller/add_community.dart';
@@ -35,6 +36,7 @@ class InitialBinding extends Bindings {
     Get.lazyPut(() => SettingController());
     Get.lazyPut(() => AddCommunityController());
     Get.lazyPut(() => EditCommunityController());
+    Get.lazyPut(() => LocationController());
     Get.lazyPut<FAQController>(() => FAQController());
   }
 }

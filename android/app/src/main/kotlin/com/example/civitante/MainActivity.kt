@@ -1,4 +1,4 @@
-package com.example.civitante
+package com.app.civitante
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -12,6 +12,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = LocateController.authController;
+    LocateController.locationController;
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Obx(() => LoadingOverlay(
