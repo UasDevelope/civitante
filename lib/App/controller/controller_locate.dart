@@ -1,15 +1,14 @@
 import 'package:civitante/App/modules/AddCommunity/controller/add_community.dart';
+import 'package:civitante/App/modules/PostsDetails/controller/posts_details_controller.dart';
 import 'package:civitante/App/modules/auth/controller/auth_controller.dart';
 import 'package:civitante/App/modules/bottom/controller/bottom_nave_controller.dart';
 import 'package:civitante/App/modules/forget/controller/forget_controller.dart';
 import 'package:civitante/App/modules/home/controller/home_controller.dart';
+import 'package:civitante/App/modules/profile/controller/profile_controller.dart';
 import 'package:civitante/App/modules/setting/controller/setting.dart';
 import 'package:civitante/App/modules/wallet/controller/wallet_controller.dart';
-import 'package:civitante/App/shared/validators.dart';
 import 'package:civitante/App/utilse/location_controller.dart';
 import 'package:civitante/App/utilse/widgets.dart';
-import 'package:flutter/material.dart';
-
 import '../modules/Addpost/controller/post.dart';
 import '../modules/communityDetails/controller/communityDetailsController.dart';
 import '../modules/drawer/controller/drawer.dart';
@@ -27,6 +26,8 @@ class LocateController {
       Get.find<CustomDrawerController>();
   static HomeController get homeController => Get.find<HomeController>();
   static PostController get postController => Get.find<PostController>();
+  static PostsDetailsController get postDetailController =>
+      Get.find<PostsDetailsController>();
   static WalletController get walletController => Get.find<WalletController>();
   static SettingController get settingController =>
       Get.find<SettingController>();
@@ -40,4 +41,6 @@ class LocateController {
       Get.find<AddCommunityController>();
   static LocationController get locationController =>
       Get.find<LocationController>();
+  static EditProfileController get profileController =>
+      Get.find<EditProfileController>();
 }

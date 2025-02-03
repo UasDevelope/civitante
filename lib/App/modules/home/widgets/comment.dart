@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:civitante/App/shared/app_text.dart';
 import 'package:civitante/App/shared/strings.dart';
 import 'package:civitante/App/utilse/widgets.dart';
@@ -7,12 +9,16 @@ import 'package:get/get_core/src/get_main.dart';
 import '../../../shared/app_button.dart';
 import '../../../shared/color.dart';
 
-Future commentsBottomSheet() {
+Future commentsBottomSheet({String postId = ""}) {
+  final postDetailController = LocateController.postDetailController;
+
   final TextEditingController commentController = TextEditingController();
+
   final List<String> comments = [
     "Interesting Nicola that not one reply or tag on this #UX talent shoutout in the last 24 hours since your tweet here......🤔",
     "Maybe I forgot the hashtags. #hiringux #designjobs #sydneyux #sydneydesigners #uxjobs",
   ];
+  log("Post Id is $postId");
 
   return Get.bottomSheet(
     StatefulBuilder(
@@ -114,7 +120,7 @@ Future commentsBottomSheet() {
                 children: [
                   Expanded(
                     child: TextFormField(
-                      controller: commentController,
+                      controller: postDetailController.commentController,
                       decoration: InputDecoration(
                         hintText: "Write a comment...",
                         hintStyle: TextStyle(color: Colors.grey),
@@ -133,12 +139,10 @@ Future commentsBottomSheet() {
                   ),
                   SizedBox(width: 8),
                   InkWell(
-                    onTap: () {
-                      if (commentController.text.isNotEmpty) {
-                        setState(() {
-                          comments.add(commentController.text);
-                        });
-                        commentController.clear();
+                    onTap: () async {
+                      if (postDetailController
+                          .commentController.text.isNotEmpty) {
+                        await postDetailController.addComments(postId);
                       }
                     },
                     child: Container(

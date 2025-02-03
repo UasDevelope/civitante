@@ -34,6 +34,7 @@ class HomeController extends GetxController {
     // If the search value is not empty, filter the posts
     if (searchQuery.isNotEmpty) {
       var filtered = posts.where((post) {
+        log("Post.category is ${post.category}");
         return post.title.toLowerCase().contains(searchQuery) ||
             post.description.toLowerCase().contains(searchQuery);
       }).toList();
@@ -51,6 +52,7 @@ class HomeController extends GetxController {
       posts.value = result;
       filteredPosts.value = posts;
     } catch (e) {
+      log("error is $e");
       ToastUtil.showToast(
         message: "Failed to load posts: ${e.toString()}",
         backgroundColor: Colors.red,
@@ -69,6 +71,7 @@ class HomeController extends GetxController {
       final response = await HttpService.get('/getPosts');
 
       if (response is List) {
+        log("Response is $response");
         return parsePosts(response);
       } else if (response is Map && response['error'] != null) {
         throw Exception(response['error']);

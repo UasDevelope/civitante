@@ -1,3 +1,4 @@
+import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +30,7 @@ class MenuItem extends StatelessWidget {
           color: AppColors.appColor), // Title text
       onTap: () async {
         if (routeName == '/login') {
-          await SharedPreferencesHelper.clearUserId();
+          PrefUtil.remove(PrefUtil.userId);
         }
         Get.toNamed(routeName); // Navigate to the route name when tapped
         print("routeName${routeName}");
