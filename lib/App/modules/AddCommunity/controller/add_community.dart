@@ -25,23 +25,22 @@ class AddCommunityController extends GetxController {
     try {
       isLoading.value = true;
       final locationController = LocateController.locationController;
+
       String? userId = AppConstant().userID;
       log("User id is $userId");
-      String imageUrl =
-          await ImageUtils.uploadImageToFirebase(File(communityImage.value));
-
+      log("Location name is ${locationController.userLocation["locationName"]}");
       final data = {
         "name": emailController.text,
         "membership": membership.value.toLowerCase(),
         "category": category.value,
         "interests": [interest.value],
         "description": descriptionController.text,
-        "image": imageUrl,
+        "image": communityImage.value,
         "visibility": {
           "location": locationController.userLocation["locationName"]
         },
         "cost": 100,
-        "userId": userId
+        "createdBy": userId
       };
       final response = await HttpService.post("/addCommunity", data);
       log("Response is ${response}");

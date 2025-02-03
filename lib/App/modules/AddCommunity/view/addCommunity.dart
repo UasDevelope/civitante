@@ -52,12 +52,12 @@ class AddCommunityScreen extends StatelessWidget {
                                 splashColor: Colors.transparent,
                                 child: CircleAvatar(
                                   radius: 50,
-                                  backgroundImage: controller
-                                          .communityImage.value.isNotEmpty
-                                      ? FileImage(
-                                          File(controller.communityImage.value))
-                                      : AssetImage(AppImages.person)
-                                          as ImageProvider,
+                                  backgroundImage:
+                                      controller.communityImage.value.isNotEmpty
+                                          ? NetworkImage(
+                                              controller.communityImage.value)
+                                          : AssetImage(AppImages.person)
+                                              as ImageProvider,
                                 ),
                               )),
                           Positioned(
@@ -83,7 +83,7 @@ class AddCommunityScreen extends StatelessWidget {
                       },
                       width: Get.width / 2,
                       borderRadius: 25,
-                      hintText: AppStrings.enterUsernameEmail,
+                      hintText: "Enter Community Name",
                       borderColor: AppColors.textFieldHintColor,
                       controller: controller.emailController,
                     ),

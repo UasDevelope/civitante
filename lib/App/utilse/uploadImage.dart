@@ -42,7 +42,9 @@ class ImageUtils {
 
     if (image != null) {
       final XFile? compressImage = await ImageUtils.compressImage(image);
-      pathToUpdate.value = compressImage?.path ?? image.path;
+      String imageUrl =
+          await uploadImageToFirebase(File(compressImage?.path ?? image.path));
+      pathToUpdate.value = imageUrl;
     } else {
       // Show an error message if no image was selected
       print("Please pick an image");
