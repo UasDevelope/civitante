@@ -1,6 +1,7 @@
 import 'package:civitante/App/shared/color.dart';
 import 'package:civitante/App/shared/image.dart';
 import 'package:civitante/App/shared/strings.dart';
+import 'package:civitante/App/utilse/uploadImage.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -38,10 +39,19 @@ class EditProfileScreen extends StatelessWidget {
             Stack(
               alignment: Alignment.center,
               children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage:
-                      AssetImage(AppImages.person), // Replace with actual image
+                Obx(
+                  () => InkWell(
+                    onTap: () {
+                      ImageUtils.pickAndUpdateImage(controller.imageUrl);
+                    },
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundImage: controller.imageUrl.isEmpty
+                          ? AssetImage(AppImages.person)
+                          : NetworkImage(controller
+                              .imageUrl.value), // Replace with actual image
+                    ),
+                  ),
                 ),
                 Positioned(
                   bottom: 0,

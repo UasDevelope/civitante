@@ -27,13 +27,14 @@ class HttpService {
 
   static Future<dynamic> get(String endpoint) async {
     final url = Uri.parse('$_baseUrl$endpoint');
-    print('here is url $url');
+    String? uid = AppConstant().userID;
+    print('here is url $url and uid is $uid');
     try {
       final response = await http.get(
         url,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${AppConstant().userID}',
+          'Authorization': 'Bearer ${uid}',
         },
       );
       return _processResponse(response);

@@ -9,6 +9,8 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = LocateController.drawerController;
+    final profileController = LocateController.profileController;
+    profileController.fetchProfileData();
     return Drawer(
       backgroundColor: Colors.white,
       child: Column(
@@ -61,7 +63,7 @@ class CustomDrawer extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                             color: AppColors.textFieldHintColor),
                         AppText(
-                          text: controller.userName.value,
+                          text: profileController.nameController.text,
                           fontSize: 14,
                           fontWeight: FontWeight.w800,
                           color: AppColors.appColor,
