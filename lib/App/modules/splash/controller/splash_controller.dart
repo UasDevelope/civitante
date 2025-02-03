@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:civitante/App/utilse/widgets.dart';
+import 'package:get/get.dart';
+import '../../../utilse/SharedPreferencesHelper.dart';
+import '../../../utilse/constant.dart';
 
 class SplashController extends GetxController {
   @override
@@ -8,19 +11,28 @@ class SplashController extends GetxController {
     super.onInit();
     _navigate();
   }
-  void _navigate() {
-    try {
-      // Using Timer to simulate a delay (3 seconds)
-      Timer(Duration(seconds: 3), () {
-        // After the timer, redirect to the SplashScreen
-        Get.offAllNamed(AppRoutes.started);
 
-        // Log the redirection message
-        log("==============Redirecting to SplashScreen================>");
+  void _navigate() async {
+    try {
+      Timer(const Duration(seconds: 3), () async {
+        final userId = await SharedPreferencesHelper.getUserId();
+        AppConstant().userID = userId;
+        log("User ID: ${userId}  , ${AppConstant().userID}?? 'null'}");
+
+        if (userId != null && userId.isNotEmpty) {
+          // User exists - go to main app
+          Get.offAllNamed(AppRoutes.bottomNav);
+          log("============== Redirecting to Home ================>");
+        } else {
+          // No user - go to onboarding
+          Get.offAllNamed(AppRoutes.started);
+          log("============== Redirecting to Get Started ================>");
+        }
       });
     } catch (e) {
-      // Log the error using debugPrint for better error tracking
-      debugPrint("Error while redirecting to Splash: $e");
+      debugPrint("Splash Navigation Error: \$e");
+      // Fallback to getStarted screen on error
+      Get.offAllNamed(AppRoutes.started);
     }
   }
 }

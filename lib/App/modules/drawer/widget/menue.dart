@@ -1,6 +1,8 @@
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 
+import '../../../utilse/SharedPreferencesHelper.dart';
+
 class MenuItem extends StatelessWidget {
   final String imagePath; // Path for the image
   final String title; // The title of the menu item
@@ -25,10 +27,12 @@ class MenuItem extends StatelessWidget {
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: AppColors.appColor), // Title text
-      onTap: () {
-
+      onTap: () async {
+        if (routeName == '/login') {
+          await SharedPreferencesHelper.clearUserId();
+        }
         Get.toNamed(routeName); // Navigate to the route name when tapped
-    print("routeName${routeName}");
+        print("routeName${routeName}");
       },
     );
   }

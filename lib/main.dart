@@ -19,7 +19,7 @@ class CivitanteApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       getPages: AppPages.pages,
       initialRoute:
-          AppRoutes.login, // Ensure AppRoutes.splash is defined correctly.
+          AppRoutes.splash, // Ensure AppRoutes.splash is defined correctly.
       initialBinding:
           InitialBinding(), // Ensure InitialBinding() is correctly set up.
       defaultTransition:
