@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../Models/Post.dart';
+import '../../shimmer/randomized_shimmer_post.dart';
 import '../controller/home_controller.dart';
 import '../widgets/EngagementRow.dart';
 import '../widgets/engament_row.dart';
@@ -41,7 +42,15 @@ class RandomSizedPostsScreen extends StatelessWidget {
                   // Call your refresh method from the controller
                   await homeController.fetchAndAssignPosts();
                 },
-                child: Obx(() => ListView.builder(
+                child: Obx(() {
+                  if (homeController.isPostLoading.value) {
+                    return RandomizedShimmerPost();
+                  }
+                  //For the empty post
+                  else if (homeController.posts.isEmpty) {
+                    return Container();
+                  } else {
+                    return ListView.builder(
                       shrinkWrap: true,
                       padding: EdgeInsets.zero,
                       itemCount: homeController.posts.length,
@@ -54,7 +63,9 @@ class RandomSizedPostsScreen extends StatelessWidget {
                           child: CustomCard2(post: post),
                         );
                       },
-                    )),
+                    );
+                  }
+                }),
               ),
             ),
           ],

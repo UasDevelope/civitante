@@ -7,7 +7,7 @@ import '../../../utilse/toast_util.dart';
 
 class HomeController extends GetxController {
   RxList<Post> posts = <Post>[].obs;
-
+  RxBool isPostLoading = false.obs;
   RxList<String> Images = [
     "assets/images/img.png",
     "assets/images/img_1.png",
@@ -23,6 +23,7 @@ class HomeController extends GetxController {
 
   Future<void> fetchAndAssignPosts() async {
     try {
+      isPostLoading.value = true;
       final result = await getPosts();
       posts.value = result; // Assign to observable list
       print(posts.value.length);
@@ -31,6 +32,8 @@ class HomeController extends GetxController {
         message: "Failed to load posts: ${e.toString()}",
         backgroundColor: Colors.red,
       );
+    } finally {
+      isPostLoading.value = false;
     }
   }
 
