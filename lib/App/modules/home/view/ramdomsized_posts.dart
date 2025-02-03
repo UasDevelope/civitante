@@ -24,6 +24,7 @@ class RandomSizedPostsScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
+
       body: Padding(
         padding: EdgeInsets.only(left: 15, right: 15),
         child: Column(
@@ -61,11 +62,9 @@ class RandomSizedPostsScreen extends StatelessWidget {
                         final post = homeController.filteredPosts[index];
                         return GestureDetector(
                           onTap: () {
-
                             Get.toNamed(AppRoutes.postDetail,
                                 arguments: {"data": post});
                             // Get.to(() => PostsDetailsScreen());
-
                           },
                           child: CustomCard2(post: post),
                         );
@@ -104,11 +103,11 @@ class CustomCard1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ListTile(
-            leading: CircleAvatar(
-              backgroundImage: post.createdBy.profileImage.isNotEmpty
-                  ? NetworkImage(post.createdBy.profileImage)
-                  : AssetImage(AppImages.person) as ImageProvider,
-            ),
+            // leading: CircleAvatar(
+            //   backgroundImage: post.createdBy.profileImage.isNotEmpty
+            //       ? NetworkImage(post.createdBy.profileImage)
+            //       : AssetImage(AppImages.person) as ImageProvider,
+            // ),
             title: AppText(
               text: post.createdBy.name,
               fontWeight: FontWeight.w500,
@@ -195,109 +194,109 @@ class CustomCard1 extends StatelessWidget {
               ],
             ),
           ),
-          EngagementRow(
-            views: post.views,
-            likes: post.likes.length,
-            comments: post.comments.length,
-          ),
-          if (haveComments && post.comments.isNotEmpty)
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: post.comments.length,
-                itemBuilder: (context, index) {
-                  final comment = post.comments[index];
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Row(
-                        //   crossAxisAlignment: CrossAxisAlignment.start,
-                        //   children: [
-                        //     CircleAvatar(
-                        //       radius: 20,
-                        //       backgroundImage:
-                        //           comment.user.profileImage.isNotEmpty
-                        //               ? NetworkImage(comment.user.profileImage)
-                        //               : AssetImage(AppImages.person)
-                        //                   as ImageProvider,
-                        //     ),
-                        //     SizedBox(width: 8),
-                        //     Expanded(
-                        //       child: Column(
-                        //         crossAxisAlignment: CrossAxisAlignment.start,
-                        //         children: [
-                        //           // Row(
-                        //           //   children: [
-                        //           //     Text(
-                        //           //       comment.user.username,
-                        //           //       // comment.user.username,
-                        //           //       style: GoogleFonts.poppins(
-                        //           //         fontSize: 14,
-                        //           //         fontWeight: FontWeight.w600,
-                        //           //         color: AppColors.appColor,
-                        //           //       ),
-                        //           //     ),
-                        //           //     SizedBox(width: 4),
-                        //           //     Text(
-                        //           //       "@${comment.user.username} · ${comment.timeAgo}",
-                        //           //       style: GoogleFonts.poppins(
-                        //           //         fontSize: 12,
-                        //           //         color: AppColors.Slate_gray,
-                        //           //       ),
-                        //           //     ),
-                        //           //   ],
-                        //           // ),
-                        //           Text(
-                        //             comment.text,
-                        //             style: GoogleFonts.poppins(
-                        //               fontSize: 14,
-                        //               color: AppColors.appColor,
-                        //             ),
-                        //             maxLines: 3,
-                        //             overflow: TextOverflow.ellipsis,
-                        //           ),
-                        //           SizedBox(height: 8),
-                        //           Row(
-                        //             mainAxisAlignment: MainAxisAlignment.end,
-                        //             children: [
-                        //               buildStatItem(
-                        //                 icon: Image.asset(
-                        //                   AppImages.like,
-                        //                   height: 18,
-                        //                   color: AppColors.Slate_gray,
-                        //                 ),
-                        //                 label: comment.likes.toString(),
-                        //                 textColor: AppColors.Slate_gray,
-                        //               ),
-                        //               SizedBox(width: 16),
-                        //               buildStatItem(
-                        //                 icon: Image.asset(
-                        //                   AppImages.chat,
-                        //                   height: 18,
-                        //                   color: AppColors.Slate_gray,
-                        //                 ),
-                        //                 label:
-                        //                     comment.replies.length.toString(),
-                        //                 textColor: AppColors.Slate_gray,
-                        //               ),
-                        //             ],
-                        //           ),
-                        //         ],
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
-                        Divider(height: 24),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
+          // EngagementRow(
+          //   views: post.views,
+          //   likes: post.likes.length,
+          //   comments: post.comments.length,
+          // ),
+          // if (haveComments && post.comments.isNotEmpty)
+          //   Padding(
+          //     padding: EdgeInsets.symmetric(horizontal: 16),
+          //     child: ListView.builder(
+          //       shrinkWrap: true,
+          //       physics: NeverScrollableScrollPhysics(),
+          //       itemCount: post.comments.length,
+          //       itemBuilder: (context, index) {
+          //         final comment = post.comments[index];
+          //         return Padding(
+          //           padding: EdgeInsets.only(bottom: 12),
+          //           child: Column(
+          //             crossAxisAlignment: CrossAxisAlignment.start,
+          //             children: [
+          //               // Row(
+          //               //   crossAxisAlignment: CrossAxisAlignment.start,
+          //               //   children: [
+          //               //     CircleAvatar(
+          //               //       radius: 20,
+          //               //       backgroundImage:
+          //               //           comment.user.profileImage.isNotEmpty
+          //               //               ? NetworkImage(comment.user.profileImage)
+          //               //               : AssetImage(AppImages.person)
+          //               //                   as ImageProvider,
+          //               //     ),
+          //               //     SizedBox(width: 8),
+          //               //     Expanded(
+          //               //       child: Column(
+          //               //         crossAxisAlignment: CrossAxisAlignment.start,
+          //               //         children: [
+          //               //           // Row(
+          //               //           //   children: [
+          //               //           //     Text(
+          //               //           //       comment.user.username,
+          //               //           //       // comment.user.username,
+          //               //           //       style: GoogleFonts.poppins(
+          //               //           //         fontSize: 14,
+          //               //           //         fontWeight: FontWeight.w600,
+          //               //           //         color: AppColors.appColor,
+          //               //           //       ),
+          //               //           //     ),
+          //               //           //     SizedBox(width: 4),
+          //               //           //     Text(
+          //               //           //       "@${comment.user.username} · ${comment.timeAgo}",
+          //               //           //       style: GoogleFonts.poppins(
+          //               //           //         fontSize: 12,
+          //               //           //         color: AppColors.Slate_gray,
+          //               //           //       ),
+          //               //           //     ),
+          //               //           //   ],
+          //               //           // ),
+          //               //           Text(
+          //               //             comment.text,
+          //               //             style: GoogleFonts.poppins(
+          //               //               fontSize: 14,
+          //               //               color: AppColors.appColor,
+          //               //             ),
+          //               //             maxLines: 3,
+          //               //             overflow: TextOverflow.ellipsis,
+          //               //           ),
+          //               //           SizedBox(height: 8),
+          //               //           Row(
+          //               //             mainAxisAlignment: MainAxisAlignment.end,
+          //               //             children: [
+          //               //               buildStatItem(
+          //               //                 icon: Image.asset(
+          //               //                   AppImages.like,
+          //               //                   height: 18,
+          //               //                   color: AppColors.Slate_gray,
+          //               //                 ),
+          //               //                 label: comment.likes.toString(),
+          //               //                 textColor: AppColors.Slate_gray,
+          //               //               ),
+          //               //               SizedBox(width: 16),
+          //               //               buildStatItem(
+          //               //                 icon: Image.asset(
+          //               //                   AppImages.chat,
+          //               //                   height: 18,
+          //               //                   color: AppColors.Slate_gray,
+          //               //                 ),
+          //               //                 label:
+          //               //                     comment.replies.length.toString(),
+          //               //                 textColor: AppColors.Slate_gray,
+          //               //               ),
+          //               //             ],
+          //               //           ),
+          //               //         ],
+          //               //       ),
+          //               //     ),
+          //               //   ],
+          //               // ),
+          //               Divider(height: 24),
+          //             ],
+          //           ),
+          //         );
+          //       },
+          //     ),
+          //   ),
         ],
       ),
     );
@@ -341,11 +340,16 @@ class CustomCard2 extends StatelessWidget {
         children: [
           ListTile(
             leading: CircleAvatar(
-              backgroundImage:
-                  AssetImage(AppImages.person), // Replace with your image
+              backgroundImage: post.createdBy.profileImage.toString().isNotEmpty
+                  ? NetworkImage(post.createdBy.profileImage.toString() ??
+                      AppImages.person)
+                  : AssetImage(AppImages.person.toString() ??
+                      AppImages.person), // Replace with your image
             ),
             title: AppText(
-                text: "Mathews", fontWeight: FontWeight.w500, fontSize: 16),
+                text: post.createdBy.name.toString(),
+                fontWeight: FontWeight.w500,
+                fontSize: 16),
             trailing: PopupMenuButton(
               icon: Image.asset(
                 AppImages.menue,
@@ -420,7 +424,7 @@ class CustomCard2 extends StatelessWidget {
                           height: 15,
                           color: AppColors.white,
                         ),
-                        label: post.likes.length.toString(),
+                        label: post.likesCount.toString(),
                         textColor: AppColors.white,
                       ),
                       const SizedBox(width: 10),
@@ -430,7 +434,7 @@ class CustomCard2 extends StatelessWidget {
                           height: 15,
                           color: AppColors.white,
                         ),
-                        label: "10",
+                        label: post.commentsCount.toString(),
                         // label: post.comments.length.toString(),
                         textColor: AppColors.white,
                       ),
@@ -444,7 +448,7 @@ class CustomCard2 extends StatelessWidget {
           Container(
               height: Get.height * 0.1,
               child: SliderWithLabels(
-                postId: post.id,
+                post: post,
               )),
           haveComments
               ? SizedBox(
@@ -457,7 +461,7 @@ class CustomCard2 extends StatelessWidget {
                     ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: 2,
+                      itemCount: post.comments.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -471,8 +475,17 @@ class CustomCard2 extends StatelessWidget {
                                 children: [
                                   CircleAvatar(
                                     radius: 26,
-                                    backgroundImage:
-                                        AssetImage(AppImages.person),
+                                    backgroundImage: post
+                                            .comments[index].user.profileImage
+                                            .toString()
+                                            .isNotEmpty
+                                        ? NetworkImage(post
+                                                .createdBy.profileImage
+                                                .toString() ??
+                                            AppImages.person)
+                                        : AssetImage(
+                                            AppImages.person.toString() ??
+                                                AppImages.person),
                                   ),
                                   SizedBox(
                                     width: 8,
@@ -488,7 +501,7 @@ class CustomCard2 extends StatelessWidget {
                                       Row(
                                         children: [
                                           Text(
-                                            "kiero_d",
+                                            post.comments[index].user.name,
                                             style: GoogleFonts.poppins(
                                                 fontSize: 16,
                                                 color: AppColors.appColor,
@@ -497,36 +510,36 @@ class CustomCard2 extends StatelessWidget {
                                           SizedBox(
                                             width: 4,
                                           ),
-                                          Text(
-                                            "@kiero_d ·2d",
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 16,
-                                                color: AppColors.Slate_gray,
-                                                fontWeight: FontWeight.w400),
-                                          ),
+                                          // Text(
+                                          //   "@kiero_d ·2d",
+                                          //   style: GoogleFonts.poppins(
+                                          //       fontSize: 16,
+                                          //       color: AppColors.Slate_gray,
+                                          //       fontWeight: FontWeight.w400),
+                                          // ),
                                         ],
                                       ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Replying to",
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 16,
-                                                color: AppColors.Slate_gray,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                          SizedBox(
-                                            width: 4,
-                                          ),
-                                          Text(
-                                            "@karennne",
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 16,
-                                                color: AppColors.blue,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                        ],
-                                      ),
+                                      // Row(
+                                      //   children: [
+                                      //     Text(
+                                      //       "Replying to",
+                                      //       style: GoogleFonts.poppins(
+                                      //           fontSize: 16,
+                                      //           color: AppColors.Slate_gray,
+                                      //           fontWeight: FontWeight.w400),
+                                      //     ),
+                                      //     SizedBox(
+                                      //       width: 4,
+                                      //     ),
+                                      //     Text(
+                                      //       "@karennne",
+                                      //       style: GoogleFonts.poppins(
+                                      //           fontSize: 16,
+                                      //           color: AppColors.blue,
+                                      //           fontWeight: FontWeight.w400),
+                                      //     ),
+                                      //   ],
+                                      // ),
                                       SizedBox(
                                         height: 4,
                                       ),
@@ -536,49 +549,49 @@ class CustomCard2 extends StatelessWidget {
                                           maxLines: 3,
                                           textAlign: TextAlign.start,
                                           overflow: TextOverflow.ellipsis,
-                                          "Interesting Nicola that not one reply or tag on this #UX talent shout out in the 24hrs since your tweet here......🤔",
+                                          "${post.comments[index].text}",
                                           style: GoogleFonts.poppins(
                                               fontSize: 15,
                                               color: AppColors.appColor,
                                               fontWeight: FontWeight.w400),
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment
-                                              .end, // Spread items evenly
-                                          children: [
-                                            // Views Row
-                                            buildStatItem(
-                                              icon: Image.asset(
-                                                AppImages
-                                                    .like, // Replace with AppImages.view
-                                                height: 20,
-                                                color: AppColors
-                                                    .Slate_gray, // Add custom color to the icon
-                                              ),
-                                              label: '25',
-                                              textColor: AppColors.Slate_gray,
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            // Likes Row
-                                            buildStatItem(
-                                              icon: Image.asset(
-                                                AppImages
-                                                    .chat, // Replace with AppImages.view
-                                                height: 28,
-                                                color: AppColors
-                                                    .Slate_gray, // Add custom color to the icon
-                                              ),
-                                              label: '25',
-                                              textColor: AppColors.Slate_gray,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                      // Padding(
+                                      //   padding: const EdgeInsets.all(8.0),
+                                      //   child: Row(
+                                      //     mainAxisAlignment: MainAxisAlignment
+                                      //         .end, // Spread items evenly
+                                      //     children: [
+                                      //       // Views Row
+                                      //       buildStatItem(
+                                      //         icon: Image.asset(
+                                      //           AppImages
+                                      //               .like, // Replace with AppImages.view
+                                      //           height: 20,
+                                      //           color: AppColors
+                                      //               .Slate_gray, // Add custom color to the icon
+                                      //         ),
+                                      //         label: '25',
+                                      //         textColor: AppColors.Slate_gray,
+                                      //       ),
+                                      //       SizedBox(
+                                      //         width: 10,
+                                      //       ),
+                                      //       // Likes Row
+                                      //       buildStatItem(
+                                      //         icon: Image.asset(
+                                      //           AppImages
+                                      //               .chat, // Replace with AppImages.view
+                                      //           height: 28,
+                                      //           color: AppColors
+                                      //               .Slate_gray, // Add custom color to the icon
+                                      //         ),
+                                      //         label: '25',
+                                      //         textColor: AppColors.Slate_gray,
+                                      //       ),
+                                      //     ],
+                                      //   ),
+                                      // ),
                                     ],
                                   )
                                 ],
@@ -594,6 +607,7 @@ class CustomCard2 extends StatelessWidget {
                   ],
                 )
               : SizedBox.shrink(),
+
         ],
       ),
     );
@@ -716,7 +730,7 @@ class CustomCard extends StatelessWidget {
               ),
             ),
           ),
-          Container(height: Get.height * 0.1, child: SliderWithLabels()),
+        //  Container(height: Get.height * 0.1, child: SliderWithLabels()),
           haveComments
               ? SizedBox(
                   height: 8,
