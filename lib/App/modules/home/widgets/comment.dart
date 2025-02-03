@@ -6,10 +6,11 @@ import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import '../../../Models/Post.dart';
 import '../../../shared/app_button.dart';
 import '../../../shared/color.dart';
 
-Future commentsBottomSheet({String postId = ""}) {
+Future commentsBottomSheet({required Post post}) {
   final postDetailController = LocateController.postDetailController;
 
   final TextEditingController commentController = TextEditingController();
@@ -18,7 +19,7 @@ Future commentsBottomSheet({String postId = ""}) {
     "Interesting Nicola that not one reply or tag on this #UX talent shoutout in the last 24 hours since your tweet here......🤔",
     "Maybe I forgot the hashtags. #hiringux #designjobs #sydneyux #sydneydesigners #uxjobs",
   ];
-  log("Post Id is $postId");
+  //log("Post Id is $post.");
 
   return Get.bottomSheet(
     StatefulBuilder(
@@ -116,46 +117,46 @@ Future commentsBottomSheet({String postId = ""}) {
               ),
               Divider(thickness: 1, color: Colors.grey[300]),
               // Add Comment Section
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: postDetailController.commentController,
-                      decoration: InputDecoration(
-                        hintText: "Write a comment...",
-                        hintStyle: TextStyle(color: Colors.grey),
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  InkWell(
-                    onTap: () async {
-                      if (postDetailController
-                          .commentController.text.isNotEmpty) {
-                        await postDetailController.addComments(postId);
-                      }
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Icon(Icons.send, color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     Expanded(
+              //       child: TextFormField(
+              //         controller: postDetailController.commentController,
+              //         decoration: InputDecoration(
+              //           hintText: "Write a comment...",
+              //           hintStyle: TextStyle(color: Colors.grey),
+              //           filled: true,
+              //           fillColor: Colors.grey[200],
+              //           contentPadding: EdgeInsets.symmetric(
+              //             horizontal: 16,
+              //             vertical: 12,
+              //           ),
+              //           border: OutlineInputBorder(
+              //             borderRadius: BorderRadius.circular(20),
+              //             borderSide: BorderSide.none,
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //     SizedBox(width: 8),
+              //     InkWell(
+              //       onTap: () async {
+              //         if (postDetailController
+              //             .commentController.text.isNotEmpty) {
+              //           await postDetailController.addComments(postId);
+              //         }
+              //       },
+              //       child: Container(
+              //         padding: EdgeInsets.all(12),
+              //         decoration: BoxDecoration(
+              //           color: Colors.blue,
+              //           borderRadius: BorderRadius.circular(20),
+              //         ),
+              //         child: Icon(Icons.send, color: Colors.white),
+              //       ),
+              //     ),
+              //   ],
+              // ),
             ],
           ),
         );

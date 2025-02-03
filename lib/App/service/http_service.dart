@@ -27,7 +27,7 @@ class HttpService {
 
   static Future<dynamic> get(String endpoint) async {
     final url = Uri.parse('$_baseUrl$endpoint');
-    print('here is url $url');
+    print('here is url ${AppConstant().userID}');
     try {
       final response = await http.get(
         url,
