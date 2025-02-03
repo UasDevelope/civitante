@@ -7,6 +7,7 @@ import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
+import '../../../utilse/SharedPreferencesHelper.dart';
 import '../../../utilse/toast_util.dart';
 import '../../../utilse/uploadImage.dart';
 
@@ -167,9 +168,8 @@ class AuthController extends GetxController {
         backgroundColor: Colors.green,
       );
       loading.value = false;
-      AppConstant().userID = response['user']['id'];
-      print('User ID: ${AppConstant().userID} ${response['user']['id']}');
-      goToNext(AppRoutes.bottomNav);
+
+      goToNext(AppRoutes.login);
     } else {
       loading.value = false;
       String errorMsg = response['details'] != null
@@ -211,11 +211,6 @@ class AuthController extends GetxController {
       // Handle success response
       if (response != null && response['error'] == null) {
         loading.value = false;
-
-        // Save user ID to AppConstant
-        AppConstant().userID = response['user']['id'];
-
-        print('User ID: ${AppConstant().userID} ${response['user']['id']}');
 
         // Show success message
         ToastUtil.showToast(
@@ -370,7 +365,7 @@ class AuthController extends GetxController {
     var response = await HttpService.post(AppConstant().charge, data);
 
     if (response != null && response['error'] == null) {
-      goToNext(AppRoutes.bottomNav);
+      goToNext(AppRoutes.login);
     } else {
       String errorMsg = response['details'] != null
           ? jsonDecode(response['details'])['message']
@@ -398,8 +393,8 @@ class AuthController extends GetxController {
         backgroundColor: Colors.green,
       );
       loading.value = false;
-      AppConstant().userID = response['user']['id'];
-      print('User ID: ${AppConstant().userID} ${response['user']['id']}');
+
+      await SharedPreferencesHelper.saveUserId(response['user']['id']);
       //upgradeToPro();
       goToNext(AppRoutes.bottomNav);
 
