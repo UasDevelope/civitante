@@ -35,19 +35,27 @@ class RandomSizedPostsScreen extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Obx(() => ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: homeController.posts.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final post = homeController.posts[index];
-                      return GestureDetector(
-                        onTap: () {
-                          Get.to(() => PostsDetailsScreen());
-                        },
-                        child: CustomCard2(post: post),
-                      );
-                    },
-                  )),
+              child: RefreshIndicator(
+                color: AppColors.appColor,
+                onRefresh: () async {
+                  // Call your refresh method from the controller
+                  await homeController.fetchAndAssignPosts();
+                },
+                child: Obx(() => ListView.builder(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      itemCount: homeController.posts.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final post = homeController.posts[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Get.to(() => PostsDetailsScreen());
+                          },
+                          child: CustomCard2(post: post),
+                        );
+                      },
+                    )),
+              ),
             ),
           ],
         ),
