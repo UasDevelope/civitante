@@ -44,7 +44,7 @@ class HomeController extends GetxController {
   Future<List<Post>> getPosts() async {
     try {
       final response = await HttpService.get('/getPosts');
-
+      print(response);
       if (response is List) {
         return parsePosts(response);
       } else if (response is Map && response['error'] != null) {
