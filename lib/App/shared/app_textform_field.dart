@@ -25,7 +25,7 @@ Widget customTextFormField({
   int? maxLines, // Optional maxLines parameter (null for unlimited lines)
 }) {
   return TextFormField(
-    maxLines: maxLines,
+    //  maxLines: maxLines,
     controller: controller,
     keyboardType: keyboardType == TextInputType.text
         ? TextInputType.multiline // Allow multiline input

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:civitante/App/utilse/constant.dart';
 import 'package:http/http.dart' as http;
 
 class HttpService {
@@ -13,6 +14,7 @@ class HttpService {
         url,
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${AppConstant().userID}',
         },
         body: jsonEncode(data),
       );
@@ -27,7 +29,13 @@ class HttpService {
     final url = Uri.parse('$_baseUrl$endpoint');
     print('here is url $url');
     try {
-      final response = await http.get(url);
+      final response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${AppConstant().userID}',
+        },
+      );
       return _processResponse(response);
     } catch (e) {
       return {'error': 'Something went wrong', 'details': e.toString()};
@@ -41,6 +49,7 @@ class HttpService {
         url,
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${AppConstant().userID}',
         },
         body: jsonEncode(data),
       );

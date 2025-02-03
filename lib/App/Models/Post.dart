@@ -1,6 +1,8 @@
 // Post Model (unchanged)
 class Post {
   final String id;
+  final String communityId;
+
   final String title;
   final String description;
   final List<String> tags;
@@ -14,6 +16,7 @@ class Post {
 
   Post({
     required this.id,
+    required this.communityId,
     required this.title,
     required this.description,
     required this.tags,
@@ -29,6 +32,7 @@ class Post {
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
       id: json['_id'] ?? '',
+      communityId: json['communityId'] ?? '',
       title: json['title'] ?? '',
       description: json['description'] ?? '',
       tags: List<String>.from(json['tags'] ?? []),

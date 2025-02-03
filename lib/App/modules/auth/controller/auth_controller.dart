@@ -344,15 +344,15 @@ class AuthController extends GetxController {
     };
 
     var response = await HttpService.post('/login', data);
-
+    print(response);
     if (response != null && response['error'] == null) {
       ToastUtil.showToast(
         message: response['message'] ?? "Login successful!",
         backgroundColor: Colors.green,
       );
       loading.value = false;
-
-      PrefUtil.setString(PrefUtil.userId, response['user']['id']);
+      print('${response['token']}');
+      PrefUtil.setString(PrefUtil.userId, response['token']);
       // await SharedPreferencesHelper.saveUserId(response['user']['id']);
       //upgradeToPro();
       goToNext(AppRoutes.bottomNav);
