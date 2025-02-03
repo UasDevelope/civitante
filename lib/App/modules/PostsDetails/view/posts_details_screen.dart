@@ -1,3 +1,7 @@
+
+import 'dart:developer';
+
+
 import 'package:civitante/App/Models/Post.dart';
 import 'package:civitante/App/modules/PostsDetails/controller/posts_details_controller.dart';
 import 'package:civitante/App/utilse/widgets.dart';
@@ -7,11 +11,15 @@ import '../../home/widgets/home_search.dart';
 import '../../notification/view/notification.dart';
 
 class PostsDetailsScreen extends StatelessWidget {
-  PostsDetailsScreen(Post post, {super.key});
+
+
   PostsDetailsController controller = Get.put(PostsDetailsController());
 
   @override
   Widget build(BuildContext context) {
+    final arguments = Get.arguments as Map<String, dynamic>;
+    final post = arguments["data"] as Post;
+    log("Posts title is ${post.title}");
     return Scaffold(
       backgroundColor: Colors.white, // Change the background color
       appBar: HomeAppbar(
@@ -28,19 +36,20 @@ class PostsDetailsScreen extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 15, right: 15),
+            //   child: HomeSerchField(
+            //     hintText: "Search here...", // Custom hint text
+            //     onChanged: (value) {
+            //       print("Search value: $value"); // Handle text changes
+            //     },
+            //   ),
+            // ),
+            // SizedBox(
+            //   height: Get.height * 0.02,
+            // ),
             Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15),
-              child: HomeSerchField(
-                hintText: "Search here...", // Custom hint text
-                onChanged: (value) {
-                  print("Search value: $value"); // Handle text changes
-                },
-              ),
-            ),
-            SizedBox(
-              height: Get.height * 0.02,
-            ),
-            Padding(
+
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
               child: Card(
                 color: AppColors.white,
@@ -103,7 +112,9 @@ class PostsDetailsScreen extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: CustomCard(
+
+              child: CustomCard2(
+                post: post,
                 haveComments: true,
               ),
             ),

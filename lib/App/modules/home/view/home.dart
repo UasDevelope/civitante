@@ -34,7 +34,7 @@ class HomeScreen extends StatelessWidget {
             child: HomeSerchField(
               hintText: "Search here...", // Custom hint text
               onChanged: (value) {
-                print("Search value: $value"); // Handle text changes
+                homeController.changeSearchValue(value);
               },
             ),
           ),

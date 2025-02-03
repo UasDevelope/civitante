@@ -3,11 +3,11 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/constant.dart';
+import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
-import '../../../utilse/SharedPreferencesHelper.dart';
 import '../../../utilse/toast_util.dart';
 import '../../../utilse/uploadImage.dart';
 
@@ -32,12 +32,18 @@ class AuthController extends GetxController {
       TextEditingController();
 
   GlobalKey<FormState> signupGlobalKey = GlobalKey<FormState>();
+
   HttpService httpService = HttpService();
 
   RxBool loading = false.obs;
+
   RxBool prAccountloading = false.obs;
+
   RxString drivingLicense = RxString("");
+
   RxString passport = RxString("");
+
+  final locationController = LocateController.locationController;
 
   TextEditingController ssNumber = TextEditingController();
   void changeObsecure() {
@@ -92,57 +98,9 @@ class AuthController extends GetxController {
     });
   }
 
-  fetchCurrentLocation() async {
-    try {
-      // Check and request permission
-      LocationPermission permission = await Geolocator.checkPermission();
-      prAccountloading.value = true;
-
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          log("===== Location permissions are denied =====>");
-          prAccountloading.value = false;
-          return;
-        }
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        log("==== Location permission denied forever ====");
-        prAccountloading.value = false;
-        return;
-      }
-
-      // Get current position
-      positioned.value = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-
-      // Get placemark details using latitude and longitude
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        positioned.value!.latitude,
-        positioned.value!.longitude,
-      );
-
-      if (placemarks.isNotEmpty) {
-        Placemark place = placemarks.first;
-        // Extract city, country, province, and street
-        String city = place.locality ?? '';
-        String country = place.country ?? '';
-        String province = place.administrativeArea ?? '';
-        String street = place.street ?? '';
-
-        // Assign to location controller
-        signupLocationController.text = "$street, $city, $province, $country";
-
-        log("Location: ${signupLocationController.text}");
-        prAccountloading.value = false;
-      }
-    } catch (e) {
-      log("Error fetching location: $e");
-    } finally {
-      isLocationFetched.value = false;
-    }
+  void assignLocationValue() {
+    signupLocationController.text =
+        locationController.userLocation["locationName"];
   }
 
 // Register Normal User
@@ -152,8 +110,8 @@ class AuthController extends GetxController {
       "email": signupEmailController.text,
       "name": fullNameController.text,
       "location": {
-        "long": positioned.value!.longitude,
-        "lat": positioned.value!.latitude
+        "long": locationController.longitude.value,
+        "lat": locationController.latitude.value
       },
       "password": signupPasswordController.text,
       "costPoints": 10
@@ -394,7 +352,8 @@ class AuthController extends GetxController {
       );
       loading.value = false;
 
-      await SharedPreferencesHelper.saveUserId(response['user']['id']);
+      PrefUtil.setString(PrefUtil.userId, response['user']['id']);
+      // await SharedPreferencesHelper.saveUserId(response['user']['id']);
       //upgradeToPro();
       goToNext(AppRoutes.bottomNav);
 

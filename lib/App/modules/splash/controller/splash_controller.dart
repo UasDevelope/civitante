@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:get/get.dart';
 import '../../../utilse/SharedPreferencesHelper.dart';
@@ -15,16 +16,15 @@ class SplashController extends GetxController {
   void _navigate() async {
     try {
       Timer(const Duration(seconds: 3), () async {
-        final userId = await SharedPreferencesHelper.getUserId();
+        final userId = PrefUtil.getString(PrefUtil.userId);
+        log("UserId is $userId");
         AppConstant().userID = userId;
-        log("User ID: ${userId}  , ${AppConstant().userID}?? 'null'}");
+        log("User ID: $userId  , ${AppConstant().userID}?? 'null'}");
 
-        if (userId != null && userId.isNotEmpty) {
-          // User exists - go to main app
+        if (userId != "" && userId.isNotEmpty) {
           Get.offAllNamed(AppRoutes.bottomNav);
           log("============== Redirecting to Home ================>");
         } else {
-          // No user - go to onboarding
           Get.offAllNamed(AppRoutes.started);
           log("============== Redirecting to Get Started ================>");
         }

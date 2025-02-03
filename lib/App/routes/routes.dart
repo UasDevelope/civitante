@@ -28,7 +28,7 @@ class AppRoutes {
   static get fqa => "/fqa";
 
   static get post => "/post";
-
+  static get postDetail => "/postDetail";
   static get addCommunity => "/addCommunity";
 
   static get communityDetail => "/communityDetails";

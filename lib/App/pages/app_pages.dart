@@ -1,4 +1,3 @@
-
 import 'package:civitante/App/modules/auth/view/login.dart';
 import 'package:civitante/App/modules/auth/view/pro_account.dart';
 import 'package:civitante/App/modules/auth/view/signup.dart';
@@ -16,6 +15,7 @@ import 'package:civitante/App/utilse/widgets.dart';
 
 import '../modules/AddCommunity/view/addCommunity.dart';
 import '../modules/AllCommunities/view/Allcommunities.dart';
+import '../modules/PostsDetails/view/posts_details_screen.dart';
 import '../modules/fqas/view/fqa.dart';
 import '../modules/started/started.dart';
 import '../testing.dart';
@@ -84,6 +84,10 @@ class AppPages {
         page: () => PostScreen(),
         binding: InitialBinding()),
     GetPage(
+        name: AppRoutes.postDetail,
+        page: () => PostsDetailsScreen(),
+        binding: InitialBinding()),
+    GetPage(
         name: AppRoutes.addCommunity,
         page: () => AddCommunityScreen(),
         binding: InitialBinding()),
@@ -99,6 +103,5 @@ class AppPages {
         name: AppRoutes.Allcommunities,
         page: () => AllCommunitiesScreen(),
         binding: InitialBinding()),
-
   ];
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:civitante/App/modules/PostsDetails/view/posts_details_screen.dart';
 import 'package:civitante/App/modules/home/widgets/filter_menues.dart';
 import 'package:civitante/App/shared/app_text.dart';
@@ -47,19 +49,23 @@ class RandomSizedPostsScreen extends StatelessWidget {
                     return RandomizedShimmerPost();
                   }
                   //For the empty post
-                  else if (homeController.posts.isEmpty) {
+                  else if (homeController.filteredPosts.isEmpty) {
                     return Container();
                   } else {
                     return ListView.builder(
                       shrinkWrap: true,
                       // physics: NeverScrollableScrollPhysics(),
                       padding: EdgeInsets.zero,
-                      itemCount: homeController.posts.length,
+                      itemCount: homeController.filteredPosts.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final post = homeController.posts[index];
+                        final post = homeController.filteredPosts[index];
                         return GestureDetector(
                           onTap: () {
-                            Get.to(() => PostsDetailsScreen(post));
+
+                            Get.toNamed(AppRoutes.postDetail,
+                                arguments: {"data": post});
+                            // Get.to(() => PostsDetailsScreen());
+
                           },
                           child: CustomCard2(post: post),
                         );
@@ -208,82 +214,83 @@ class CustomCard1 extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CircleAvatar(
-                              radius: 20,
-                              backgroundImage:
-                                  comment.user.profileImage.isNotEmpty
-                                      ? NetworkImage(comment.user.profileImage)
-                                      : AssetImage(AppImages.person)
-                                          as ImageProvider,
-                            ),
-                            SizedBox(width: 8),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        comment.user.username,
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.appColor,
-                                        ),
-                                      ),
-                                      SizedBox(width: 4),
-                                      Text(
-                                        "@${comment.user.username} · ${comment.timeAgo}",
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 12,
-                                          color: AppColors.Slate_gray,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    comment.text,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 14,
-                                      color: AppColors.appColor,
-                                    ),
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  SizedBox(height: 8),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      buildStatItem(
-                                        icon: Image.asset(
-                                          AppImages.like,
-                                          height: 18,
-                                          color: AppColors.Slate_gray,
-                                        ),
-                                        label: comment.likes.toString(),
-                                        textColor: AppColors.Slate_gray,
-                                      ),
-                                      SizedBox(width: 16),
-                                      buildStatItem(
-                                        icon: Image.asset(
-                                          AppImages.chat,
-                                          height: 18,
-                                          color: AppColors.Slate_gray,
-                                        ),
-                                        label:
-                                            comment.replies.length.toString(),
-                                        textColor: AppColors.Slate_gray,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   crossAxisAlignment: CrossAxisAlignment.start,
+                        //   children: [
+                        //     CircleAvatar(
+                        //       radius: 20,
+                        //       backgroundImage:
+                        //           comment.user.profileImage.isNotEmpty
+                        //               ? NetworkImage(comment.user.profileImage)
+                        //               : AssetImage(AppImages.person)
+                        //                   as ImageProvider,
+                        //     ),
+                        //     SizedBox(width: 8),
+                        //     Expanded(
+                        //       child: Column(
+                        //         crossAxisAlignment: CrossAxisAlignment.start,
+                        //         children: [
+                        //           // Row(
+                        //           //   children: [
+                        //           //     Text(
+                        //           //       comment.user.username,
+                        //           //       // comment.user.username,
+                        //           //       style: GoogleFonts.poppins(
+                        //           //         fontSize: 14,
+                        //           //         fontWeight: FontWeight.w600,
+                        //           //         color: AppColors.appColor,
+                        //           //       ),
+                        //           //     ),
+                        //           //     SizedBox(width: 4),
+                        //           //     Text(
+                        //           //       "@${comment.user.username} · ${comment.timeAgo}",
+                        //           //       style: GoogleFonts.poppins(
+                        //           //         fontSize: 12,
+                        //           //         color: AppColors.Slate_gray,
+                        //           //       ),
+                        //           //     ),
+                        //           //   ],
+                        //           // ),
+                        //           Text(
+                        //             comment.text,
+                        //             style: GoogleFonts.poppins(
+                        //               fontSize: 14,
+                        //               color: AppColors.appColor,
+                        //             ),
+                        //             maxLines: 3,
+                        //             overflow: TextOverflow.ellipsis,
+                        //           ),
+                        //           SizedBox(height: 8),
+                        //           Row(
+                        //             mainAxisAlignment: MainAxisAlignment.end,
+                        //             children: [
+                        //               buildStatItem(
+                        //                 icon: Image.asset(
+                        //                   AppImages.like,
+                        //                   height: 18,
+                        //                   color: AppColors.Slate_gray,
+                        //                 ),
+                        //                 label: comment.likes.toString(),
+                        //                 textColor: AppColors.Slate_gray,
+                        //               ),
+                        //               SizedBox(width: 16),
+                        //               buildStatItem(
+                        //                 icon: Image.asset(
+                        //                   AppImages.chat,
+                        //                   height: 18,
+                        //                   color: AppColors.Slate_gray,
+                        //                 ),
+                        //                 label:
+                        //                     comment.replies.length.toString(),
+                        //                 textColor: AppColors.Slate_gray,
+                        //               ),
+                        //             ],
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                         Divider(height: 24),
                       ],
                     ),
@@ -338,7 +345,7 @@ class CustomCard2 extends StatelessWidget {
                   AssetImage(AppImages.person), // Replace with your image
             ),
             title: AppText(
-                text: "Sara Mathew", fontWeight: FontWeight.w500, fontSize: 16),
+                text: "Mathews", fontWeight: FontWeight.w500, fontSize: 16),
             trailing: PopupMenuButton(
               icon: Image.asset(
                 AppImages.menue,
@@ -365,7 +372,6 @@ class CustomCard2 extends StatelessWidget {
             height: 200,
             child: Stack(
               children: [
-                // Image Carousel
                 PageView.builder(
                   itemCount: post.mediaUrls.length,
                   itemBuilder: (context, index) {
@@ -388,38 +394,24 @@ class CustomCard2 extends StatelessWidget {
                     );
                   },
                 ),
-
-                // Gradient Overlay
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.7),
-                          Colors.transparent,
-                        ],
-                        stops: const [0.0, 0.5],
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Engagement Icons
                 Positioned(
                   bottom: 8,
                   right: 8,
                   child: Row(
                     children: [
-                      buildStatItem(
-                        icon: Image.asset(
-                          AppImages.view,
-                          height: 20,
-                          color: AppColors.white,
+                      GestureDetector(
+                        onTap: () {
+                          log("Printed image");
+                        },
+                        child: buildStatItem(
+                          icon: Image.asset(
+                            AppImages.view,
+                            height: 20,
+                            color: AppColors.white,
+                          ),
+                          label: post.views.toString(),
+                          textColor: AppColors.white,
                         ),
-                        label: post.views.toString(),
-                        textColor: AppColors.white,
                       ),
                       const SizedBox(width: 10),
                       buildStatItem(
@@ -438,7 +430,8 @@ class CustomCard2 extends StatelessWidget {
                           height: 15,
                           color: AppColors.white,
                         ),
-                        label: post.comments.length.toString(),
+                        label: "10",
+                        // label: post.comments.length.toString(),
                         textColor: AppColors.white,
                       ),
                       const SizedBox(width: 10),
@@ -448,7 +441,11 @@ class CustomCard2 extends StatelessWidget {
               ],
             ),
           ),
-          Container(height: Get.height * 0.1, child: SliderWithLabels()),
+          Container(
+              height: Get.height * 0.1,
+              child: SliderWithLabels(
+                postId: post.id,
+              )),
           haveComments
               ? SizedBox(
                   height: 8,
@@ -604,8 +601,9 @@ class CustomCard2 extends StatelessWidget {
 }
 
 class CustomCard extends StatelessWidget {
-  const CustomCard({super.key, this.haveComments = false});
+  const CustomCard({super.key, this.haveComments = false, this.postImage = ""});
   final bool haveComments;
+  final String postImage;
 
   @override
   Widget build(BuildContext context) {
@@ -652,11 +650,19 @@ class CustomCard extends StatelessWidget {
             height: 200,
             decoration: BoxDecoration(
               // borderRadius: BorderRadius.circular(16),
-              gradient: LinearGradient(
-                colors: [Colors.blue, Colors.red],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              gradient: postImage.isEmpty
+                  ? LinearGradient(
+                      colors: [Colors.blue, Colors.red],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    )
+                  : null,
+              image: postImage.isNotEmpty
+                  ? DecorationImage(
+                      image: NetworkImage(postImage),
+                      fit: BoxFit.cover, // Adjust this as needed
+                    )
+                  : null,
             ),
             child: Align(
               alignment: Alignment.bottomRight,
@@ -669,9 +675,9 @@ class CustomCard extends StatelessWidget {
                     // Views Row
                     buildStatItem(
                       icon: Image.asset(
-                        AppImages.view, // Replace with AppImages.view
+                        AppImages.view,
                         height: 20,
-                        color: AppColors.white, // Add custom color to the icon
+                        color: AppColors.white,
                       ),
                       label: '25',
                       textColor: AppColors.white,
