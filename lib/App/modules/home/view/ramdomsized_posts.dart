@@ -47,15 +47,15 @@ class RandomSizedPostsScreen extends StatelessWidget {
                     return RandomizedShimmerPost();
                   }
                   //For the empty post
-                  else if (homeController.posts.isEmpty) {
+                  else if (homeController.filteredPosts.isEmpty) {
                     return Container();
                   } else {
                     return ListView.builder(
                       shrinkWrap: true,
                       padding: EdgeInsets.zero,
-                      itemCount: homeController.posts.length,
+                      itemCount: homeController.filteredPosts.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final post = homeController.posts[index];
+                        final post = homeController.filteredPosts[index];
                         return GestureDetector(
                           onTap: () {
                             Get.to(() => PostsDetailsScreen());
@@ -337,7 +337,7 @@ class CustomCard2 extends StatelessWidget {
                   AssetImage(AppImages.person), // Replace with your image
             ),
             title: AppText(
-                text: "Sara Mathew", fontWeight: FontWeight.w500, fontSize: 16),
+                text: post.title, fontWeight: FontWeight.w500, fontSize: 16),
             trailing: PopupMenuButton(
               icon: Image.asset(
                 AppImages.menue,
