@@ -44,7 +44,6 @@ class SignupScreen extends StatelessWidget {
                           height: Get.height * 0.01,
                         ),
                         customTextFormField(
-
                             width: Get.width / 2,
                             borderRadius: 25,
                             hintText: AppStrings.enterFullName,
@@ -70,7 +69,7 @@ class SignupScreen extends StatelessWidget {
                               return Validators.locationValidator(value!);
                             },
                             obsecureonTap: () {
-                              controller.fetchCurrentLocation();
+                              controller.assignLocationValue();
                             },
                             width: Get.width / 2,
                             icon: Icons.location_on_outlined,

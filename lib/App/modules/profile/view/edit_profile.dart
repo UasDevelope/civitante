@@ -6,8 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 class EditProfileScreen extends StatelessWidget {
+  const EditProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final controller = LocateController.profileController;
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -19,12 +22,11 @@ class EditProfileScreen extends StatelessWidget {
             Get.back();
           },
         ),
-        title: AppText(text:
-          AppStrings.Edit_Profile,
-          fontWeight:FontWeight.w500,
-          color:AppColors.appColor,
-          fontSize:14
-        ),
+        title: AppText(
+            text: AppStrings.Edit_Profile,
+            fontWeight: FontWeight.w500,
+            color: AppColors.appColor,
+            fontSize: 14),
         centerTitle: true,
       ),
       body: Padding(
@@ -58,54 +60,55 @@ class EditProfileScreen extends StatelessWidget {
             SizedBox(height: 24),
             // Username/Email Text Field
             customTextFormField(
-                validatore: (value) {
-                  return Validators.emailValidator(value!);
-                },
                 width: Get.width / 2,
                 borderRadius: 25,
-                hintText: AppStrings.enterUsernameEmail,
+                hintText: "Enter your name",
                 borderColor: AppColors.textFieldHintColor,
-                controller:TextEditingController()),
+                controller: controller.nameController),
             SizedBox(height: 16),
             // Location Text Field
-            customTextFormField(
-                validatore: (value) {
-                  return Validators.locationValidator(value!);
-                },
-                width: Get.width / 2,
-                borderRadius: 25,
-                hintText: AppStrings.location,
-                borderColor: AppColors.textFieldHintColor,
-                controller: TextEditingController()),
+
+            // customTextFormField(
+            //     validatore: (value) {
+            //       return Validators.locationValidator(value!);
+            //     },
+            //     width: Get.width / 2,
+            //     borderRadius: 25,
+            //     hintText: AppStrings.location,
+            //     borderColor: AppColors.textFieldHintColor,
+            //     controller: TextEditingController()),
             SizedBox(height: 16),
             // Info Text
             Align(
               alignment: Alignment.centerLeft,
-              child: AppText(text:
-                "Points for the deduction if someone wants to follow",
-               color:AppColors.Slate_gray,
-                fontWeight:FontWeight.w400,
-                fontSize:14
-              ),
+              child: AppText(
+                  text: "Points for the deduction if someone wants to follow",
+                  color: AppColors.Slate_gray,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14),
             ),
             SizedBox(height: 20),
             // Follow Cost Text Field
             customTextFormField(
-                validatore: (value) {
-                  return Validators.locationValidator(value!);
-                },
+                keyboardType: TextInputType.number,
+                validatore: (value) {},
                 width: Get.width / 2,
                 borderRadius: 25,
                 hintText: AppStrings.Follow_cost,
                 borderColor: AppColors.textFieldHintColor,
-                controller: TextEditingController()),
+                controller: controller.costController),
             Spacer(),
             // Save Changes Button
             AppButton(
-                textColor:AppColors.white,
-                radius:20,
-                text: AppStrings.Save_Changes, onPressed: (){}),
-            SizedBox(height:20,),
+                textColor: AppColors.white,
+                radius: 20,
+                text: AppStrings.Save_Changes,
+                onPressed: () {
+                  controller.editUserProfile();
+                }),
+            SizedBox(
+              height: 20,
+            ),
           ],
         ),
       ),

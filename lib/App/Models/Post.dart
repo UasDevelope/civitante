@@ -1,4 +1,4 @@
-// Post Model
+// Post Model (unchanged)
 class Post {
   final String id;
   final String title;
@@ -28,23 +28,25 @@ class Post {
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
-      id: json['_id'],
-      title: json['title'],
-      description: json['description'],
-      tags: List<String>.from(json['tags']),
-      category: json['category'],
-      mediaUrls: List<String>.from(json['mediaUrls']),
-      createdBy: CreatedBy.fromJson(json['createdBy']),
-      comments:
-          List<Comment>.from(json['comments'].map((x) => Comment.fromJson(x))),
-      likes: List<String>.from(json['likes']),
-      views: json['views'],
+      id: json['_id'] ?? '',
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
+      tags: List<String>.from(json['tags'] ?? []),
+      category: json['category'] ?? '',
+      mediaUrls: List<String>.from(json['mediaUrls'] ?? []),
+      createdBy: CreatedBy.fromJson(json['createdBy'] ?? {}),
+      comments: (json['comments'] as List<dynamic>?)
+              ?.map((x) => Comment.fromJson(x))
+              .toList() ??
+          [],
+      likes: List<String>.from(json['likes'] ?? []),
+      views: json['views'] ?? 0,
       createdAt: DateTime.parse(json['createdAt']),
     );
   }
 }
 
-// CreatedBy Model
+// CreatedBy Model (unchanged)
 class CreatedBy {
   final String id;
   final String email;
@@ -60,41 +62,43 @@ class CreatedBy {
 
   factory CreatedBy.fromJson(Map<String, dynamic> json) {
     return CreatedBy(
-      id: json['_id'],
-      email: json['email'],
-      name: json['name'],
+      id: json['_id'] ?? '',
+      email: json['email'] ?? '',
+      name: json['name'] ?? '',
       profileImage: json['profileImage'] ?? '',
     );
   }
 }
 
-// Comment Model
+// Comment Model (FIXED)
 class Comment {
   final String id;
   final String text;
   final DateTime createdAt;
-  final CommentUser user;
+  final String userId; // Changed from CommentUser to String
   final List<Comment> replies;
-  final int likes;
+  final List<String> likes;
 
   Comment({
     required this.id,
     required this.text,
     required this.createdAt,
-    required this.user,
+    required this.userId, // Now expects a user ID string
     required this.replies,
     required this.likes,
   });
 
   factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
-      id: json['_id'],
-      text: json['text'],
+      id: json['_id'] ?? '',
+      text: json['text'] ?? '',
       createdAt: DateTime.parse(json['createdAt']),
-      user: CommentUser.fromJson(json['user']),
-      replies:
-          List<Comment>.from(json['replies'].map((x) => Comment.fromJson(x))),
-      likes: json['likes'],
+      userId: json['user'] ?? '', // Directly read the user ID string
+      replies: (json['replies'] as List<dynamic>?)
+              ?.map((x) => Comment.fromJson(x))
+              .toList() ??
+          [],
+      likes: List<String>.from(json['likes'] ?? []),
     );
   }
 
@@ -106,26 +110,5 @@ class Comment {
     if (difference.inHours > 0) return '${difference.inHours}h';
     if (difference.inMinutes > 0) return '${difference.inMinutes}m';
     return 'Just now';
-  }
-}
-
-// Comment User Model
-class CommentUser {
-  final String id;
-  final String username;
-  final String profileImage;
-
-  CommentUser({
-    required this.id,
-    required this.username,
-    this.profileImage = '',
-  });
-
-  factory CommentUser.fromJson(Map<String, dynamic> json) {
-    return CommentUser(
-      id: json['_id'],
-      username: json['username'],
-      profileImage: json['profileImage'] ?? '',
-    );
   }
 }

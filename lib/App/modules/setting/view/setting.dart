@@ -5,6 +5,7 @@ import 'package:civitante/App/shared/app_text.dart';
 import 'package:civitante/App/shared/color.dart';
 import 'package:civitante/App/shared/image.dart';
 import 'package:civitante/App/shared/strings.dart';
+import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -50,7 +51,7 @@ class SettingScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(left: 8.0, bottom: 8, top: 8),
               child: Column(
-                spacing: 10,
+                spacing: Get.height * 0.02,
                 children: [
                   buildDivider(),
                   buildSectionRow(
@@ -80,21 +81,24 @@ class SettingScreen extends StatelessWidget {
                         Get.to(EditProfileScreen());
                       },
                       title: AppStrings.Edit_Profile),
-                  buildDivider(),
-                  buildSectionRow(
-                      onTap: () {
-                        Get.to(BucketScreen());
-                      },
-                      title: AppStrings.Bucket),
-                  buildDivider(),
-                  buildSectionRow(title: AppStrings.Notifications),
+                  // buildDivider(),
+                  // buildSectionRow(
+                  //     onTap: () {
+                  //       Get.to(BucketScreen());
+                  //     },
+                  //     title: AppStrings.Bucket),
+                  // buildDivider(),
+                  // buildSectionRow(title: AppStrings.Notifications),
                 ],
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: _buildSectionHeader(title: AppStrings.General),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 8.0),
+          //   child: _buildSectionHeader(title: AppStrings.General),
+          // ),
+          SizedBox(
+            height: Get.height * 0.08,
           ),
           Card(
             elevation: 1,
@@ -104,25 +108,23 @@ class SettingScreen extends StatelessWidget {
               child: Column(
                 spacing: 10,
                 children: [
-                  buildDivider(),
-                  buildSectionRow(title: AppStrings.Display_and_sound),
-                  buildDivider(),
-                  buildSectionRow(
-                    title: AppStrings.Light_Theme,
-                    trailing: Obx(() => Switch(
-                          value: controller.isLightTheme.value,
-                          onChanged: (value) {
-                            controller.isLightTheme.value =
-                                value; // Update state
-                          },
-                        )),
-                  ),
-                  buildDivider(),
-                  buildSectionRow(title: AppStrings.Two_Factor_Authentication),
-                  buildDivider(),
-                  SizedBox(
-                    height: 15,
-                  ),
+                  // buildDivider(),
+                  // buildSectionRow(title: AppStrings.Display_and_sound),
+                  // buildDivider(),
+                  // buildSectionRow(
+                  //   title: AppStrings.Light_Theme,
+                  //   trailing: Obx(() => Switch(
+                  //         value: controller.isLightTheme.value,
+                  //         onChanged: (value) {
+                  //           controller.isLightTheme.value =
+                  //               value; // Update state
+                  //         },
+                  //       )),
+                  // ),
+                  // buildDivider(),
+                  // buildSectionRow(title: AppStrings.Two_Factor_Authentication),
+                  // buildDivider(),
+
                   buildSectionRow(
                     title: AppStrings.Logout,
                     leading: Padding(
@@ -133,18 +135,18 @@ class SettingScreen extends StatelessWidget {
                         height: 25,
                       ),
                     ),
-                    trailing: AppText(
-                      text: AppStrings.Logout,
-                    ),
+                    // trailing: AppText(
+                    //   text: AppStrings.Logout,
+                    // ),
                     onTap: () {
-                      Get.snackbar("Logout",
-                          "You have been logged out"); // Example action
+                      PrefUtil.remove(PrefUtil.userId);
+                      Get.offAll(AppRoutes.login);
                     },
                   ),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

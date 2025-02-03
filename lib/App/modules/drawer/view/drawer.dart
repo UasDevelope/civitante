@@ -110,13 +110,14 @@ class CustomDrawer extends StatelessWidget {
           ),
           Spacer(),
 
-          // Logout button
-          MenuItem(
-            imageColor: Color(0xffFF3B30),
-            imagePath: AppImages.logout,
-            title: AppStrings.login,
-            routeName: AppRoutes.login,
-          ),
+          /// Logout button
+
+          // MenuItem(
+          //   imageColor: Color(0xffFF3B30),
+          //   imagePath: AppImages.logout,
+          //   title: AppStrings.log_out,
+          //   routeName: AppRoutes.login,
+          // ),
         ],
       ),
     );
