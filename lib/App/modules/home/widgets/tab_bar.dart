@@ -9,40 +9,37 @@ class HomeTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3, // Number of tabs
-      child: Padding(
-        padding: const EdgeInsets.only(right: 8.0, left: 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TabBar(
-              isScrollable: true,
-              tabAlignment: TabAlignment.start,
-              dividerColor: AppColors.white,
-              indicator: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(20), // Rounded corners
-              ),
-              unselectedLabelColor: Colors.black,
-              labelColor: Colors.white, // Text color for the active tab
-              indicatorPadding: EdgeInsets.zero,
-              labelPadding: EdgeInsets.zero, // Remove additional padding
-              tabs: [
-                _buildTab("Pro Accounts", 0),
-                _buildTab("Followed Accounts", 1),
-                _buildTab("Randomized Posts", 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TabBar(
+            isScrollable: true,
+            tabAlignment: TabAlignment.start,
+            dividerColor: AppColors.white,
+            indicator: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(20), // Rounded corners
+            ),
+            unselectedLabelColor: Colors.black,
+            labelColor: Colors.white, // Text color for the active tab
+            indicatorPadding: EdgeInsets.zero,
+            labelPadding: EdgeInsets.zero, // Remove additional padding
+            tabs: [
+              _buildTab("Pro Accounts", 0),
+              _buildTab("Followed Accounts", 1),
+              _buildTab("Randomized Posts", 2),
+            ],
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                RandomSizedPostsScreen(),
+                RandomSizedPostsScreen(),
+                RandomSizedPostsScreen(),
               ],
             ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  RandomSizedPostsScreen(),
-                  RandomSizedPostsScreen(),
-                  RandomSizedPostsScreen(),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

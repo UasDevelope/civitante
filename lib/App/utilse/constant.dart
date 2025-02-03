@@ -34,4 +34,5 @@ class AppConstant {
   String savePaymentMethod = '/savePaymentMethod';
   String charge = '/charge';
   String upgradeToPro = '/upgradeToPro';
+  String getProfile = '/getProfile';
 }

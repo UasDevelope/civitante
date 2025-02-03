@@ -1,4 +1,6 @@
+
 import 'dart:developer';
+
 
 import 'package:civitante/App/Models/Post.dart';
 import 'package:civitante/App/modules/PostsDetails/controller/posts_details_controller.dart';
@@ -9,7 +11,8 @@ import '../../home/widgets/home_search.dart';
 import '../../notification/view/notification.dart';
 
 class PostsDetailsScreen extends StatelessWidget {
-  PostsDetailsScreen({super.key});
+
+
   PostsDetailsController controller = Get.put(PostsDetailsController());
 
   @override
@@ -46,6 +49,7 @@ class PostsDetailsScreen extends StatelessWidget {
             //   height: Get.height * 0.02,
             // ),
             Padding(
+
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
               child: Card(
                 color: AppColors.white,
@@ -108,6 +112,7 @@ class PostsDetailsScreen extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
+
               child: CustomCard2(
                 post: post,
                 haveComments: true,

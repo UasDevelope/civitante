@@ -54,15 +54,18 @@ class RandomSizedPostsScreen extends StatelessWidget {
                   } else {
                     return ListView.builder(
                       shrinkWrap: true,
+                      // physics: NeverScrollableScrollPhysics(),
                       padding: EdgeInsets.zero,
                       itemCount: homeController.filteredPosts.length,
                       itemBuilder: (BuildContext context, int index) {
                         final post = homeController.filteredPosts[index];
                         return GestureDetector(
                           onTap: () {
+
                             Get.toNamed(AppRoutes.postDetail,
                                 arguments: {"data": post});
                             // Get.to(() => PostsDetailsScreen());
+
                           },
                           child: CustomCard2(post: post),
                         );
