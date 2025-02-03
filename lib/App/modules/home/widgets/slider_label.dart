@@ -2,13 +2,14 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
+import '../../../Models/Post.dart';
 import '../../../utilse/widgets.dart';
 import 'comment.dart';
 import 'dots.dart';
 
 class SliderWithLabels extends StatelessWidget {
-  final String postId;
-  const SliderWithLabels({super.key, this.postId = ""});
+  final Post post;
+  const SliderWithLabels({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +55,7 @@ class SliderWithLabels extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  commentsBottomSheet(postId: postId);
+                  commentsBottomSheet(post: post);
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8.0),

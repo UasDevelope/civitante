@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:civitante/App/utilse/widgets.dart';
@@ -34,7 +35,7 @@ class HomeController extends GetxController {
     // If the search value is not empty, filter the posts
     if (searchQuery.isNotEmpty) {
       var filtered = posts.where((post) {
-        log("Post.category is ${post.category}");
+        // log("Post.category is ${post.category}");
         return post.title.toLowerCase().contains(searchQuery) ||
             post.description.toLowerCase().contains(searchQuery);
       }).toList();
@@ -45,14 +46,23 @@ class HomeController extends GetxController {
     }
   }
 
+  /// Fetch and assign posts
   Future<void> fetchAndAssignPosts() async {
     try {
       isPostLoading.value = true;
       final result = await getPosts();
-      posts.value = result;
-      filteredPosts.value = posts;
+
+      // Ensure the fetched list is not null before assigning
+      if (result.isNotEmpty) {
+        posts.assignAll(result);
+        filteredPosts.assignAll(result);
+      } else {
+        log("No posts found");
+        posts.clear();
+        filteredPosts.clear();
+      }
     } catch (e) {
-      log("error is $e");
+      log("Error: $e");
       ToastUtil.showToast(
         message: "Failed to load posts: ${e.toString()}",
         backgroundColor: Colors.red,
@@ -62,22 +72,44 @@ class HomeController extends GetxController {
     }
   }
 
+  /// Parse JSON response into a List of Post objects
   List<Post> parsePosts(List<dynamic> responseList) {
-    return responseList.map<Post>((json) => Post.fromJson(json)).toList();
+    try {
+      return responseList.map<Post>((json) => Post.fromJson(json)).toList();
+    } catch (e) {
+      log("Parsing Error: $e");
+      return [];
+    }
   }
 
+  /// Fetch posts from API
   Future<List<Post>> getPosts() async {
     try {
-      final response = await HttpService.get('/getPosts');
-      print(response);
-      if (response is List) {
-        log("Response is $response");
-        return parsePosts(response);
-      } else if (response is Map && response['error'] != null) {
+      var response = await HttpService.get('/getPosts');
+      log("Raw Response: $response");
+
+      // Decode JSON response if it's a string
+      if (response is String) {
+        response = jsonDecode(response);
+      }
+
+      // Check if the response is a valid map with a `posts` list
+      if (response is Map<String, dynamic> && response.containsKey('posts')) {
+        if (response['posts'] is List) {
+          log("Parsed Posts: ${response['posts']}");
+          return parsePosts(response['posts']);
+        }
+      }
+
+      // Handle error messages from the API
+      if (response is Map<String, dynamic> && response.containsKey('error')) {
         throw Exception(response['error']);
       }
+
+      // If format is incorrect, throw an error
       throw Exception('Invalid response format');
     } catch (e) {
+      log("Fetch Error: $e");
       throw Exception('Failed to fetch posts: ${e.toString()}');
     }
   }
