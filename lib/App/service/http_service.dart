@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:civitante/App/utilse/constant.dart';
 import 'package:http/http.dart' as http;
 
@@ -28,15 +29,15 @@ class HttpService {
   static Future<dynamic> get(String endpoint) async {
     final url = Uri.parse('$_baseUrl$endpoint');
 
-    String? uid = AppConstant().userID;
-   
     try {
+      var header = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${AppConstant().userID}',
+      };
+      log("Header is $header");
       final response = await http.get(
         url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${uid}',
-        },
+        headers: header,
       );
       return _processResponse(response);
     } catch (e) {
@@ -72,6 +73,7 @@ class HttpService {
   }
 
   static dynamic _processResponse(http.Response response) {
+    log("Response code is ${response.statusCode}");
     switch (response.statusCode) {
       case 200:
       case 201:

@@ -7,7 +7,8 @@ class AppColors {
   static Color get textFiledBorderColor => Color.fromRGBO(255, 255, 255, 0.08);
   static Color get blue => Color(0xff2F89FC);
   static Color get moreblue => Color(0xff6552FE);
-  static const Color  Slate_gray = Color(0xff606A81);
+  static const Color Slate_gray = Color(0xff606A81);
+  static const Color greyShade = Color(0xffE8E8EA);
   // In your AppColors class
 
   static Color get light_gray => Color(0xffD9D9D9);

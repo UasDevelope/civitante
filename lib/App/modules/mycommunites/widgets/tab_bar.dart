@@ -1,5 +1,7 @@
+import 'package:civitante/App/controller/controller_locate.dart';
 import 'package:civitante/App/shared/app_text.dart';
 import 'package:civitante/App/shared/color.dart';
+import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 import 'MyCommunitiesList.dart';
 
@@ -8,12 +10,15 @@ class MyCommunitiesTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = LocateController.myCommunities;
+
     return DefaultTabController(
       length: 3, // Number of tabs
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TabBar(
+            controller: controller.tabController,
             isScrollable: true,
             tabAlignment: TabAlignment.start,
             dividerColor: AppColors.white,
@@ -48,30 +53,33 @@ class MyCommunitiesTabBar extends StatelessWidget {
   Widget _buildTab(String text, int index) {
     return Builder(
       builder: (context) {
+        final controller = LocateController.myCommunities;
         final TabController tabController = DefaultTabController.of(context)!;
         return AnimatedBuilder(
           animation: tabController,
           builder: (context, child) {
-            final bool isSelected = tabController.index == index;
-
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              margin:
-                  EdgeInsets.symmetric(horizontal: 16), // Spacing between tabs
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black,
-                  width: 1,
-                ), // Border for each tab
-                borderRadius: BorderRadius.circular(30), // Rounded corners
-              ),
-              child: AppText(
-                text: text,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: isSelected ? Colors.white : AppColors.appColor,
-              ),
-            );
+            return Obx(() {
+              final bool isSelected =
+                  controller.selectedStatus.value == text.toLowerCase();
+              return Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                margin: EdgeInsets.symmetric(
+                    horizontal: 16), // Spacing between tabs
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 1,
+                  ), // Border for each tab
+                  borderRadius: BorderRadius.circular(30), // Rounded corners
+                ),
+                child: AppText(
+                  text: text,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: isSelected ? Colors.white : AppColors.appColor,
+                ),
+              );
+            });
           },
         );
       },

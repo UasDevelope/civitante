@@ -40,5 +40,6 @@ class InitialBinding extends Bindings {
     Get.lazyPut(() => LocationController());
     Get.lazyPut(() => ProfileController());
     Get.lazyPut<FAQController>(() => FAQController());
+    Get.lazyPut<MyCommunityController>(() => MyCommunityController());
   }
 }
