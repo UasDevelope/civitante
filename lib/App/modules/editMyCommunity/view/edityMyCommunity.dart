@@ -1,19 +1,27 @@
+import 'package:civitante/App/Models/my_community_model.dart';
 import 'package:civitante/App/modules/editMyCommunity/controller/editCommunityController.dart';
 import 'package:civitante/App/modules/home/widgets/homeAppbar.dart';
 import 'package:civitante/App/shared/app_button.dart';
 import 'package:civitante/App/shared/color.dart';
 import 'package:civitante/App/shared/image.dart';
 import 'package:civitante/App/shared/strings.dart';
+import 'package:civitante/App/utilse/uploadImage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../shared/app_textform_field.dart';
 import '../../../shared/validators.dart';
 
 class EditCommunityScreen extends StatelessWidget {
+  const EditCommunityScreen();
   @override
   Widget build(BuildContext context) {
+    final data = Get.arguments["data"] as MyCommunityModel;
     final controller = Get.find<EditCommunityController>();
-
+    controller.assignValue(
+        name: data.name,
+        image: data.image,
+        category: data.category,
+        desc: data.description);
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: HomeAppbar(title: AppStrings.Edit_Community),
@@ -27,15 +35,22 @@ class EditCommunityScreen extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: AssetImage(AppImages.person),
-                    ),
+                    Obx(() => GestureDetector(
+                          onTap: () async {
+                            await ImageUtils.pickAndUpdateImage(
+                                controller.imageUrl);
+                          },
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundImage:
+                                NetworkImage(controller.imageUrl.value),
+                          ),
+                        )),
                   ],
                 ),
                 GestureDetector(
                   onTap: () {
-                    // Add image picking logic here
+                    ImageUtils.pickAndUpdateImage(controller.imageUrl);
                   },
                   child: Image.asset(
                     AppImages.camera,
@@ -44,18 +59,18 @@ class EditCommunityScreen extends StatelessWidget {
                 ),
               ],
             ),
-             SizedBox(height: 20),
+            SizedBox(height: 20),
             customTextFormField(
               validatore: (value) {
-                return Validators.emailValidator(value!);
+                // return Validators.emailValidator(value!);
               },
               width: Get.width / 2,
               borderRadius: 25,
               hintText: AppStrings.Enter_Community_Name,
               borderColor: AppColors.textFieldHintColor,
-              controller: TextEditingController(),
+              controller: controller.communityNameController,
             ),
-             SizedBox(height: 15),
+            SizedBox(height: 15),
             Obx(() => DropdownButtonFormField<String>(
                   dropdownColor: AppColors.white,
                   value: controller.selectedCategory.value.isEmpty
@@ -88,17 +103,17 @@ class EditCommunityScreen extends StatelessWidget {
                     controller.selectedCategory.value = value!;
                   },
                 )),
-             SizedBox(height: 15),
+            SizedBox(height: 15),
             customTextFormField(
               maxLines: 4,
               validatore: (value) {
-                return Validators.emailValidator(value!);
+                // return Validators.emailValidator(value!);
               },
               width: Get.width / 2,
               borderRadius: 15,
               hintText: AppStrings.Enter_Description,
               borderColor: AppColors.textFieldHintColor,
-              controller: TextEditingController(),
+              controller: controller.descriptionController,
             ),
             Spacer(),
             AppButton(
@@ -106,15 +121,19 @@ class EditCommunityScreen extends StatelessWidget {
                 textColor: AppColors.white,
                 radius: 15,
                 text: AppStrings.Delete,
-                onPressed: () {}),
-             SizedBox(height: 10),
+                onPressed: () {
+                  controller.deleteCommunity(data.id);
+                }),
+            SizedBox(height: 10),
             AppButton(
                 color: AppColors.appColor,
                 textColor: AppColors.white,
                 radius: 15,
                 text: AppStrings.Save_Changes,
-                onPressed: () {}),
-             SizedBox(height: 50),
+                onPressed: () {
+                  controller.saveChanges(data.id);
+                }),
+            SizedBox(height: 50),
           ],
         ),
       ),

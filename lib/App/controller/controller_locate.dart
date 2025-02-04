@@ -1,4 +1,5 @@
 import 'package:civitante/App/modules/AddCommunity/controller/add_community.dart';
+import 'package:civitante/App/modules/AllCommunities/controller/all_community.dart';
 import 'package:civitante/App/modules/PostsDetails/controller/posts_details_controller.dart';
 import 'package:civitante/App/modules/auth/controller/auth_controller.dart';
 import 'package:civitante/App/modules/bottom/controller/bottom_nave_controller.dart';
@@ -45,4 +46,6 @@ class LocateController {
       Get.find<ProfileController>();
   static MyCommunityController get myCommunities =>
       Get.find<MyCommunityController>();
+  static AllCommunityController get allCommunity =>
+      Get.find<AllCommunityController>();
 }

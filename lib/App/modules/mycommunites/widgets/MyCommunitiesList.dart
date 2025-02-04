@@ -1,3 +1,4 @@
+import 'package:civitante/App/Models/my_community_model.dart';
 import 'package:civitante/App/controller/controller_locate.dart';
 import 'package:civitante/App/modules/communityDetails/view/communityDetails.dart';
 import 'package:civitante/App/modules/shimmer/my_community_model.dart';
@@ -6,6 +7,8 @@ import 'package:civitante/App/shared/image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+
+import '../../loading/empty_data.dart';
 
 class MyCommunitiesList extends StatelessWidget {
   const MyCommunitiesList({super.key});
@@ -19,7 +22,7 @@ class MyCommunitiesList extends StatelessWidget {
         if (controller.communityLoading.value) {
           return MyCommunityShimmer();
         } else if (controller.filteredCommunities.isEmpty) {
-          return Container();
+          return LottieAnimationWidget();
         } else {
           return ListView.builder(
             padding: const EdgeInsets.all(8.0),
@@ -31,6 +34,7 @@ class MyCommunitiesList extends StatelessWidget {
                 imageUrl: data.image,
                 groupName: data.name,
                 memberCount: data.totalMembers.toString(),
+                data: data,
               );
             },
           );
@@ -44,19 +48,22 @@ class MyCommunitiesCard extends StatelessWidget {
   final String imageUrl;
   final String groupName;
   final String memberCount;
-
+  final MyCommunityModel data;
   const MyCommunitiesCard({
     Key? key,
     required this.imageUrl,
     required this.groupName,
     required this.memberCount,
+    required this.data,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(MyCommunityDetail());
+        Get.to(MyCommunityDetail(
+          community: data,
+        ));
       },
       child: Card(
         color: AppColors.white,

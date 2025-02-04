@@ -9,6 +9,8 @@ class MyCommunityShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      shrinkWrap: true,
+      physics: ScrollPhysics(),
       padding: const EdgeInsets.all(8.0),
       itemCount: 6,
       itemBuilder: (context, index) {

@@ -1,3 +1,4 @@
+import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:developer';
 import 'dart:io';
@@ -42,9 +43,11 @@ class ImageUtils {
 
     if (image != null) {
       final XFile? compressImage = await ImageUtils.compressImage(image);
+      CustomLoadingDialog.showCustomLoadingDialog("Uploading image....");
       String imageUrl =
           await uploadImageToFirebase(File(compressImage?.path ?? image.path));
       pathToUpdate.value = imageUrl;
+      CustomLoadingDialog.closeLoadingDialog();
     } else {
       // Show an error message if no image was selected
       print("Please pick an image");

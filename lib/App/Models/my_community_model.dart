@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 class MyCommunityModel {
   final String id;
   final String name;
+  final String description;
   final String image;
   final String category;
   final List<String> interests;
@@ -13,6 +14,7 @@ class MyCommunityModel {
   MyCommunityModel({
     required this.id,
     required this.name,
+    required this.description,
     required this.image,
     required this.category,
     required this.interests,
@@ -21,18 +23,25 @@ class MyCommunityModel {
     required this.createdAt,
   });
 
-  // Factory method to create an instance from JSON
+  // Factory method to create an instance from JSON with null safety
   factory MyCommunityModel.fromJson(Map<String, dynamic> json) {
     return MyCommunityModel(
-      id: json['_id'] ?? '',
-      name: json['name'] ?? '',
-      image: json['image'] ?? '',
-      category: json['category'] ?? '',
-      interests: List<String>.from(json['interests'] ?? []),
-      status: json['status'] ?? '',
-      totalMembers: json['totalMembers'] ?? 0,
-      createdAt:
-          DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
+      id: json['_id']?.toString() ?? '',
+      name: json['name']?.toString() ?? 'Unknown',
+      description:
+          json['description']?.toString() ?? 'No description available',
+      image: json['image']?.toString() ?? '',
+      category: json['category']?.toString() ?? 'Uncategorized',
+      interests: json['interests'] is List
+          ? List<String>.from(json['interests'].map((e) => e.toString()))
+          : [],
+      status: json['status']?.toString() ?? 'Inactive',
+      totalMembers: json['totalMembers'] is int
+          ? json['totalMembers']
+          : int.tryParse(json['totalMembers']?.toString() ?? '0') ?? 0,
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'].toString()) ?? DateTime.now()
+          : DateTime.now(),
     );
   }
 
@@ -41,6 +50,7 @@ class MyCommunityModel {
     return {
       '_id': id,
       'name': name,
+      'description': description,
       'image': image,
       'category': category,
       'interests': interests,
