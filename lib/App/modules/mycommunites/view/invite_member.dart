@@ -8,6 +8,7 @@ class InviteMember extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = LocateController.myCommunities;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: HomeAppbar(
@@ -30,54 +31,65 @@ class InviteMember extends StatelessWidget {
                 physics: ScrollPhysics(),
                 itemBuilder: (itemBuilder, index) {
                   return Obx(() {
-                    return Container(
-                      decoration: BoxDecoration(
+                    final isSelected =
+                        controller.selectedIndexes.contains(index);
+                    return GestureDetector(
+                      onTap: () {
+                        controller
+                            .toggleSelection(index); // Toggle selection on tap
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(color: AppColors.greyShade),
-                          color: Colors.white60),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Row(
-                          children: [
-                            // Group Image
-                            CircleAvatar(
-                              radius: 25,
-                              backgroundImage: NetworkImage("imageUrl"),
-                            ),
-                            const SizedBox(width: 16),
-                            // Group Details
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "groupName",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    '100 pts',
-                                    style: const TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
+                          color: isSelected
+                              ? AppColors.light_gray
+                              : Colors.white60, // Change color if selected
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            children: [
+                              // Group Image
+                              CircleAvatar(
+                                radius: 25,
+                                backgroundImage: NetworkImage("imageUrl"),
                               ),
-                            ),
-                            // Icon
-                            Container(
-                              height: 50,
-                              decoration: BoxDecoration(
-                                  color: AppColors.greyShade,
-                                  border:
-                                      Border.all(color: AppColors.greyShade),
-                                  shape: BoxShape.circle),
-                            )
-                          ],
+                              const SizedBox(width: 16),
+                              // Group Details
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "groupName",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      '100 pts',
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // Icon
+                              Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    color: AppColors.greyShade,
+                                    border:
+                                        Border.all(color: AppColors.greyShade),
+                                    shape: BoxShape.circle),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     );
