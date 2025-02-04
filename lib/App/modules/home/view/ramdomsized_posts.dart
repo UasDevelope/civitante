@@ -448,7 +448,7 @@ class CustomCard2 extends StatelessWidget {
                 post: post,
               )),
           Padding(
-            padding: EdgeInsets.only(top: 0,bottom: 10,left: 10),
+            padding: EdgeInsets.only(top: 0, bottom: 10, left: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
