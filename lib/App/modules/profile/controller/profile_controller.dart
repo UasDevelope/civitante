@@ -32,7 +32,8 @@ class EditProfileController extends GetxController {
           "long": locationController.longitude.value,
           "lat": locationController.latitude.value
         },
-        "costPoints": costController.text
+        "costPoints": costController.text,
+        "profileImage": imageUrl.value
       };
       final response = await HttpService.put("/editProfile/$userId", data);
       log("Response is $response");

@@ -22,6 +22,7 @@ class SplashController extends GetxController {
         log("User ID: $userId  , ${AppConstant().userID}?? 'null'}");
 
         if (userId != "" && userId.isNotEmpty) {
+          LocateController.profileController;
           Get.offAllNamed(AppRoutes.bottomNav);
           log("============== Redirecting to Home ================>");
         } else {

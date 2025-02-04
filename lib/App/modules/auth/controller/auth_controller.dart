@@ -351,8 +351,11 @@ class AuthController extends GetxController {
         backgroundColor: Colors.green,
       );
       loading.value = false;
+      String token = response['token'];
       print('${response['token']}');
-      PrefUtil.setString(PrefUtil.userId, response['token']);
+      PrefUtil.setString(PrefUtil.userId, token);
+      AppConstant().userID = token;
+      LocateController.profileController;
       // await SharedPreferencesHelper.saveUserId(response['user']['id']);
       //upgradeToPro();
       goToNext(AppRoutes.bottomNav);

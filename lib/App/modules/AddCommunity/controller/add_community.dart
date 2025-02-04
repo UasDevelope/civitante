@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 class AddCommunityController extends GetxController {
   final TextEditingController emailController = TextEditingController();
+
   final TextEditingController descriptionController = TextEditingController();
 
   RxString membership = ''.obs;
@@ -36,9 +37,7 @@ class AddCommunityController extends GetxController {
         "interests": [interest.value],
         "description": descriptionController.text,
         "image": communityImage.value,
-        "visibility": {
-          "location": locationController.userLocation["locationName"]
-        },
+        "visibility": {"location": visibility.value},
         "cost": 100,
         "createdBy": userId
       };
