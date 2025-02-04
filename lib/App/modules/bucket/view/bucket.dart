@@ -41,7 +41,8 @@ class BucketScreen extends StatelessWidget {
                   childAspectRatio: 0.8,
                 ),
                 itemBuilder: (context, index) {
-                  return GridItem(imageUrl: AppImages.rectangle);
+                  // return GridItem(imageUrl: AppImages.rectangle);
+                  return Text('Ahmad');
                 },
               )
             ],

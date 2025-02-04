@@ -13,10 +13,10 @@ class BottomNaveController extends GetxController {
   RxList<Widget> get pages => _pages;
   Future<void> changeIndex(int index) async {
     showloading.value = true;
-    Timer(Duration(seconds: 3), () {
+    // Timer(Duration(seconds: 3), () {
       print("Index Changed====>from${[currentIndex]}----to----${[index]}");
       currentIndex.value = index;
       showloading.value = false;
-    });
+   // });
   }
 }
