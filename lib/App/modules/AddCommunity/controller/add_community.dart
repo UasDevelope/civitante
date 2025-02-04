@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:developer';
+import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
 import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/constant.dart';
 import 'package:civitante/App/utilse/toast_util.dart';
@@ -24,12 +25,15 @@ class AddCommunityController extends GetxController {
 
   Future<void> addCommunity() async {
     try {
-      isLoading.value = true;
+      CustomLoadingDialog.showCustomLoadingDialog("Adding Community....");
       final locationController = LocateController.locationController;
 
       String? userId = AppConstant().userID;
+
       log("User id is $userId");
+
       log("Location name is ${locationController.userLocation["locationName"]}");
+
       final data = {
         "name": emailController.text,
         "membership": membership.value.toLowerCase(),
@@ -42,12 +46,13 @@ class AddCommunityController extends GetxController {
         "createdBy": userId
       };
       final response = await HttpService.post("/addCommunity", data);
+      final controller = LocateController.myCommunities;
+      controller.fetchCommunities();
+      CustomLoadingDialog.closeLoadingDialog();
       Get.back();
       log("Response is ${response}");
     } catch (e) {
       ToastUtil.showToast(message: "$e", backgroundColor: Colors.red);
-    } finally {
-      isLoading.value = false;
-    }
+    } finally {}
   }
 }

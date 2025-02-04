@@ -45,11 +45,8 @@ android {
     }
 }
 dependencies {
-    // Play Core for Dynamic Features
-    implementation 'com.google.android.play:core:2.0.3'
-
     // Stripe SDK
-    implementation 'com.stripe:stripe-android:20.34.0'
+//    implementation 'com.stripe:stripe-android:20.34.0'
 }
 
 flutter {

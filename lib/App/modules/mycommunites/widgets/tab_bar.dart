@@ -18,6 +18,7 @@ class MyCommunitiesTabBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TabBar(
+            physics: NeverScrollableScrollPhysics(),
             controller: controller.tabController,
             isScrollable: true,
             tabAlignment: TabAlignment.start,

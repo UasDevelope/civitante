@@ -1,8 +1,11 @@
 import 'dart:developer';
 import 'package:civitante/App/Models/my_community_model.dart';
+import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
 import 'package:civitante/App/service/http_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../Models/member_model.dart';
 
 class MyCommunityController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -13,10 +16,11 @@ class MyCommunityController extends GetxController
   RxString searchedValue = "".obs;
 
   RxList<MyCommunityModel> communities = <MyCommunityModel>[].obs;
-  RxList<MyCommunityModel> filteredCommunities =
-      <MyCommunityModel>[].obs; // New list for filtered communities
+
+  RxList<MyCommunityModel> filteredCommunities = <MyCommunityModel>[].obs;
 
   late TabController tabController;
+
   RxBool communityLoading = false.obs;
 
   void changeSearchValue(String newValue) {
@@ -59,16 +63,72 @@ class MyCommunityController extends GetxController
     }
   }
 
+  ///[Edit Community]
+
   ///[Invite Members]
 
-  RxList<int> selectedIndexes = <int>[].obs;
+  RxList<String> selectedIndexes = <String>[].obs;
 
-  void toggleSelection(int index) {
-    if (selectedIndexes.contains(index)) {
-      selectedIndexes.remove(index);
+  RxString userSearch = "".obs;
+
+  RxBool isUserLoading = false.obs;
+  var nonMembers = <NonMemberUser>[].obs;
+
+  ///[userSearch]
+  void onChangeUserSearch(String value) {
+    userSearch.value = value;
+  }
+
+  ///toggle selection by using toggle selection [selectedIndexes]
+  void toggleSelection(String id) {
+    if (selectedIndexes.contains(id)) {
+      selectedIndexes.remove(id);
     } else {
-      selectedIndexes.add(index);
+      selectedIndexes.add(id);
     }
+  }
+
+  List<NonMemberUser> get filteredUsers {
+    if (userSearch.value.isEmpty) {
+      return nonMembers;
+    }
+    return nonMembers
+        .where((user) =>
+            user.name.toLowerCase().contains(userSearch.value.toLowerCase()))
+        .toList();
+  }
+
+  Future<void> fetchAllUsers(String communityId) async {
+    try {
+      isUserLoading.value = true;
+      final response = await HttpService.get("/getNonMembers/$communityId");
+      if (response != null && response['nonMembers'] != null) {
+        nonMembers.value = (response['nonMembers'] as List<dynamic>)
+            .map((data) => NonMemberUser.fromJson(data as Map<String, dynamic>))
+            .toList();
+      }
+    } catch (e) {
+      log("Error during fetching all use $e");
+    } finally {
+      isUserLoading.value = false;
+    }
+  }
+
+  /// add or remove community by using  [selectedIndexes]
+
+  Future<void> addOrRemoveFromCommunity(String communityId,
+      {String actionType = "add"}) async {
+    try {
+      CustomLoadingDialog.showCustomLoadingDialog(
+          actionType == "add" ? "Inviting user...." : "Removing user....");
+      final response = await HttpService.post("/addOrRemoveUser/$communityId",
+          {"memberIds": selectedIndexes, "action": actionType});
+      log("Response for add and remove community is $response");
+      CustomLoadingDialog.closeLoadingDialog();
+    } catch (e) {
+      CustomLoadingDialog.closeLoadingDialog();
+      log("Error for community is $e");
+    } finally {}
   }
 
   @override

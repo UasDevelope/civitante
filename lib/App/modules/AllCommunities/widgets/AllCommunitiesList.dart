@@ -1,53 +1,44 @@
+import 'package:civitante/App/Models/my_community_model.dart';
+import 'package:civitante/App/controller/controller_locate.dart';
 import 'package:civitante/App/modules/communityDetails/view/communityDetails.dart';
+import 'package:civitante/App/modules/shimmer/my_community_model.dart';
 import 'package:civitante/App/shared/color.dart';
-import 'package:civitante/App/shared/image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class MyCommunitiesList extends StatelessWidget {
-  final List<Map<String, String>> groups = [
-    {
-      'imageUrl': AppImages.person,
-      'groupName': 'Wehner - Mosciski',
-      'memberCount': '200',
-    },
-    {
-      'imageUrl': AppImages.person,
-      'groupName': 'Tremblay and Sons',
-      'memberCount': '200',
-    },
-    {
-      'imageUrl': AppImages.person,
-      'groupName': 'Hagenes Group',
-      'memberCount': '200',
-    },
-    {
-      'imageUrl': AppImages.person,
-      'groupName': 'Wiegand, Littel and Ernser',
-      'memberCount': '200',
-    },
-  ];
-
-  MyCommunitiesList({super.key});
+  const MyCommunitiesList({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = LocateController.allCommunity;
+
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: ListView.builder(
-        padding: const EdgeInsets.all(8.0),
-        itemCount: groups.length,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          final group = groups[index];
-          return MyCommunitiesCard(
-            imageUrl: group['imageUrl']!,
-            groupName: group['groupName']!,
-            memberCount: group['memberCount']!,
+      body: Obx(() {
+        if (controller.isCommunityLoading.value) {
+          return MyCommunityShimmer();
+        }
+        // else if(false){
+        //   return Container();
+        // }
+        else {
+          return ListView.builder(
+            padding: const EdgeInsets.all(8.0),
+            itemCount: controller.filteredCommunities.length,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              final group = controller.filteredCommunities[index];
+              return MyCommunitiesCard(
+                imageUrl: group.image,
+                groupName: group.name,
+                memberCount: group.totalMembers.toString(),
+                data: group,
+              );
+            },
           );
-        },
-      ),
+        }
+      }),
     );
   }
 }
@@ -56,19 +47,23 @@ class MyCommunitiesCard extends StatelessWidget {
   final String imageUrl;
   final String groupName;
   final String memberCount;
+  final MyCommunityModel? data;
 
-  const MyCommunitiesCard({
-    Key? key,
-    required this.imageUrl,
-    required this.groupName,
-    required this.memberCount,
-  }) : super(key: key);
+  const MyCommunitiesCard(
+      {Key? key,
+      required this.imageUrl,
+      required this.groupName,
+      required this.memberCount,
+      this.data})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(MyCommunityDetail());
+        Get.to(MyCommunityDetail(
+          community: data,
+        ));
       },
       child: Card(
         color: AppColors.white,
@@ -78,10 +73,9 @@ class MyCommunitiesCard extends StatelessWidget {
           padding: const EdgeInsets.all(12.0),
           child: Row(
             children: [
-              // Group Image
               CircleAvatar(
                 radius: 25,
-                backgroundImage: AssetImage(imageUrl),
+                backgroundImage: NetworkImage(imageUrl),
               ),
               const SizedBox(width: 16),
               // Group Details

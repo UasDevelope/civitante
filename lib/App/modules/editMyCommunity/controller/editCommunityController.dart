@@ -1,30 +1,79 @@
+import 'dart:developer';
+
+import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
+import 'package:civitante/App/service/http_service.dart';
+import 'package:civitante/App/utilse/toast_util.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 import 'package:get/get.dart';
+
+import '../../../utilse/widgets.dart';
 
 class EditCommunityController extends GetxController {
   // Observable variables
-  var communityName = ''.obs;
-  var description = ''.obs;
+  final TextEditingController communityNameController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+
+  // Reactive variables
   var selectedCategory = ''.obs;
+  var imageUrl = ''.obs;
 
   // List of categories
-  final categories = ['Category 1', 'Category 2', 'Category 3'];
+  final categories = ['Technology', 'Health', 'AI'];
 
-  // Function to delete the community
-  void deleteCommunity() {
-    // Add your delete logic here
-    Get.snackbar('Delete', 'Community deleted successfully!');
+  void assignValue({
+    required String name,
+    required String image,
+    required String category,
+    required String desc,
+  }) {
+    communityNameController.text = name;
+    descriptionController.text = desc;
+    imageUrl.value = image;
+    selectedCategory.value = category;
   }
 
-  // Function to save changes
-  void saveChanges() {
-    // Add your save logic here
-    if (communityName.isEmpty || selectedCategory.isEmpty) {
-      Get.snackbar('Error', 'Please fill all fields');
-      return;
+  void saveChanges(String communityId) async {
+    try {
+      CustomLoadingDialog.showCustomLoadingDialog("Updating community");
+      // Add your save logic here
+      if (communityNameController.text.isEmpty || selectedCategory.isEmpty) {
+        Get.snackbar('Error', 'Please fill all fields');
+        return;
+      }
+      final response = await HttpService.put("/editCommunity/$communityId", {
+        "description": descriptionController.text,
+        "category": selectedCategory.value,
+        "image": imageUrl.value,
+        "name": communityNameController.text
+      });
+      final controller = LocateController.myCommunities;
+      controller.fetchCommunities();
+      CustomLoadingDialog.closeLoadingDialog();
+      Get.back();
+      Get.back();
+      log("Response of edit community is $response");
+    } catch (e) {
+      CustomLoadingDialog.closeLoadingDialog();
+      ToastUtil.showToast(message: "$e");
+    } finally {}
+  }
+
+  Future<void> deleteCommunity(String communityId) async {
+    try {
+      CustomLoadingDialog.showCustomLoadingDialog("Deleting community...");
+      final response = await HttpService.delete("/delCommunity/$communityId");
+      final controller = LocateController.myCommunities;
+      controller.fetchCommunities();
+      CustomLoadingDialog.closeLoadingDialog();
+      Get.back();
+      Get.back();
+      log("Response is $response");
+    } catch (e) {
+      CustomLoadingDialog.closeLoadingDialog();
+      ToastUtil.showToast(message: "$e");
+      log("Error during community delete $e");
     }
-    Get.snackbar('Success', 'Changes saved successfully!');
   }
 }
-

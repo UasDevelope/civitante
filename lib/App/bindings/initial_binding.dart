@@ -1,3 +1,4 @@
+import 'package:civitante/App/modules/AllCommunities/controller/all_community.dart';
 import 'package:civitante/App/modules/auth/controller/auth_controller.dart';
 import 'package:civitante/App/modules/bottom/controller/bottom_nave_controller.dart';
 import 'package:civitante/App/modules/communities/controller/controllerCommunity.dart';
@@ -41,5 +42,6 @@ class InitialBinding extends Bindings {
     Get.lazyPut(() => ProfileController());
     Get.lazyPut<FAQController>(() => FAQController());
     Get.lazyPut<MyCommunityController>(() => MyCommunityController());
+    Get.lazyPut<AllCommunityController>(() => AllCommunityController());
   }
 }

@@ -1,14 +1,19 @@
+import 'package:civitante/App/modules/loading/empty_data.dart';
+import 'package:civitante/App/modules/mycommunites/controller/my_community.dart';
+import 'package:civitante/App/modules/shimmer/my_community_model.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 import '../../home/widgets/homeAppbar.dart';
 import '../../home/widgets/home_search.dart';
 
 class InviteMember extends StatelessWidget {
-  const InviteMember({super.key});
+  final String communityId;
+  const InviteMember({super.key, required this.communityId});
 
   @override
   Widget build(BuildContext context) {
-    final controller = LocateController.myCommunities;
+    final controller = Get.put(MyCommunityController());
+    controller.fetchAllUsers(communityId);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: HomeAppbar(
@@ -23,84 +28,103 @@ class InviteMember extends StatelessWidget {
             children: [
               HomeSerchField(
                 hintText: "Search here...", // Custom hint text
-                onChanged: (value) {},
+                onChanged: (value) {
+                  controller.onChangeUserSearch(value);
+                },
               ),
-              ListView.separated(
-                itemCount: 4,
-                shrinkWrap: true,
-                physics: ScrollPhysics(),
-                itemBuilder: (itemBuilder, index) {
-                  return Obx(() {
-                    final isSelected =
-                        controller.selectedIndexes.contains(index);
-                    return GestureDetector(
-                      onTap: () {
-                        controller
-                            .toggleSelection(index); // Toggle selection on tap
+              Obx(() => controller.selectedIndexes.isNotEmpty
+                  ? IconButton(
+                      onPressed: () {
+                        controller.addOrRemoveFromCommunity(communityId);
                       },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: AppColors.greyShade),
-                          color: isSelected
-                              ? AppColors.light_gray
-                              : Colors.white60, // Change color if selected
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Row(
-                            children: [
-                              // Group Image
-                              CircleAvatar(
-                                radius: 25,
-                                backgroundImage: NetworkImage("imageUrl"),
-                              ),
-                              const SizedBox(width: 16),
-                              // Group Details
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "groupName",
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      '100 pts',
-                                      style: const TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ],
+                      icon: Icon(Icons.add))
+                  : Container()),
+              Obx(() {
+                if (controller.isUserLoading.value) {
+                  return MyCommunityShimmer();
+                } else if (controller.filteredUsers.isEmpty) {
+                  return LottieAnimationWidget();
+                }
+
+                return ListView.separated(
+                  itemCount: controller.filteredUsers.length,
+                  shrinkWrap: true,
+                  physics: ScrollPhysics(),
+                  itemBuilder: (itemBuilder, index) {
+                    final data = controller.filteredUsers[index];
+                    return Obx(() {
+                      final isSelected =
+                          controller.selectedIndexes.contains(data.id);
+                      return GestureDetector(
+                        onTap: () {
+                          controller.toggleSelection(data.id);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: AppColors.greyShade),
+                            color: isSelected
+                                ? AppColors.light_gray
+                                : Colors.white60, // Change color if selected
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Row(
+                              children: [
+                                // Group Image
+                                CircleAvatar(
+                                  radius: 25,
+                                  backgroundImage:
+                                      NetworkImage(data.profileImage),
                                 ),
-                              ),
-                              // Icon
-                              Container(
-                                height: 50,
-                                decoration: BoxDecoration(
-                                    color: AppColors.greyShade,
-                                    border:
-                                        Border.all(color: AppColors.greyShade),
-                                    shape: BoxShape.circle),
-                              )
-                            ],
+                                const SizedBox(width: 16),
+                                // Group Details
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        data.name,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        '${data.costPoints} pts',
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // Icon
+                                Container(
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      color: AppColors.greyShade,
+                                      border: Border.all(
+                                          color: AppColors.greyShade),
+                                      shape: BoxShape.circle),
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
+                      );
+                    });
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return SizedBox(
+                      height: Get.height * 0.02,
                     );
-                  });
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(
-                    height: Get.height * 0.02,
-                  );
-                },
-              )
+                  },
+                );
+              })
             ],
           ),
         ),

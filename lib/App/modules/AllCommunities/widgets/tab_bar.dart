@@ -1,6 +1,8 @@
+import 'package:civitante/App/controller/controller_locate.dart';
 import 'package:civitante/App/shared/app_text.dart';
 import 'package:civitante/App/shared/color.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'AllCommunitiesList.dart';
 
 class AllCommunitiesTabBar extends StatelessWidget {
@@ -8,12 +10,15 @@ class AllCommunitiesTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = LocateController.allCommunity;
     return DefaultTabController(
-      length: 5, // Number of tabs
+      length: 3,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TabBar(
+            physics: NeverScrollableScrollPhysics(),
+            controller: controller.tabController,
             isScrollable: true,
             tabAlignment: TabAlignment.start,
             dividerColor: AppColors.white,
@@ -39,8 +44,8 @@ class AllCommunitiesTabBar extends StatelessWidget {
                 MyCommunitiesList(),
                 MyCommunitiesList(),
                 MyCommunitiesList(),
-                MyCommunitiesList(),
-                MyCommunitiesList(),
+                // MyCommunitiesList(),
+                // MyCommunitiesList(),
               ],
             ),
           ),
@@ -52,12 +57,12 @@ class AllCommunitiesTabBar extends StatelessWidget {
   Widget _buildTab(String text, int index) {
     return Builder(
       builder: (context) {
+        final controller = LocateController.allCommunity;
         final TabController tabController = DefaultTabController.of(context)!;
         return AnimatedBuilder(
           animation: tabController,
           builder: (context, child) {
             final bool isSelected = tabController.index == index;
-
             return Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               margin:
