@@ -2,6 +2,7 @@ import 'package:civitante/App/Models/my_community_model.dart';
 import 'package:civitante/App/modules/CommunityPost/view/community_post_screen.dart';
 import 'package:civitante/App/modules/editMyCommunity/view/edityMyCommunity.dart';
 import 'package:civitante/App/modules/mycommunites/view/invite_member.dart';
+import 'package:civitante/App/modules/mycommunites/view/members_in_community.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utilse/widgets.dart';
@@ -60,12 +61,18 @@ class MyCommunityDetail extends StatelessWidget {
                                           fontSize: 16,
                                           color: AppColors.appColor),
                                       const SizedBox(height: 4),
-                                      AppText(
-                                          text:
-                                              '${community!.totalMembers} members',
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.moreblue,
-                                          fontSize: 12),
+                                      InkWell(
+                                        onTap: () {
+                                          Get.to(MembersInCommunity(
+                                              communityId: community!.id));
+                                        },
+                                        child: AppText(
+                                            text:
+                                                '${community!.totalMembers} members',
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.moreblue,
+                                            fontSize: 12),
+                                      ),
                                     ],
                                   ),
                                 ),
