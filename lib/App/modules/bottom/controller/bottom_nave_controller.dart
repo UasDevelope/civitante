@@ -14,9 +14,9 @@ class BottomNaveController extends GetxController {
   Future<void> changeIndex(int index) async {
     showloading.value = true;
     // Timer(Duration(seconds: 3), () {
-      print("Index Changed====>from${[currentIndex]}----to----${[index]}");
-      currentIndex.value = index;
-      showloading.value = false;
-   // });
+    print("Index Changed====>from${[currentIndex]}----to----${[index]}");
+    currentIndex.value = index;
+    showloading.value = false;
+    // });
   }
 }
