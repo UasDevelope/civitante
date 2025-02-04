@@ -1,6 +1,4 @@
 import 'dart:developer';
-
-import 'package:civitante/App/modules/PostsDetails/view/posts_details_screen.dart';
 import 'package:civitante/App/modules/home/widgets/filter_menues.dart';
 import 'package:civitante/App/shared/app_text.dart';
 import 'package:civitante/App/shared/color.dart';
@@ -9,22 +7,21 @@ import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../../../Models/Post.dart';
 import '../../shimmer/randomized_shimmer_post.dart';
 import '../controller/home_controller.dart';
-import '../widgets/EngagementRow.dart';
 import '../widgets/engament_row.dart';
 import '../widgets/slider_label.dart';
 
 class RandomSizedPostsScreen extends StatelessWidget {
+  const RandomSizedPostsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final homeController = Get.find<HomeController>();
 
     return Scaffold(
       backgroundColor: Colors.white,
-
       body: Padding(
         padding: EdgeInsets.only(left: 15, right: 15),
         child: Column(
@@ -446,10 +443,42 @@ class CustomCard2 extends StatelessWidget {
             ),
           ),
           Container(
-              height: Get.height * 0.1,
+              height: Get.height * 0.07,
               child: SliderWithLabels(
                 post: post,
               )),
+          Padding(
+            padding: EdgeInsets.only(top: 0,bottom: 10,left: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppText(
+                  text: post.title,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                SizedBox(height: 8),
+                AppText(
+                  text: post.description,
+                  fontSize: 16,
+                  color: AppColors.Slate_gray,
+                ),
+                SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  children: post.tags
+                      .map((tag) => Chip(
+                            label: AppText(
+                              text: "#$tag",
+                              color: AppColors.appColor,
+                            ),
+                            backgroundColor: AppColors.light_gray,
+                          ))
+                      .toList(),
+                ),
+              ],
+            ),
+          ),
           haveComments
               ? SizedBox(
                   height: 8,
@@ -607,7 +636,6 @@ class CustomCard2 extends StatelessWidget {
                   ],
                 )
               : SizedBox.shrink(),
-
         ],
       ),
     );
@@ -730,7 +758,7 @@ class CustomCard extends StatelessWidget {
               ),
             ),
           ),
-        //  Container(height: Get.height * 0.1, child: SliderWithLabels()),
+          //  Container(height: Get.height * 0.1, child: SliderWithLabels()),
           haveComments
               ? SizedBox(
                   height: 8,

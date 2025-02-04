@@ -146,7 +146,7 @@ class ProfileScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  StatItem(title: 'Posts', value: controller.totalPosts.value),
+                  StatItem(title: 'Posts', value: controller.posts.length),
                   VerticalDivider(
                     color: Colors.grey,
                     thickness: 1,
