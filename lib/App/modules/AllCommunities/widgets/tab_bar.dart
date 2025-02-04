@@ -29,8 +29,8 @@ class AllCommunitiesTabBar extends StatelessWidget {
               _buildTab("New", 0),
               _buildTab("Top communities", 1),
               _buildTab("Joined", 2),
-              _buildTab("Trending", 3),
-              _buildTab("Dev Recommendations", 4),
+              // _buildTab("Trending", 3),
+              // _buildTab("Dev Recommendations", 4),
             ],
           ),
           Expanded(

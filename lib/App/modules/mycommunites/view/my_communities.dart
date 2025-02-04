@@ -9,12 +9,12 @@ import '../widgets/addCommunityButton.dart';
 import '../widgets/tab_bar.dart';
 
 class MyCommunitiesScreen extends StatelessWidget {
-  final MyCommunityController controller = Get.put(MyCommunityController());
-
   MyCommunitiesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = LocateController.myCommunities;
+    controller.fetchCommunities();
     return Scaffold(
         backgroundColor: Colors.white, // Change the background color
         appBar: HomeAppbar(
@@ -34,11 +34,11 @@ class MyCommunitiesScreen extends StatelessWidget {
                       height: controller.isPosting.value == true ? 20 : 20,
                     ),
                     Padding(
-                      padding:EdgeInsets.only(left: 15, right: 15),
+                      padding: EdgeInsets.only(left: 15, right: 15),
                       child: HomeSerchField(
                         hintText: "Search here...", // Custom hint text
                         onChanged: (value) {
-                          print("Search value: $value"); // Handle text changes
+                          controller.changeSearchValue(value);
                         },
                       ),
                     ),

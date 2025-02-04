@@ -1,4 +1,6 @@
+import 'package:civitante/App/controller/controller_locate.dart';
 import 'package:civitante/App/modules/communityDetails/view/communityDetails.dart';
+import 'package:civitante/App/modules/shimmer/my_community_model.dart';
 import 'package:civitante/App/shared/color.dart';
 import 'package:civitante/App/shared/image.dart';
 import 'package:flutter/material.dart';
@@ -6,48 +8,34 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 class MyCommunitiesList extends StatelessWidget {
-  final List<Map<String, String>> groups = [
-    {
-      'imageUrl': AppImages.person,
-      'groupName': 'Wehner - Mosciski',
-      'memberCount': '200',
-    },
-    {
-      'imageUrl': AppImages.person,
-      'groupName': 'Tremblay and Sons',
-      'memberCount': '200',
-    },
-    {
-      'imageUrl': AppImages.person,
-      'groupName': 'Hagenes Group',
-      'memberCount': '200',
-    },
-    {
-      'imageUrl': AppImages.person,
-      'groupName': 'Wiegand, Littel and Ernser',
-      'memberCount': '200',
-    },
-  ];
-
-  MyCommunitiesList({super.key});
+  const MyCommunitiesList({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = LocateController.myCommunities;
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: ListView.builder(
-        padding: const EdgeInsets.all(8.0),
-        itemCount: groups.length,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          final group = groups[index];
-          return MyCommunitiesCard(
-            imageUrl: group['imageUrl']!,
-            groupName: group['groupName']!,
-            memberCount: group['memberCount']!,
+      body: Obx(() {
+        if (controller.communityLoading.value) {
+          return MyCommunityShimmer();
+        } else if (controller.filteredCommunities.isEmpty) {
+          return Container();
+        } else {
+          return ListView.builder(
+            padding: const EdgeInsets.all(8.0),
+            itemCount: controller.filteredCommunities.length,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              final data = controller.filteredCommunities[index];
+              return MyCommunitiesCard(
+                imageUrl: data.image,
+                groupName: data.name,
+                memberCount: data.totalMembers.toString(),
+              );
+            },
           );
-        },
-      ),
+        }
+      }),
     );
   }
 }
@@ -81,7 +69,7 @@ class MyCommunitiesCard extends StatelessWidget {
               // Group Image
               CircleAvatar(
                 radius: 25,
-                backgroundImage: AssetImage(imageUrl),
+                backgroundImage: NetworkImage(imageUrl),
               ),
               const SizedBox(width: 16),
               // Group Details

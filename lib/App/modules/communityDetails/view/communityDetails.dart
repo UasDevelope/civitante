@@ -1,5 +1,6 @@
 import 'package:civitante/App/modules/CommunityPost/view/community_post_screen.dart';
 import 'package:civitante/App/modules/editMyCommunity/view/edityMyCommunity.dart';
+import 'package:civitante/App/modules/mycommunites/view/invite_member.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utilse/widgets.dart';
@@ -30,7 +31,9 @@ class MyCommunityDetail extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Profile Avatar and Actions
-                    Text(controller.isPosting.value.toString(),),
+                    Text(
+                      controller.isPosting.value.toString(),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,7 +90,9 @@ class MyCommunityDetail extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            buildActionCommunityButton(AppImages.addCircle, () {}),
+                            buildActionCommunityButton(AppImages.addCircle, () {
+                              Get.to(InviteMember());
+                            }),
                             buildActionCommunityButton(AppImages.eidt, () {
                               Get.toNamed(AppRoutes.editMycommunity);
                             }),

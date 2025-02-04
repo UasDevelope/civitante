@@ -42,6 +42,7 @@ class AddCommunityController extends GetxController {
         "createdBy": userId
       };
       final response = await HttpService.post("/addCommunity", data);
+      Get.back();
       log("Response is ${response}");
     } catch (e) {
       ToastUtil.showToast(message: "$e", backgroundColor: Colors.red);
