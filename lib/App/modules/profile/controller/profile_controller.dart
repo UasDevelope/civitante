@@ -1,31 +1,88 @@
 import 'dart:developer';
-
 import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/toast_util.dart';
-import 'package:civitante/App/utilse/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../Models/Post.dart';
+import '../../../controller/controller_locate.dart';
 
-class EditProfileController extends GetxController {
+class ProfileController extends GetxController {
+  // Reactive state
+  final RxList<Post> posts = <Post>[].obs;
+  final RxString imageUrl = ''.obs;
+  final RxString name = ''.obs;
+  final RxInt totalPosts = 0.obs;
+  final RxInt followers = 0.obs;
+  final RxInt following = 0.obs;
+  final RxBool isLoading = false.obs;
+  final RxBool isError = false.obs;
+
+  // Form controllers
   final TextEditingController nameController = TextEditingController();
   final TextEditingController costController = TextEditingController();
-  RxString imageUrl = "".obs;
-  String userId = PrefUtil.getString(PrefUtil.userId);
-  RxBool isLoading = false.obs;
+
+  // Dependencies
+  final String userId = PrefUtil.getString(PrefUtil.userId);
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadInitialData();
+  }
+
+  Future<void> _loadInitialData() async {
+    await Future.wait([
+      fetchProfileData(),
+      fetchAndAssignPosts(),
+    ]);
+  }
+
+  Future<void> fetchAndAssignPosts() async {
+    try {
+      isLoading.value = true;
+      isError.value = false;
+
+      final response = await await HttpService.get('/getProfile');
+      final postsData = response['posts'] as List<dynamic>? ?? [];
+
+      posts.assignAll(_parsePosts(postsData));
+    } catch (e, stackTrace) {
+      isError.value = true;
+      _handleError('Failed to load posts', e, stackTrace);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   Future<void> fetchProfileData() async {
     try {
-      final response = await HttpService.get("/getProfile");
-      nameController.text = response["name"];
-      log("Response is $response");
-    } catch (e) {
-      ToastUtil.showToast(message: "$e");
-    } finally {}
+      final response = await await HttpService.get('/getProfile');
+
+      name.value = response['name']?.toString() ?? '';
+      totalPosts.value = response['totalPosts'] as int? ?? 0;
+      followers.value = response['followers'] as int? ?? 0;
+      following.value = response['following'] as int? ?? 0;
+      imageUrl.value = response['profileImage']?.toString() ?? '';
+    } catch (e, stackTrace) {
+      _handleError('Failed to load profile', e, stackTrace);
+    }
+  }
+
+  List<Post> _parsePosts(List<dynamic> responseList) {
+    try {
+      return responseList.map<Post>((json) => Post.fromJson(json)).toList();
+    } catch (e, stackTrace) {
+      log('Post parsing error', error: e, stackTrace: stackTrace);
+      throw const FormatException('Failed to parse posts');
+    }
   }
 
   Future<void> editUserProfile() async {
     try {
       isLoading.value = true;
       final locationController = LocateController.locationController;
+
       final data = {
         "name": nameController.text,
         "location": {
@@ -34,20 +91,23 @@ class EditProfileController extends GetxController {
         },
         "costPoints": costController.text
       };
-      final response = await HttpService.put("/editProfile/$userId", data);
-      log("Response is $response");
-      fetchProfileData();
-    } catch (e) {
-      log("The error during editProfile");
+
+      await await HttpService.put("/editProfile/$userId", data);
+      await Future.wait([fetchProfileData(), fetchAndAssignPosts()]);
+
+      ToastUtil.showToast(message: 'Profile updated successfully');
+    } catch (e, stackTrace) {
+      _handleError('Profile update failed', e, stackTrace);
     } finally {
       isLoading.value = false;
     }
   }
 
-  @override
-  void onInit() {
-    // TODO: implement onInit
-    super.onInit();
-    fetchProfileData();
+  void _handleError(String message, dynamic error, StackTrace stackTrace) {
+    log(message, error: error, stackTrace: stackTrace);
+    ToastUtil.showToast(
+      message: '$message: ${error.toString()}',
+      backgroundColor: Colors.red,
+    );
   }
 }

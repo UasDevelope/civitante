@@ -17,8 +17,10 @@ class StatsRow extends StatelessWidget {
               title: "Posts",
               value: "430",
               percentage: "10.2%",
-              percentageColor: Colors.blue, voidCallback: () {
-                Get.to(StatisticsScreen());
+              percentageColor: Colors.blue,
+
+              voidCallback: () {
+              //  Get.to(StatisticsScreen());
             },
             ),
           ),

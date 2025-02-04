@@ -41,6 +41,6 @@ class LocateController {
       Get.find<AddCommunityController>();
   static LocationController get locationController =>
       Get.find<LocationController>();
-  static EditProfileController get profileController =>
-      Get.find<EditProfileController>();
+  static ProfileController get profileController =>
+      Get.find<ProfileController>();
 }

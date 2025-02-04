@@ -8,29 +8,17 @@ import 'package:civitante/App/shared/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../Models/Post.dart';
 import '../../home/widgets/engament_row.dart';
+import '../controller/profile_controller.dart';
 import '../widget/status_row.dart';
 import '../widget/warning.dart';
 
-class ProfileController extends GetxController {
-  // Example dynamic data
-  var posts = 1532.obs;
-  var followers = 4310.obs;
-  var following = 1310.obs;
-
-  // List of images for the grid
-  var images = [
-    AppImages.arrowup,
-    AppImages.arrowup,
-    AppImages.arrowup,
-  ].obs;
-}
-
 class ProfileScreen extends StatelessWidget {
-  final ProfileController controller = Get.put(ProfileController());
-
   @override
   Widget build(BuildContext context) {
+    final ProfileController controller = Get.put(ProfileController());
+
     return Scaffold(
       drawer: CustomDrawer(),
       appBar: HomeAppbar(
@@ -38,12 +26,50 @@ class ProfileScreen extends StatelessWidget {
         rightIcon: AppImages.notification,
       ),
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Warning(),
-            Padding(
+      body: Obx(() => RefreshIndicator(
+            onRefresh: () async => await controller.fetchAndAssignPosts(),
+            child: SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: _buildContent(controller),
+            ),
+          )),
+    );
+  }
+
+  Widget _buildContent(ProfileController controller) {
+    // if (controller.isLoading.value) {
+    //   return SizedBox(
+    //     height: Get.height * 0.8,
+    //     child: Center(child: CircularProgressIndicator()),
+    //   );
+    // }
+
+    if (controller.isError.value) {
+      return SizedBox(
+        height: Get.height * 0.8,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AppText(text: 'Failed to load profile'),
+              SizedBox(height: 16),
+              AppButton(
+                text: 'Retry',
+                onPressed: controller.fetchAndAssignPosts,
+                width: 100,
+              )
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Warning and other existing widgets
+        //   Warning(),
+        Obx(() => Padding(
               padding: EdgeInsets.only(left: 16.0, right: 16, top: 16),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -63,126 +89,107 @@ class ProfileScreen extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(top: 8.0),
                               child: AppText(
-                                  text: "Sara Mathew",
+                                  text: controller.name.value,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 16,
                                   color: AppColors.appColor),
                             ),
-                            Image.asset(
-                              AppImages.share,
-                              height: 25,
-                              width: 25,
-                            )
+                            // Image.asset(
+                            //   AppImages.share,
+                            //   height: 25,
+                            //   width: 25,
+                            // )
                           ],
                         ),
                         SizedBox(height: 4),
                         SizedBox(height: 8),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Colors.transparent, // Transparent background
-                            shadowColor: Colors.transparent, // Remove shadow
-                            side: BorderSide(
-                                color: AppColors.textFieldHintColor,
-                                width: 0.4), // Black border
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(20), // Rounded corners
-                            ),
-                          ),
-                          onPressed: () {
-                            // Follow action
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: AppText(
-                                text: '+ Follow',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                                color: AppColors.Slate_gray),
-                          ),
-                        ),
+                        // ElevatedButton(
+                        //   style: ElevatedButton.styleFrom(
+                        //     backgroundColor: Colors.transparent,
+                        //     shadowColor: Colors.transparent,
+                        //     side: BorderSide(
+                        //         color: AppColors.textFieldHintColor,
+                        //         width: 0.4),
+                        //     shape: RoundedRectangleBorder(
+                        //       borderRadius: BorderRadius.circular(20),
+                        //     ),
+                        //   ),
+                        //   onPressed: () {},
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.all(8.0),
+                        //     child: AppText(
+                        //         text: '+ Follow',
+                        //         fontWeight: FontWeight.w600,
+                        //         fontSize: 14,
+                        //         color: AppColors.Slate_gray),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
                 ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16, top: 5),
+            )),
+
+        // Obx(() => Padding(
+        //   padding: const EdgeInsets.only(left: 16, top: 5),
+        //   child: Row(
+        //     children: [
+        //       Image.asset(AppImages.location, height: 20),
+        //       AppText(text: controller.location.value)
+        //     ],
+        //   ),
+        // )),
+
+        Obx(() => Container(
+              height: 60,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Image.asset(
-                    AppImages.location,
-                    height: 20,
+                  StatItem(title: 'Posts', value: controller.totalPosts.value),
+                  VerticalDivider(
+                    color: Colors.grey,
+                    thickness: 1,
+                    width: 20,
+                    indent: 10,
+                    endIndent: 10,
                   ),
-                  AppText(text: "Bangalore, India")
+                  StatItem(
+                      title: 'Followers', value: controller.followers.value),
+                  VerticalDivider(
+                    color: Colors.grey,
+                    thickness: 1,
+                    width: 20,
+                    indent: 10,
+                    endIndent: 10,
+                  ),
+                  StatItem(
+                      title: 'Following', value: controller.following.value),
                 ],
               ),
-            ),
-            // Stats Section
-            SizedBox(
-              height: 10,
-            ),
-            Obx(
-              () => Container(
-                height: 60, // Define the height for the Row
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    StatItem(title: 'Posts', value: controller.posts.value),
-                    VerticalDivider(
-                      color: Colors.grey, // Color of the divider
-                      thickness: 1, // Thickness of the divider
-                      width: 20, // Space occupied by the divider
-                      indent: 10, // Top padding
-                      endIndent: 10, // Bottom padding
-                    ),
-                    StatItem(
-                        title: 'Followers', value: controller.followers.value),
-                    VerticalDivider(
-                      color: Colors.grey, // Color of the divider
-                      thickness: 1, // Thickness of the divider
-                      width: 20, // Space occupied by the divider
-                      indent: 10, // Top padding
-                      endIndent: 10, // Bottom padding
-                    ),
-                    StatItem(
-                        title: 'Following', value: controller.following.value),
-                  ],
-                ),
-              ),
-            ),
+            )),
 
-            SizedBox(height: 16),
-            StatsRow(),
+        SizedBox(height: 16),
+        StatsRow(),
 
-            // Grid Section
-            SizedBox(
-              height: 20,
-            ),
-            Padding(
+        Obx(() => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Obx(
-                () => GridView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: controller.images.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 8,
-                    mainAxisSpacing: 8,
-                    childAspectRatio: 1,
-                  ),
-                  itemBuilder: (context, index) {
-                    return GridItem(imageUrl: controller.images[index]);
-                  },
+              child: GridView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: controller.posts.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                  childAspectRatio: 1,
                 ),
+                itemBuilder: (context, index) {
+                  return GridItem(post: controller.posts[index]);
+                },
               ),
-            ),
-          ],
-        ),
-      ),
+            )),
+      ],
     );
   }
 }
@@ -214,9 +221,9 @@ class StatItem extends StatelessWidget {
 }
 
 class GridItem extends StatelessWidget {
-  final String imageUrl;
+  Post post;
 
-  const GridItem({required this.imageUrl});
+  GridItem({required this.post});
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +233,7 @@ class GridItem extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
-              image: AssetImage(AppImages.rectangle),
+              image: NetworkImage(post.mediaUrls[0]),
               fit: BoxFit.cover,
             ),
           ),
@@ -244,7 +251,7 @@ class GridItem extends StatelessWidget {
                       height: 20,
                       color: AppColors.white, // Add custom color to the icon
                     ),
-                    label: '25',
+                    label: post.views.toString(),
                     textColor: AppColors.white,
                   ),
                   SizedBox(
@@ -257,7 +264,7 @@ class GridItem extends StatelessWidget {
                       height: 15,
                       color: AppColors.white, // Add custom color to the icon
                     ),
-                    label: '25',
+                    label: post.likesCount.toString(),
                     textColor: AppColors.white,
                   ),
                   SizedBox(
@@ -270,7 +277,7 @@ class GridItem extends StatelessWidget {
                       height: 15,
                       color: AppColors.white, // Add custom color to the icon
                     ),
-                    label: '25',
+                    label: post.commentsCount.toString(),
                     textColor: AppColors.white,
                   ),
                   SizedBox(
