@@ -46,6 +46,17 @@ class HomeController extends GetxController {
     }
   }
 
+  void sortByLikes() {
+    filteredPosts.value = List.from(filteredPosts.value)
+      ..sort((a, b) => b.likesCount.value.compareTo(a.likesCount.value));
+  }
+
+  void sortByComments() {
+    print('Sorting by Comments...');
+    filteredPosts.value = List.from(filteredPosts.value)
+      ..sort((a, b) => b.commentsCount.value.compareTo(a.commentsCount.value));
+  }
+
   /// Fetch and assign posts
   Future<void> fetchAndAssignPosts() async {
     try {
@@ -111,6 +122,98 @@ class HomeController extends GetxController {
     } catch (e) {
       log("Fetch Error: $e");
       throw Exception('Failed to fetch posts: ${e.toString()}');
+    }
+  }
+
+  Future<int> addLikeToPost(String postId, int index) async {
+    try {
+      var data = {
+        "postId": postId,
+      };
+      print('here is Data ${data}');
+      var response = await HttpService.post('/addLikeToPost', data);
+
+      if (response != null && response['error'] == null) {
+        filteredPosts[index].likesCount.value = response['likesCount'] ?? 0;
+        filteredPosts[index].isLikedByUser.value =
+            response['likedDone'] ?? false;
+        print("Post liked successfully: $response");
+        return response['likesCount'] ?? 0; // Like added successfully
+      } else {
+        String errorMsg = response['details'] ?? "Unknown error occurred";
+        print("Error adding like: $errorMsg");
+        ToastUtil.showToast(
+          message: "Error: $errorMsg",
+          backgroundColor: Colors.red,
+        );
+
+        return 0;
+      }
+    } catch (e) {
+      print("Exception: ${e.toString()}");
+      ToastUtil.showToast(
+        message: "Failed to like post: ${e.toString()}",
+        backgroundColor: Colors.red,
+      );
+      return 0;
+    }
+  }
+
+  Future<Map<String, dynamic>?> viewPostById(String postId, int index) async {
+    try {
+      var response = await HttpService.get('/view/$postId');
+
+      if (response != null && response['error'] == null) {
+        filteredPosts[index].isViewed.value = true;
+        print("Post details: $response");
+        return response; // Returning the post details
+      } else {
+        String errorMsg = response['details'] ?? "Unknown error occurred";
+        print("Error fetching post: $errorMsg");
+        ToastUtil.showToast(
+          message: "Error: $errorMsg",
+          backgroundColor: Colors.red,
+        );
+        return null;
+      }
+    } catch (e) {
+      print("Exception: ${e.toString()}");
+      ToastUtil.showToast(
+        message: "Failed to fetch post: ${e.toString()}",
+        backgroundColor: Colors.red,
+      );
+      return null;
+    }
+  }
+
+  Future<bool> reportPost(String postId, int index) async {
+    try {
+      var response = await HttpService.post('/reportPost', {"postId": postId});
+
+      if (response != null && response['error'] == null) {
+        filteredPosts[index].isReported.value = response['reported'] ?? false;
+        print("Post reported successfully: ${response['reported']}");
+        ToastUtil.showToast(
+          message: "Post reported successfully",
+          backgroundColor: Colors.green,
+        );
+        return true;
+      } else {
+        String errorMsg = response['details'] ?? "Unknown error occurred";
+        print("Error reporting post: $errorMsg");
+        ToastUtil.showToast(
+          message: "Error: $errorMsg",
+          backgroundColor: Colors.red,
+        );
+        return false;
+      }
+    } catch (e) {
+      print("Exception: ${e.toString()}");
+      ToastUtil.showToast(
+        message: "Failed to report post: ${e.toString()}",
+        backgroundColor: Colors.red,
+      );
+      return false;
     }
   }
 

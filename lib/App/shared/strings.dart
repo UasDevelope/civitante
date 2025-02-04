@@ -81,6 +81,8 @@ class AppStrings {
 
   static String get Report => "Report";
 
+  static String get Reported => "Reported";
+
   static String get Explore => "Explore";
 
   static String get Cancel => "Cancel";
