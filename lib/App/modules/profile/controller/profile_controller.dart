@@ -35,7 +35,6 @@ class ProfileController extends GetxController {
 
   Future<void> _loadInitialData() async {
     await Future.wait([
-      fetchProfileData(),
       fetchAndAssignPosts(),
     ]);
   }
@@ -45,22 +44,8 @@ class ProfileController extends GetxController {
       isLoading.value = true;
       isError.value = false;
       var response = await HttpService.get('/getProfile');
-
+      print('here is response of profile ${response['followers']} ');
       final postsData = response['posts'] as List<dynamic>? ?? [];
-
-      posts.assignAll(_parsePosts(postsData));
-    } catch (e, stackTrace) {
-      isError.value = true;
-      _handleError('Failed to load posts', e, stackTrace);
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  Future<void> fetchProfileData() async {
-    try {
-      final response = await await HttpService.get('/getProfile');
-
       name.value = response['name']?.toString() ?? '';
 
       totalPosts.value = response['totalPosts'] is int
@@ -78,8 +63,12 @@ class ProfileController extends GetxController {
           : (response['following'] is List ? response['following'].length : 0);
 
       imageUrl.value = response['profileImage']?.toString() ?? '';
+      posts.assignAll(_parsePosts(postsData));
     } catch (e, stackTrace) {
-      _handleError('Failed to load profile', e, stackTrace);
+      isError.value = true;
+      _handleError('Failed to load posts', e, stackTrace);
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -108,7 +97,7 @@ class ProfileController extends GetxController {
       };
 
       await await HttpService.put("/editProfile/$userId", data);
-      await Future.wait([fetchProfileData(), fetchAndAssignPosts()]);
+      await Future.wait([fetchAndAssignPosts()]);
 
       ToastUtil.showToast(message: 'Profile updated successfully');
     } catch (e, stackTrace) {

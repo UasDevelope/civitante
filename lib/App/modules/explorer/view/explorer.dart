@@ -1,6 +1,7 @@
 import 'package:civitante/App/modules/home/widgets/home_search.dart';
 import 'package:flutter/material.dart';
 import '../../../utilse/widgets.dart';
+import '../../home/view/ramdomsized_posts.dart';
 
 class ExplorerScreen extends StatelessWidget {
   ExplorerScreen({super.key});
@@ -14,17 +15,8 @@ class ExplorerScreen extends StatelessWidget {
         rightIcon: AppImages.notification,
         onRightIconPressed: () {},
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: HomeSerchField(
-              onChanged: (vale) {
-
-              },
-            ),
-          ),
-        ],
+      body: RandomSizedPostsScreen(
+        explore: true,
       ),
       drawer: CustomDrawer(),
     );
