@@ -85,7 +85,6 @@ class ProfileController extends GetxController {
 
   Future<void> editUserProfile() async {
     try {
-      isLoading.value = true;
       // final locationController = LocateController.locationController;
       CustomLoadingDialog.showCustomLoadingDialog("Updating profile....");
       final data = {
@@ -106,9 +105,7 @@ class ProfileController extends GetxController {
       ToastUtil.showToast(message: 'Profile updated successfully');
     } catch (e, stackTrace) {
       _handleError('Profile update failed', e, stackTrace);
-    } finally {
-      isLoading.value = false;
-    }
+    } finally {}
   }
 
   void _handleError(String message, dynamic error, StackTrace stackTrace) {
