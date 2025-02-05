@@ -16,6 +16,7 @@ class PreviewProfileController extends GetxController {
   final RxString name = ''.obs;
   final RxInt totalPosts = 0.obs;
   final RxInt followers = 0.obs;
+  final RxBool isFollow = false.obs;
   final RxInt following = 0.obs;
   final RxBool isLoading = false.obs;
   final RxBool isError = false.obs;
@@ -43,9 +44,9 @@ class PreviewProfileController extends GetxController {
     try {
       isLoading.value = true;
       isError.value = false;
-      print('check token $id');
-      var response = await HttpService.get('/getProfile/$id');
 
+      var response = await HttpService.get('/getProfile/$id');
+      print('check token $response');
       final postsData = response['posts'] as List<dynamic>? ?? [];
       name.value = response['name']?.toString() ?? '';
 
@@ -58,6 +59,7 @@ class PreviewProfileController extends GetxController {
       followers.value = response['followers'] is int
           ? response['followers']
           : (response['followers'] is List ? response['followers'].length : 0);
+      isFollow.value = response['isFollow'] ?? true;
 
       following.value = response['following'] is int
           ? response['following']
@@ -73,31 +75,33 @@ class PreviewProfileController extends GetxController {
     }
   }
 
-  // Future<void> fetchProfileData() async {
-  //   try {
-  //     final response = await await HttpService.get('/getProfile/:userId$id');
-  //
-  //     name.value = response['name']?.toString() ?? '';
-  //
-  //     totalPosts.value = response['totalPosts'] is int
-  //         ? response['totalPosts']
-  //         : (response['totalPosts'] is List
-  //             ? response['totalPosts'].length
-  //             : 0);
-  //
-  //     followers.value = response['followers'] is int
-  //         ? response['followers']
-  //         : (response['followers'] is List ? response['followers'].length : 0);
-  //
-  //     following.value = response['following'] is int
-  //         ? response['following']
-  //         : (response['following'] is List ? response['following'].length : 0);
-  //
-  //     imageUrl.value = response['profileImage']?.toString() ?? '';
-  //   } catch (e, stackTrace) {
-  //     _handleError('Failed to load profile', e, stackTrace);
-  //   }
-  // }
+  Future<void> followUnfollowUser() async {
+    try {
+      var response = await HttpService.post('/followUnfollow/$id', {});
+
+      if (response != null && response['error'] == null) {
+        isFollow.value = response['isFollow'];
+
+        followers.value = response['followersCount'];
+
+        ToastUtil.showToast(
+          message: response['message'] ?? "Action completed successfully",
+          backgroundColor: Colors.green,
+        );
+      } else {
+        String errorMsg = response['details'] ?? "Unknown error occurred";
+        ToastUtil.showToast(
+          message: "Error: $errorMsg",
+          backgroundColor: Colors.red,
+        );
+      }
+    } catch (e) {
+      ToastUtil.showToast(
+        message: "Failed to process request: ${e.toString()}",
+        backgroundColor: Colors.red,
+      );
+    }
+  }
 
   List<Post> _parsePosts(List<dynamic> responseList) {
     try {

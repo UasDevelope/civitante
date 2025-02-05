@@ -40,12 +40,12 @@ class CommunityPostScreen extends StatelessWidget {
             SizedBox(
               height: Get.height * 0.02,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: CustomCard(
-                haveComments: true,
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 15),
+            //   child: CustomCard(
+            //     haveComments: true,
+            //   ),
+            // ),
             SizedBox(
               height: Get.height * 0.06,
             ),

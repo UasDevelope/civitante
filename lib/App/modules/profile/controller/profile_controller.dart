@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
 import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/toast_util.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../Models/Post.dart';
 import '../../../controller/controller_locate.dart';
+import '../../loading/custom_loading_dialogue.dart';
 
 class ProfileController extends GetxController {
   final bool currentUser;
@@ -36,7 +36,6 @@ class ProfileController extends GetxController {
 
   Future<void> _loadInitialData() async {
     await Future.wait([
-      fetchProfileData(),
       fetchAndAssignPosts(),
     ]);
   }
@@ -46,22 +45,8 @@ class ProfileController extends GetxController {
       isLoading.value = true;
       isError.value = false;
       var response = await HttpService.get('/getProfile');
-
+      print('here is response of profile ${response['followers']} ');
       final postsData = response['posts'] as List<dynamic>? ?? [];
-
-      posts.assignAll(_parsePosts(postsData));
-    } catch (e, stackTrace) {
-      isError.value = true;
-      _handleError('Failed to load posts', e, stackTrace);
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  Future<void> fetchProfileData() async {
-    try {
-      final response = await await HttpService.get('/getProfile');
-
       name.value = response['name']?.toString() ?? '';
 
       totalPosts.value = response['totalPosts'] is int
@@ -80,9 +65,12 @@ class ProfileController extends GetxController {
 
       imageUrl.value = response['profileImage']?.toString() ?? '';
       nameController.text = name.value;
-      print("Name is ${nameController.text}");
+      posts.assignAll(_parsePosts(postsData));
     } catch (e, stackTrace) {
-      _handleError('Failed to load profile', e, stackTrace);
+      isError.value = true;
+      _handleError('Failed to load posts', e, stackTrace);
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -97,8 +85,9 @@ class ProfileController extends GetxController {
 
   Future<void> editUserProfile() async {
     try {
-      CustomLoadingDialog.showCustomLoadingDialog("Updating profile....");
+      isLoading.value = true;
       // final locationController = LocateController.locationController;
+      CustomLoadingDialog.showCustomLoadingDialog("Updating profile....");
       final data = {
         "name": nameController.text,
         // "location": {
@@ -110,14 +99,16 @@ class ProfileController extends GetxController {
       };
       print("The data I am giving is ${data}");
 
-      await await HttpService.put("/editProfile", data);
-      await Future.wait([fetchProfileData(), fetchAndAssignPosts()]);
+      await await HttpService.put("/editProfile/$userId", data);
+      await Future.wait([fetchAndAssignPosts()]);
       CustomLoadingDialog.closeLoadingDialog();
+
       ToastUtil.showToast(message: 'Profile updated successfully');
     } catch (e, stackTrace) {
-      CustomLoadingDialog.closeLoadingDialog();
       _handleError('Profile update failed', e, stackTrace);
-    } finally {}
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   void _handleError(String message, dynamic error, StackTrace stackTrace) {

@@ -29,19 +29,7 @@ class HomeScreen extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 15, right: 15),
-            child: HomeSerchField(
-              hintText: "Search here...", // Custom hint text
-              onChanged: (value) {
-                homeController.changeSearchValue(value);
-              },
-            ),
-          ),
-          SizedBox(
-            height: Get.height * 0.05,
-          ),
-          Container(height: Get.height / 1.7, child: HomeTabBar()),
+          Container(height: Get.height / 1.45, child: HomeTabBar()),
         ],
       ),
     );

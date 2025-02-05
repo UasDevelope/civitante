@@ -10,7 +10,7 @@ class CustomDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = LocateController.drawerController;
     final profileController = LocateController.profileController;
-    profileController.fetchProfileData();
+    profileController.fetchAndAssignPosts();
     return Drawer(
       backgroundColor: Colors.white,
       child: Column(
