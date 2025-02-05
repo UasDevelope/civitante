@@ -60,9 +60,9 @@ class ProfileController extends GetxController {
       final response = await await HttpService.get('/getProfile');
 
       name.value = response['name']?.toString() ?? '';
-      totalPosts.value = response['totalPosts'] as int? ?? 0;
-      followers.value = response['followers'] as int? ?? 0;
-      following.value = response['following'] as int? ?? 0;
+      totalPosts.value = response['totalPosts'] ?? 0;
+      followers.value = response['followers'] ?? 0;
+      following.value = response['following'] ?? 0;
       imageUrl.value = response['profileImage']?.toString() ?? '';
     } catch (e, stackTrace) {
       _handleError('Failed to load profile', e, stackTrace);
