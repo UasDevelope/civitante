@@ -57,10 +57,10 @@ class HomeController extends GetxController {
   }
 
   /// Fetch and assign posts
-  Future<void> fetchAndAssignPosts() async {
+  Future<void> fetchAndAssignPosts({String communityId = ""}) async {
     try {
       isPostLoading.value = true;
-      final result = await getPosts();
+      final result = await getPosts(communityId: communityId);
 
       // Ensure the fetched list is not null before assigning
       if (result.isNotEmpty) {
@@ -93,9 +93,11 @@ class HomeController extends GetxController {
   }
 
   /// Fetch posts from API
-  Future<List<Post>> getPosts() async {
+  Future<List<Post>> getPosts({String communityId = ""}) async {
     try {
-      var response = await HttpService.get('/getPosts');
+      bool isCommunity = communityId != "" ? true : false;
+      var response =
+          await HttpService.get('/getPosts/${isCommunity ? communityId : ""}');
       log("Raw Response: $response");
 
       // Decode JSON response if it's a string

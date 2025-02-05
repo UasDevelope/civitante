@@ -19,6 +19,8 @@ class MyCommunityDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final communityPostController = LocateController.homeController;
+    communityPostController.fetchAndAssignPosts(communityId: community!.id);
     return Scaffold(
         backgroundColor: Colors.white, // Change the background color
         appBar: HomeAppbar(
@@ -119,8 +121,10 @@ class MyCommunityDetail extends StatelessWidget {
                             ],
                           ),
                         if (isAllCommunity)
-                          buildActionCommunityButton(
-                              AppImages.addCircle, () {}),
+                          buildActionCommunityButton(AppImages.addCircle, () {
+                            Get.toNamed(AppRoutes.post,
+                                arguments: {"communityId": community!.id});
+                          }),
                       ],
                     ),
                     // Community Name and Members
@@ -169,18 +173,19 @@ class MyCommunityDetail extends StatelessWidget {
                         color: AppColors.appColor),
                     const SizedBox(height: 10),
                     // ListView for Posts
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: 5, // Replace with your dynamic item count
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                              onTap: () {
-                                Get.to(CommunityPostScreen());
-                              },
-                              child: CustomCard());
-                        },
-                      ),
-                    ),
+                    RandomSizedPostsScreen()
+                    // Expanded(
+                    //   child: ListView.builder(
+                    //     itemCount: 5, // Replace with your dynamic item count
+                    //     itemBuilder: (BuildContext context, int index) {
+                    //       return GestureDetector(
+                    //           onTap: () {
+                    //             Get.to(CommunityPostScreen());
+                    //           },
+                    //           child: CustomCard());
+                    //     },
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
