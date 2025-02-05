@@ -11,7 +11,6 @@ class ChatController extends GetxController {
   late IO.Socket socket;
   final TextEditingController messageController = TextEditingController();
   final ScrollController scrollController = ScrollController();
-
   var messages = <Map<String, dynamic>>[].obs;
   var isLoading = false.obs; // Track loading state
 

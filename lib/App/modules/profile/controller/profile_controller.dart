@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
 import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/toast_util.dart';
@@ -64,6 +65,7 @@ class ProfileController extends GetxController {
       followers.value = response['followers'] as int? ?? 0;
       following.value = response['following'] as int? ?? 0;
       imageUrl.value = response['profileImage']?.toString() ?? '';
+      nameController.text = name.value;
     } catch (e, stackTrace) {
       _handleError('Failed to load profile', e, stackTrace);
     }
@@ -80,9 +82,8 @@ class ProfileController extends GetxController {
 
   Future<void> editUserProfile() async {
     try {
-      isLoading.value = true;
+      CustomLoadingDialog.showCustomLoadingDialog("Updating profile....");
       final locationController = LocateController.locationController;
-
       final data = {
         "name": nameController.text,
         "location": {
@@ -95,13 +96,12 @@ class ProfileController extends GetxController {
 
       await await HttpService.put("/editProfile/$userId", data);
       await Future.wait([fetchProfileData(), fetchAndAssignPosts()]);
-
+      CustomLoadingDialog.closeLoadingDialog();
       ToastUtil.showToast(message: 'Profile updated successfully');
     } catch (e, stackTrace) {
+      CustomLoadingDialog.closeLoadingDialog();
       _handleError('Profile update failed', e, stackTrace);
-    } finally {
-      isLoading.value = false;
-    }
+    } finally {}
   }
 
   void _handleError(String message, dynamic error, StackTrace stackTrace) {
