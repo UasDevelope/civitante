@@ -65,6 +65,7 @@ class HttpService {
   static Future<dynamic> delete(String endpoint) async {
     final url = Uri.parse('$_baseUrl$endpoint');
     try {
+      print(url);
       final response = await http.delete(url, headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${AppConstant().userID}',

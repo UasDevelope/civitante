@@ -8,7 +8,9 @@ class BottomNaveController extends GetxController {
     ExplorerScreen(),
     PostScreen(),
     WalletScreen(),
-    ProfileScreen(),
+    ProfileScreen(
+      currentUser: true,
+    ),
   ].obs;
   RxList<Widget> get pages => _pages;
   Future<void> changeIndex(int index) async {

@@ -1,6 +1,9 @@
 import 'dart:developer';
 import 'package:civitante/App/modules/home/widgets/filter_menues.dart';
+
 import 'package:civitante/App/modules/loading/empty_data.dart';
+
+import 'package:civitante/App/modules/previewUserProfile/view/previewprofile.dart';
 import 'package:civitante/App/shared/app_text.dart';
 import 'package:civitante/App/shared/color.dart';
 import 'package:civitante/App/shared/image.dart';
@@ -67,7 +70,11 @@ class RandomSizedPostsScreen extends StatelessWidget {
                         final post = homeController.filteredPosts[index];
                         return GestureDetector(
                           onTap: () {
-                            homeController.viewPostById(post.id, index);
+                            var response =
+                                homeController.viewPostById(post.id, index);
+                            print('here is value ${response}');
+
+                            /// post.views.value = response['likesCount'];
 
                             Get.toNamed(AppRoutes.postDetail, arguments: {
                               "data": post,
@@ -365,14 +372,21 @@ class _CustomCard2State extends State<CustomCard2> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ListTile(
-                leading: CircleAvatar(
-                  backgroundImage:
-                      widget.post.createdBy.profileImage.toString().isNotEmpty
-                          ? NetworkImage(
-                              widget.post.createdBy.profileImage.toString() ??
-                                  AppImages.person)
-                          : AssetImage(AppImages.person.toString() ??
-                              AppImages.person), // Replace with your image
+                leading: GestureDetector(
+                  onTap: () {
+                    Get.to(PreviewProfileScreen(
+                      id: widget.post.createdBy.id,
+                    ));
+                  },
+                  child: CircleAvatar(
+                    backgroundImage:
+                        widget.post.createdBy.profileImage.toString().isNotEmpty
+                            ? NetworkImage(
+                                widget.post.createdBy.profileImage.toString() ??
+                                    AppImages.person)
+                            : AssetImage(AppImages.person.toString() ??
+                                AppImages.person), // Replace with your image
+                  ),
                 ),
                 title: AppText(
                     text: widget.post.createdBy.name.toString(),
@@ -415,7 +429,7 @@ class _CustomCard2State extends State<CustomCard2> {
                         fontSize: 16,
                         fontWeight: FontWeight.w600),
               ),
-              Container(
+              SizedBox(
                 height: 200,
                 child: Stack(
                   children: [
@@ -509,7 +523,7 @@ class _CustomCard2State extends State<CustomCard2> {
                   ],
                 ),
               ),
-              Container(
+              SizedBox(
                   height: Get.height * 0.07,
                   child: SliderWithLabels(
                     post: widget.post,
