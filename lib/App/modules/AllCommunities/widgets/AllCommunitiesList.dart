@@ -1,6 +1,7 @@
 import 'package:civitante/App/Models/my_community_model.dart';
 import 'package:civitante/App/controller/controller_locate.dart';
 import 'package:civitante/App/modules/communityDetails/view/communityDetails.dart';
+import 'package:civitante/App/modules/loading/empty_data.dart';
 import 'package:civitante/App/modules/shimmer/my_community_model.dart';
 import 'package:civitante/App/shared/color.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,8 @@ class MyCommunitiesList extends StatelessWidget {
       body: Obx(() {
         if (controller.isCommunityLoading.value) {
           return MyCommunityShimmer();
+        } else if (controller.filteredCommunities.isEmpty) {
+          return LottieAnimationWidget();
         }
         // else if(false){
         //   return Container();
@@ -62,6 +65,7 @@ class MyCommunitiesCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Get.to(MyCommunityDetail(
+          isAllCommunity: true,
           community: data,
         ));
       },

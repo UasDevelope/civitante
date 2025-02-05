@@ -1,5 +1,3 @@
-import 'package:get/get.dart';
-
 class MyCommunityModel {
   final String id;
   final String name;
@@ -9,6 +7,7 @@ class MyCommunityModel {
   final List<String> interests;
   final String status;
   final int totalMembers;
+  final int cost;
   final DateTime createdAt;
 
   MyCommunityModel({
@@ -20,6 +19,7 @@ class MyCommunityModel {
     required this.interests,
     required this.status,
     required this.totalMembers,
+    required this.cost,
     required this.createdAt,
   });
 
@@ -39,6 +39,9 @@ class MyCommunityModel {
       totalMembers: json['totalMembers'] is int
           ? json['totalMembers']
           : int.tryParse(json['totalMembers']?.toString() ?? '0') ?? 0,
+      cost: json['cost'] is int
+          ? json['cost']
+          : int.tryParse(json['cost']?.toString() ?? '0') ?? 0,
       createdAt: json['createdAt'] != null
           ? DateTime.tryParse(json['createdAt'].toString()) ?? DateTime.now()
           : DateTime.now(),
@@ -56,6 +59,7 @@ class MyCommunityModel {
       'interests': interests,
       'status': status,
       'totalMembers': totalMembers,
+      'cost': cost,
       'createdAt': createdAt.toIso8601String(),
     };
   }

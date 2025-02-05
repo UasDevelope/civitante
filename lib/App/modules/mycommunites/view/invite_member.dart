@@ -29,7 +29,7 @@ class InviteMember extends StatelessWidget {
               HomeSerchField(
                 hintText: "Search here...", // Custom hint text
                 onChanged: (value) {
-                  controller.onChangeUserSearch(value);
+                  controller.onChangeNonMemberUserSearch(value);
                 },
               ),
               Obx(() => controller.selectedIndexes.isNotEmpty
@@ -40,18 +40,18 @@ class InviteMember extends StatelessWidget {
                       icon: Icon(Icons.add))
                   : Container()),
               Obx(() {
-                if (controller.isUserLoading.value) {
+                if (controller.isNonMemberUserLoading.value) {
                   return MyCommunityShimmer();
-                } else if (controller.filteredUsers.isEmpty) {
+                } else if (controller.filteredNonMemberUsers.isEmpty) {
                   return LottieAnimationWidget();
                 }
 
                 return ListView.separated(
-                  itemCount: controller.filteredUsers.length,
+                  itemCount: controller.filteredNonMemberUsers.length,
                   shrinkWrap: true,
                   physics: ScrollPhysics(),
                   itemBuilder: (itemBuilder, index) {
-                    final data = controller.filteredUsers[index];
+                    final data = controller.filteredNonMemberUsers[index];
                     return Obx(() {
                       final isSelected =
                           controller.selectedIndexes.contains(data.id);

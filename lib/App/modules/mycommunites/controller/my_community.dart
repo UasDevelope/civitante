@@ -69,14 +69,14 @@ class MyCommunityController extends GetxController
 
   RxList<String> selectedIndexes = <String>[].obs;
 
-  RxString userSearch = "".obs;
+  RxString nonMemberUserSearch = "".obs;
 
-  RxBool isUserLoading = false.obs;
+  RxBool isNonMemberUserLoading = false.obs;
   var nonMembers = <NonMemberUser>[].obs;
 
-  ///[userSearch]
-  void onChangeUserSearch(String value) {
-    userSearch.value = value;
+  ///[nonMemberUserSearch]
+  void onChangeNonMemberUserSearch(String value) {
+    nonMemberUserSearch.value = value;
   }
 
   ///toggle selection by using toggle selection [selectedIndexes]
@@ -88,19 +88,20 @@ class MyCommunityController extends GetxController
     }
   }
 
-  List<NonMemberUser> get filteredUsers {
-    if (userSearch.value.isEmpty) {
+  List<NonMemberUser> get filteredNonMemberUsers {
+    if (nonMemberUserSearch.value.isEmpty) {
       return nonMembers;
     }
     return nonMembers
-        .where((user) =>
-            user.name.toLowerCase().contains(userSearch.value.toLowerCase()))
+        .where((user) => user.name
+            .toLowerCase()
+            .contains(nonMemberUserSearch.value.toLowerCase()))
         .toList();
   }
 
   Future<void> fetchAllUsers(String communityId) async {
     try {
-      isUserLoading.value = true;
+      isNonMemberUserLoading.value = true;
       final response = await HttpService.get("/getNonMembers/$communityId");
       if (response != null && response['nonMembers'] != null) {
         nonMembers.value = (response['nonMembers'] as List<dynamic>)
@@ -110,7 +111,48 @@ class MyCommunityController extends GetxController
     } catch (e) {
       log("Error during fetching all use $e");
     } finally {
-      isUserLoading.value = false;
+      isNonMemberUserLoading.value = false;
+    }
+  }
+
+  /// Its Time to process the member in the community
+
+  RxString memberUserSearch = "".obs;
+
+  RxBool isMemberUserLoading = false.obs;
+  var members = <NonMemberUser>[].obs;
+
+  ///[nonMemberUserSearch]
+  void onChangeMemberUserSearch(String value) {
+    memberUserSearch.value = value;
+  }
+
+  List<NonMemberUser> get filteredMemberUsers {
+    if (memberUserSearch.value.isEmpty) {
+      return members;
+    }
+    return members
+        .where((user) => user.name
+            .toLowerCase()
+            .contains(memberUserSearch.value.toLowerCase()))
+        .toList();
+  }
+
+  Future<void> fetchMemberUsers(String communityId) async {
+    try {
+      isMemberUserLoading.value = true;
+      final response = await HttpService.get("/getMembers/$communityId");
+      log("response for member is $response");
+
+      if (response != null && response['members'] != null) {
+        members.value = (response['members'] as List<dynamic>)
+            .map((data) => NonMemberUser.fromJson(data as Map<String, dynamic>))
+            .toList();
+      }
+    } catch (e) {
+      log("Error during fetching all use $e");
+    } finally {
+      isMemberUserLoading.value = false;
     }
   }
 
