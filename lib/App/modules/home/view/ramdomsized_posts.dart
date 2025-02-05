@@ -31,6 +31,11 @@ class RandomSizedPostsScreen extends StatelessWidget {
               alignment: Alignment.topRight,
               child: HomeFilterMenues(
                 onSelected: (value) {
+                  if (value == 'Comments') {
+                    homeController.sortByComments();
+                  } else {
+                    homeController.sortByLikes();
+                  }
                   print("selected=>$value");
                 },
               ),
@@ -59,11 +64,18 @@ class RandomSizedPostsScreen extends StatelessWidget {
                         final post = homeController.filteredPosts[index];
                         return GestureDetector(
                           onTap: () {
+
+                              homeController.viewPostById(post.id,index);
+
+
                             Get.toNamed(AppRoutes.postDetail,
                                 arguments: {"data": post});
                             // Get.to(() => PostsDetailsScreen());
                           },
-                          child: CustomCard2(post: post),
+                          child: CustomCard2(
+                            post: post,
+                            index: index,
+                          ),
                         );
                       },
                     );
@@ -318,13 +330,25 @@ class CustomCard1 extends StatelessWidget {
   }
 }
 
-class CustomCard2 extends StatelessWidget {
-  const CustomCard2({super.key, this.haveComments = false, required this.post});
+class CustomCard2 extends StatefulWidget {
+  CustomCard2(
+      {super.key,
+      this.haveComments = false,
+      required this.post,
+      this.index = 0});
   final bool haveComments;
   final Post post;
+  int index;
 
   @override
+  State<CustomCard2> createState() => _CustomCard2State();
+}
+
+class _CustomCard2State extends State<CustomCard2> {
+  @override
   Widget build(BuildContext context) {
+    final homeController = Get.find<HomeController>();
+
     return Card(
       color: AppColors.white,
       // margin: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
@@ -337,47 +361,59 @@ class CustomCard2 extends StatelessWidget {
         children: [
           ListTile(
             leading: CircleAvatar(
-              backgroundImage: post.createdBy.profileImage.toString().isNotEmpty
-                  ? NetworkImage(post.createdBy.profileImage.toString() ??
-                      AppImages.person)
-                  : AssetImage(AppImages.person.toString() ??
-                      AppImages.person), // Replace with your image
+              backgroundImage:
+                  widget.post.createdBy.profileImage.toString().isNotEmpty
+                      ? NetworkImage(
+                          widget.post.createdBy.profileImage.toString() ??
+                              AppImages.person)
+                      : AssetImage(AppImages.person.toString() ??
+                          AppImages.person), // Replace with your image
             ),
             title: AppText(
-                text: post.createdBy.name.toString(),
+                text: widget.post.createdBy.name.toString(),
                 fontWeight: FontWeight.w500,
                 fontSize: 16),
-            trailing: PopupMenuButton(
-              icon: Image.asset(
-                AppImages.menue,
-                height: 30,
-              ),
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15), // Rounded corners
-                  side: BorderSide(
-                    color: AppColors.textFieldHintColor, // Border color
-                    width: 0.4, // Border width
-                  )),
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  child: AppText(
-                      text: AppStrings.Report,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600),
-                ),
-              ],
-            ),
+            trailing: widget.post.isReported != true
+                ? PopupMenuButton(
+                    icon: Image.asset(
+                      AppImages.menue,
+                      height: 30,
+                    ),
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(15), // Rounded corners
+                        side: BorderSide(
+                          color: AppColors.textFieldHintColor, // Border color
+                          width: 0.4, // Border width
+                        )),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: AppText(
+                            text: AppStrings.Report,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                        onTap: () {
+                          homeController.reportPost(
+                              widget.post.id, widget.index);
+                        },
+                      ),
+                    ],
+                  )
+                : AppText(
+                    text: AppStrings.Reported,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600),
           ),
           Container(
             height: 200,
             child: Stack(
               children: [
                 PageView.builder(
-                  itemCount: post.mediaUrls.length,
+                  itemCount: widget.post.mediaUrls.length,
                   itemBuilder: (context, index) {
                     return Image.network(
-                      post.mediaUrls[index],
+                      widget.post.mediaUrls[index],
                       fit: BoxFit.cover,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) return child;
@@ -407,31 +443,47 @@ class CustomCard2 extends StatelessWidget {
                         child: buildStatItem(
                           icon: Image.asset(
                             AppImages.view,
-                            height: 20,
-                            color: AppColors.white,
+                            height: 25,
+                            color: widget.post.isViewed == true
+                                ? AppColors.green
+                                : AppColors.white,
                           ),
-                          label: post.views.toString(),
+                          label: widget.post.views.toString(),
                           textColor: AppColors.white,
                         ),
                       ),
                       const SizedBox(width: 10),
-                      buildStatItem(
-                        icon: Image.asset(
-                          AppImages.like,
-                          height: 15,
-                          color: AppColors.white,
-                        ),
-                        label: post.likesCount.toString(),
-                        textColor: AppColors.white,
-                      ),
+                      Obx(() {
+                        return GestureDetector(
+                          onTap: () async {
+                            // Use `await` to make sure the like count updates correctly
+                            int newLikesCount = await homeController
+                                .addLikeToPost(widget.post.id, widget.index);
+                            // widget.post.likesCount.value =
+                            //     newLikesCount; // Update likesCount reactively
+                          },
+                          child: buildStatItem(
+                            icon: Image.asset(
+                              AppImages.like,
+                              height: 25,
+                              color: widget.post.isLikedByUser.value
+                                  ? AppColors.appColor
+                                  : AppColors.white, // Use .value
+                            ),
+                            label:
+                                widget.post.likesCount.toString(), // Use .value
+                            textColor: AppColors.white,
+                          ),
+                        );
+                      }),
                       const SizedBox(width: 10),
                       buildStatItem(
                         icon: Image.asset(
                           AppImages.comment,
-                          height: 15,
+                          height: 25,
                           color: AppColors.white,
                         ),
-                        label: post.commentsCount.toString(),
+                        label: widget.post.commentsCount.toString(),
                         // label: post.comments.length.toString(),
                         textColor: AppColors.white,
                       ),
@@ -445,7 +497,7 @@ class CustomCard2 extends StatelessWidget {
           Container(
               height: Get.height * 0.07,
               child: SliderWithLabels(
-                post: post,
+                post: widget.post,
               )),
           Padding(
             padding: EdgeInsets.only(top: 0, bottom: 10, left: 10),
@@ -453,20 +505,20 @@ class CustomCard2 extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AppText(
-                  text: post.title,
+                  text: widget.post.title,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
                 SizedBox(height: 8),
                 AppText(
-                  text: post.description,
+                  text: widget.post.description,
                   fontSize: 16,
                   color: AppColors.Slate_gray,
                 ),
                 SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
-                  children: post.tags
+                  children: widget.post.tags
                       .map((tag) => Chip(
                             label: AppText(
                               text: "#$tag",
@@ -479,18 +531,18 @@ class CustomCard2 extends StatelessWidget {
               ],
             ),
           ),
-          haveComments
+          widget.haveComments
               ? SizedBox(
                   height: 8,
                 )
               : SizedBox.shrink(),
-          haveComments
+          widget.haveComments
               ? Column(
                   children: [
                     ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: post.comments.length,
+                      itemCount: widget.post.comments.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -504,12 +556,12 @@ class CustomCard2 extends StatelessWidget {
                                 children: [
                                   CircleAvatar(
                                     radius: 26,
-                                    backgroundImage: post
-                                            .comments[index].user.profileImage
+                                    backgroundImage: widget.post.comments[index]
+                                            .user.profileImage
                                             .toString()
                                             .isNotEmpty
-                                        ? NetworkImage(post
-                                                .createdBy.profileImage
+                                        ? NetworkImage(widget
+                                                .post.createdBy.profileImage
                                                 .toString() ??
                                             AppImages.person)
                                         : AssetImage(
@@ -530,7 +582,8 @@ class CustomCard2 extends StatelessWidget {
                                       Row(
                                         children: [
                                           Text(
-                                            post.comments[index].user.name,
+                                            widget
+                                                .post.comments[index].user.name,
                                             style: GoogleFonts.poppins(
                                                 fontSize: 16,
                                                 color: AppColors.appColor,
@@ -578,7 +631,7 @@ class CustomCard2 extends StatelessWidget {
                                           maxLines: 3,
                                           textAlign: TextAlign.start,
                                           overflow: TextOverflow.ellipsis,
-                                          "${post.comments[index].text}",
+                                          "${widget.post.comments[index].text}",
                                           style: GoogleFonts.poppins(
                                               fontSize: 15,
                                               color: AppColors.appColor,
