@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import '../../../Models/Post.dart';
 import '../../../routes/routes.dart';
 import '../../home/widgets/engament_row.dart';
+import '../../shimmer/profile_gridview_shimmer.dart';
 import '../controller/profile_controller.dart';
 import '../widget/status_row.dart';
 
@@ -178,7 +179,11 @@ class ProfileScreen extends StatelessWidget {
         SizedBox(height: 16),
         StatsRow(),
 
-        Obx(() => Padding(
+        Obx(() {
+          if (controller.isLoading.value) {
+            return ProfileGridViewShimmer();
+          } else {
+            return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: GridView.builder(
                 physics: NeverScrollableScrollPhysics(),
@@ -200,7 +205,9 @@ class ProfileScreen extends StatelessWidget {
                       child: GridItem(post: controller.posts[index]));
                 },
               ),
-            )),
+            );
+          }
+        }),
       ],
     );
   }
