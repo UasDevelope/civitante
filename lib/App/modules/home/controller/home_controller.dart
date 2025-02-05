@@ -6,16 +6,15 @@ import 'package:flutter/material.dart';
 
 import '../../../Models/Post.dart';
 import '../../../service/http_service.dart';
+import '../../../utilse/pref.dart';
 import '../../../utilse/toast_util.dart';
 
 class HomeController extends GetxController {
   RxList<Post> posts = <Post>[].obs; // Original list of posts
   RxList<Post> filteredPosts = <Post>[].obs; // New list for filtered posts
-
+  final TextEditingController commentController = TextEditingController();
   RxBool isPostLoading = false.obs;
-
   RxString searchedValue = "".obs;
-
   RxList<String> Images = [
     "assets/images/img.png",
     "assets/images/img_1.png",
@@ -123,6 +122,21 @@ class HomeController extends GetxController {
       log("Fetch Error: $e");
       throw Exception('Failed to fetch posts: ${e.toString()}');
     }
+  }
+
+  Future<void> addComments(String postId) async {
+    String userId = PrefUtil.getString(PrefUtil.userId);
+    try {
+      var data = {"userId": userId, "text": commentController.text};
+      log('Requested data is $data');
+      final response =
+          await HttpService.post("/addCommentToPost/$postId", data);
+
+      log("Response is $response");
+      commentController.clear();
+    } catch (e) {
+      ToastUtil.showToast(message: "$e", backgroundColor: Colors.red);
+    } finally {}
   }
 
   Future<int> addLikeToPost(String postId, int index) async {

@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../Models/Post.dart';
+import '../../../routes/routes.dart';
 import '../../home/widgets/engament_row.dart';
 import '../controller/profile_controller.dart';
 import '../widget/status_row.dart';
@@ -185,7 +186,13 @@ class ProfileScreen extends StatelessWidget {
                   childAspectRatio: 1,
                 ),
                 itemBuilder: (context, index) {
-                  return GridItem(post: controller.posts[index]);
+                  final post = controller.posts[index];
+                  return GestureDetector(
+                      onTap: () {
+                        Get.toNamed(AppRoutes.postDetail,
+                            arguments: {"data": post, 'currentUser': true});
+                      },
+                      child: GridItem(post: controller.posts[index]));
                 },
               ),
             )),
