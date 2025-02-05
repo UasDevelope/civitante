@@ -7,11 +7,12 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 class ChatController extends GetxController {
   final String communityId;
   ChatController({required this.communityId});
+
   late IO.Socket socket;
   final TextEditingController messageController = TextEditingController();
   final ScrollController scrollController = ScrollController();
-
   var messages = <Map<String, dynamic>>[].obs;
+  var isLoading = false.obs; // Track loading state
 
   @override
   void onInit() {
@@ -19,19 +20,30 @@ class ChatController extends GetxController {
     connectSocket();
   }
 
-  void decodeToken(String userToken) {
+  @override
+  void onClose() {
+    print("Disconnecting socket...");
+    socket.disconnect();
+    socket.dispose();
+    super.onClose();
+  }
+
+  String decodeToken(String userToken) {
     if (userToken.isNotEmpty) {
       Map<String, dynamic> decodedToken = JwtDecoder.decode(userToken);
-      print("decodedToken is $decodedToken");
+      return decodedToken["id"];
     } else {
-      print("Token is empty!");
+      return "";
     }
   }
 
-  void connectSocket() {
+  Future<void> connectSocket() async {
+    isLoading.value = true;
     String userToken = PrefUtil.getString(PrefUtil.userId);
-    decodeToken(userToken);
+    String userId = decodeToken(userToken);
+
     print("Connecting to socket with token: $userToken"); // Debug log
+
     socket = IO.io("https://civitante.onrender.com/", <String, dynamic>{
       "transports": ["websocket"],
       "autoConnect": false,
@@ -44,7 +56,11 @@ class ChatController extends GetxController {
 
     socket.onConnect((_) {
       print("Connected to socket!"); // Debug log
-      joinCommunity();
+      joinCommunity(userId);
+    });
+
+    socket.on("disconnect", (data) {
+      print("Data from server is $data");
     });
 
     socket.on("receiveMessage", (data) {
@@ -52,10 +68,10 @@ class ChatController extends GetxController {
       messages.add({
         "_id": data["_id"],
         "text": data["message"],
-        "isMe":
-            data["sender"]["id"] == userToken, // Compare with actual userToken
+        "isMe": data["sender"]["id"] == userId,
         "time": _formatTime(data["createdAt"]),
         "sender": data["sender"]["name"],
+        "profileImage": data["sender"]["profileImage"],
       });
 
       _scrollToBottom();
@@ -68,11 +84,33 @@ class ChatController extends GetxController {
     socket.onError((error) {
       print("Socket error: $error"); // Debug log
     });
+
+    isLoading.value = false; // Stop loading after connection
   }
 
-  void joinCommunity() {
+  void joinCommunity(String userId) {
     print("Joining community: $communityId"); // Debug log
+    isLoading.value = true; // Start loading while fetching messages
+
     socket.emit("joinCommunityChat", {"communityId": communityId});
+
+    socket.on("joinedCommunity", (data) {
+      messages.clear();
+      if (data["recentMessage"] != null) {
+        for (var msg in data["recentMessage"]) {
+          messages.add({
+            "_id": msg["_id"],
+            "text": msg["message"],
+            "isMe": msg["sender"]["_id"] == userId,
+            "time": _formatTime(msg["createdAt"]),
+            "sender": msg["sender"]["name"],
+            "profileImage": msg["sender"]["profileImage"]
+          });
+        }
+      }
+      _scrollToBottom();
+      isLoading.value = false; // Stop loading after fetching messages
+    });
   }
 
   void sendMessage() {

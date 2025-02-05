@@ -49,7 +49,7 @@ class CustomDrawer extends StatelessWidget {
                     CircleAvatar(
                       radius: 25,
                       backgroundImage:
-                          AssetImage(controller.profileImage.value),
+                          NetworkImage(profileController.imageUrl.value),
                     ),
                     SizedBox(width: 12), // Space between image and text
 
@@ -62,12 +62,12 @@ class CustomDrawer extends StatelessWidget {
                             fontSize: 11,
                             fontWeight: FontWeight.w500,
                             color: AppColors.textFieldHintColor),
-                        AppText(
-                          text: profileController.nameController.text,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.appColor,
-                        ),
+                        Obx(() => AppText(
+                              text: profileController.name.value,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.appColor,
+                            )),
                       ],
                     ),
                   ],

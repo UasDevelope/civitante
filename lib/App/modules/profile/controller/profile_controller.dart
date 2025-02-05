@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../Models/Post.dart';
 import '../../../controller/controller_locate.dart';
+import '../../loading/custom_loading_dialogue.dart';
 
 class ProfileController extends GetxController {
   final bool currentUser;
@@ -63,6 +64,7 @@ class ProfileController extends GetxController {
           : (response['following'] is List ? response['following'].length : 0);
 
       imageUrl.value = response['profileImage']?.toString() ?? '';
+      nameController.text = name.value;
       posts.assignAll(_parsePosts(postsData));
     } catch (e, stackTrace) {
       isError.value = true;
@@ -84,20 +86,22 @@ class ProfileController extends GetxController {
   Future<void> editUserProfile() async {
     try {
       isLoading.value = true;
-      final locationController = LocateController.locationController;
-
+      // final locationController = LocateController.locationController;
+      CustomLoadingDialog.showCustomLoadingDialog("Updating profile....");
       final data = {
         "name": nameController.text,
-        "location": {
-          "long": locationController.longitude.value,
-          "lat": locationController.latitude.value
-        },
+        // "location": {
+        //   "long": locationController.longitude.value,
+        //   "lat": locationController.latitude.value
+        // },
         "costPoints": costController.text,
         "profileImage": imageUrl.value
       };
+      print("The data I am giving is ${data}");
 
       await await HttpService.put("/editProfile/$userId", data);
       await Future.wait([fetchAndAssignPosts()]);
+      CustomLoadingDialog.closeLoadingDialog();
 
       ToastUtil.showToast(message: 'Profile updated successfully');
     } catch (e, stackTrace) {
