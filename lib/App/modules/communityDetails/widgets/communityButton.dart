@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+
 import '../../../utilse/widgets.dart';
 
 Widget buildActionCommunityButton(String assetPath, VoidCallback onTap) {
@@ -8,7 +10,10 @@ Widget buildActionCommunityButton(String assetPath, VoidCallback onTap) {
     width: 40,
     child: GestureDetector(
       onTap: onTap,
-      child: Image.asset(assetPath),
+      child: Image.asset(
+        assetPath,
+        color: Colors.black,
+      ),
     ),
   );
 }

@@ -59,6 +59,11 @@ class HomeController extends GetxController {
   /// Fetch and assign posts
   Future<void> fetchAndAssignPosts({String communityId = ""}) async {
     try {
+      if (communityId != "") {
+        posts.clear();
+        filteredPosts.clear();
+        log("Last community id $communityId");
+      }
       isPostLoading.value = true;
       final result = await getPosts(communityId: communityId);
 

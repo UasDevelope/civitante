@@ -166,7 +166,10 @@ class MyCommunityController extends GetxController
       final response = await HttpService.post("/addOrRemoveUser/$communityId",
           {"memberIds": selectedIndexes, "action": actionType});
       log("Response for add and remove community is $response");
+      fetchCommunities();
       CustomLoadingDialog.closeLoadingDialog();
+      Get.back();
+      Get.back();
     } catch (e) {
       CustomLoadingDialog.closeLoadingDialog();
       log("Error for community is $e");

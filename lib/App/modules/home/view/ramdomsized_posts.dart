@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:civitante/App/modules/home/widgets/filter_menues.dart';
+import 'package:civitante/App/modules/loading/empty_data.dart';
 import 'package:civitante/App/shared/app_text.dart';
 import 'package:civitante/App/shared/color.dart';
 import 'package:civitante/App/shared/image.dart';
@@ -14,7 +15,8 @@ import '../widgets/engament_row.dart';
 import '../widgets/slider_label.dart';
 
 class RandomSizedPostsScreen extends StatelessWidget {
-  const RandomSizedPostsScreen({super.key});
+  final String communityId;
+  const RandomSizedPostsScreen({super.key, this.communityId = ""});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,8 @@ class RandomSizedPostsScreen extends StatelessWidget {
                 color: AppColors.appColor,
                 onRefresh: () async {
                   // Call your refresh method from the controller
-                  await homeController.fetchAndAssignPosts();
+                  await homeController.fetchAndAssignPosts(
+                      communityId: communityId);
                 },
                 child: Obx(() {
                   if (homeController.isPostLoading.value) {
@@ -53,7 +56,7 @@ class RandomSizedPostsScreen extends StatelessWidget {
                   }
                   //For the empty post
                   else if (homeController.filteredPosts.isEmpty) {
-                    return Container();
+                    return LottieAnimationWidget();
                   } else {
                     return ListView.builder(
                       shrinkWrap: true,
