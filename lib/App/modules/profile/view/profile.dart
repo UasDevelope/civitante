@@ -4,18 +4,19 @@ import 'package:civitante/App/shared/app_button.dart';
 import 'package:civitante/App/shared/app_text.dart';
 import 'package:civitante/App/shared/color.dart';
 import 'package:civitante/App/shared/image.dart';
-import 'package:civitante/App/shared/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../../Models/Post.dart';
 import '../../../routes/routes.dart';
 import '../../home/widgets/engament_row.dart';
 import '../controller/profile_controller.dart';
 import '../widget/status_row.dart';
-import '../widget/warning.dart';
 
 class ProfileScreen extends StatelessWidget {
+  final bool currentUser;
+
+  const ProfileScreen({super.key, this.currentUser = false});
+
   @override
   Widget build(BuildContext context) {
     final ProfileController controller = Get.put(ProfileController());
@@ -104,27 +105,28 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 4),
                         SizedBox(height: 8),
-                        // ElevatedButton(
-                        //   style: ElevatedButton.styleFrom(
-                        //     backgroundColor: Colors.transparent,
-                        //     shadowColor: Colors.transparent,
-                        //     side: BorderSide(
-                        //         color: AppColors.textFieldHintColor,
-                        //         width: 0.4),
-                        //     shape: RoundedRectangleBorder(
-                        //       borderRadius: BorderRadius.circular(20),
-                        //     ),
-                        //   ),
-                        //   onPressed: () {},
-                        //   child: Padding(
-                        //     padding: const EdgeInsets.all(8.0),
-                        //     child: AppText(
-                        //         text: '+ Follow',
-                        //         fontWeight: FontWeight.w600,
-                        //         fontSize: 14,
-                        //         color: AppColors.Slate_gray),
-                        //   ),
-                        // ),
+
+                     currentUser==true?   ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            side: BorderSide(
+                                color: AppColors.textFieldHintColor,
+                                width: 0.4),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          onPressed: () {},
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: AppText(
+                                text: '+ Follow',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: AppColors.Slate_gray),
+                          ),
+                        ):SizedBox(),
                       ],
                     ),
                   ),
