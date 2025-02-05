@@ -9,22 +9,21 @@ import 'package:get/get.dart';
 import '../../../Models/Post.dart';
 import '../../../routes/routes.dart';
 import '../../home/widgets/engament_row.dart';
-import '../controller/profile_controller.dart';
+import '../controller/preview_profile_controller.dart';
 import '../widget/status_row.dart';
 
-class ProfileScreen extends StatelessWidget {
-  final bool currentUser;
+class PreviewProfileScreen extends StatelessWidget {
+  final String id;
 
-  const ProfileScreen({super.key, this.currentUser = false});
+  const PreviewProfileScreen({super.key, this.id = ''});
 
   @override
   Widget build(BuildContext context) {
-    final ProfileController controller = Get.put(ProfileController(true));
+    final PreviewProfileController controller =
+        Get.put(PreviewProfileController(id));
 
     return Scaffold(
-      drawer: currentUser
-          ? CustomDrawer()
-          : null, // Hide drawer if currentUser is false
+      // Hide drawer if currentUser is false
       appBar: HomeAppbar(
         title: "Profile",
         rightIcon: AppImages.notification,
@@ -40,7 +39,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(ProfileController controller) {
+  Widget _buildContent(PreviewProfileController controller) {
     // if (controller.isLoading.value) {
     //   return SizedBox(
     //     height: Get.height * 0.8,
@@ -107,29 +106,27 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 4),
                         SizedBox(height: 8),
-                        currentUser == false
-                            ? ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  shadowColor: Colors.transparent,
-                                  side: BorderSide(
-                                      color: AppColors.textFieldHintColor,
-                                      width: 0.4),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                onPressed: () {},
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: AppText(
-                                      text: '+ Follow',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                      color: AppColors.Slate_gray),
-                                ),
-                              )
-                            : SizedBox(),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            side: BorderSide(
+                                color: AppColors.textFieldHintColor,
+                                width: 0.4),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          onPressed: () {},
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: AppText(
+                                text: '+ Follow',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: AppColors.Slate_gray),
+                          ),
+                        )
                       ],
                     ),
                   ),
