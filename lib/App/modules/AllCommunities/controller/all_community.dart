@@ -15,6 +15,7 @@ class AllCommunityController extends GetxController
   RxString searchedValue = "".obs;
 
   RxString selectedTab = "new".obs;
+  RxInt selectedTabIndex = 0.obs;
 
   RxList<MyCommunityModel> communities = <MyCommunityModel>[].obs;
 
@@ -67,15 +68,19 @@ class AllCommunityController extends GetxController
         switch (tabController.index) {
           case 0:
             selectedTab.value = "new";
+            selectedTabIndex.value = 0;
             break;
           case 1:
             selectedTab.value = "top";
+            selectedTabIndex.value = 1;
             break;
           case 2:
             selectedTab.value = "joined";
+            selectedTabIndex.value = 2;
             break;
         }
         log("Selected status is ${selectedTab.value}");
+        log("Selected Index is ${selectedTabIndex.value}");
         fetchAllCommunities();
       }
     });

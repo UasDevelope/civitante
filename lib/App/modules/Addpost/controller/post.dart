@@ -147,6 +147,8 @@ class PostController extends GetxController {
           backgroundColor: Colors.green,
         );
         CustomLoadingDialog.closeLoadingDialog();
+        final controller = LocateController.homeController;
+        controller.fetchAndAssignPosts(communityId: communityId);
         _clearForm();
         Get.back();
       } else {

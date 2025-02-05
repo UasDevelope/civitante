@@ -4,7 +4,7 @@ import 'package:civitante/App/utilse/constant.dart';
 import 'package:http/http.dart' as http;
 
 class HttpService {
-  static const String _baseUrl = 'https://civitante.vercel.app/user';
+  static const String _baseUrl = 'https://civitante.onrender.com/user';
 
   static Future<dynamic> post(
       String endpoint, Map<String, dynamic> data) async {
@@ -28,7 +28,7 @@ class HttpService {
 
   static Future<dynamic> get(String endpoint) async {
     final url = Uri.parse('$_baseUrl$endpoint');
-
+    log(" get Url is $url");
     try {
       var header = {
         'Content-Type': 'application/json',

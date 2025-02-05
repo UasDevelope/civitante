@@ -58,31 +58,27 @@ class AllCommunitiesTabBar extends StatelessWidget {
     return Builder(
       builder: (context) {
         final controller = LocateController.allCommunity;
-        final TabController tabController = DefaultTabController.of(context)!;
-        return AnimatedBuilder(
-          animation: tabController,
-          builder: (context, child) {
-            final bool isSelected = tabController.index == index;
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              margin:
-                  EdgeInsets.symmetric(horizontal: 16), // Spacing between tabs
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black,
-                  width: 1,
-                ), // Border for each tab
-                borderRadius: BorderRadius.circular(30), // Rounded corners
-              ),
-              child: AppText(
-                text: text,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: isSelected ? Colors.white : AppColors.appColor,
-              ),
-            );
-          },
-        );
+        return Obx(() {
+          bool isSelected = controller.selectedTabIndex.value == index;
+          return Container(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            margin:
+                EdgeInsets.symmetric(horizontal: 16), // Spacing between tabs
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.black,
+                width: 1,
+              ), // Border for each tab
+              borderRadius: BorderRadius.circular(30), // Rounded corners
+            ),
+            child: AppText(
+              text: text,
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: isSelected ? Colors.white : AppColors.appColor,
+            ),
+          );
+        });
       },
     );
   }
