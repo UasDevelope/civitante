@@ -4,18 +4,18 @@ class Post {
   final String id;
   final String title;
   final String description;
-  final RxList<String> tags;  // Using RxList for tags
+  final RxList<String> tags; // Using RxList for tags
   final String category;
-  final RxList<String> media;  // Using RxList for media
-  final RxList<String> mediaUrls;  // Using RxList for mediaUrls
+  final RxList<String> media; // Using RxList for media
+  final RxList<String> mediaUrls; // Using RxList for mediaUrls
   final CreatedBy createdBy;
-  final RxInt views;  // Reactive views count
-  RxInt likesCount;  // Using RxInt for likesCount
-  final RxInt commentsCount;  // Using RxInt for commentsCount
-  RxBool isLikedByUser;  // Using RxBool for isLikedByUser
-  RxBool isReported;  // Using RxBool for isReported
-  RxBool isViewed;  // Using RxBool for isViewed
-  RxList<Comment> comments;  // Using RxList for comments
+  final RxInt views; // Reactive views count
+  RxInt likesCount; // Using RxInt for likesCount
+  final RxInt commentsCount; // Using RxInt for commentsCount
+  RxBool isLikedByUser; // Using RxBool for isLikedByUser
+  RxBool isReported; // Using RxBool for isReported
+  RxBool isViewed; // Using RxBool for isViewed
+  RxList<Comment> comments; // Using RxList for comments
 
   Post({
     required this.id,
@@ -40,10 +40,18 @@ class Post {
       id: json['_id'] ?? '',
       title: json['title'] ?? 'Untitled',
       description: json['description'] ?? '',
-      tags: RxList<String>((json['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
+      tags: RxList<String>(
+          (json['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
+              []),
       category: json['category'] ?? '',
-      media: RxList<String>((json['media'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
-      mediaUrls: RxList<String>((json['mediaUrls'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
+      media: RxList<String>((json['media'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          []),
+      mediaUrls: RxList<String>((json['mediaUrls'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          []),
       createdBy: CreatedBy.fromJson(json['createdBy'] ?? {}),
       views: RxInt(json['views'] ?? 0),
       likesCount: RxInt(json['likesCount'] ?? 0),
@@ -51,7 +59,10 @@ class Post {
       isLikedByUser: RxBool(json['isLikedByUser'] ?? false),
       isReported: RxBool(json['isReported'] ?? false),
       isViewed: RxBool(json['isViewed'] ?? false),
-      comments: RxList<Comment>((json['comments'] as List<dynamic>?)?.map((x) => Comment.fromJson(x)).toList() ?? []),
+      comments: RxList<Comment>((json['comments'] as List<dynamic>?)
+              ?.map((x) => Comment.fromJson(x))
+              .toList() ??
+          []),
     );
   }
 }
@@ -83,17 +94,15 @@ class Comment {
   final String id;
   final User user;
   final String text;
-  final RxList<String> likes;  // Using RxList for likes
+  // Using RxList for likes
   final DateTime createdAt;
-  final RxList<Comment> replies;  // Using RxList for replies
+  // Using RxList for replies
 
   Comment({
     required this.id,
     required this.user,
     required this.text,
-    required this.likes,
     required this.createdAt,
-    required this.replies,
   });
 
   factory Comment.fromJson(Map<String, dynamic> json) {
@@ -101,9 +110,10 @@ class Comment {
       id: json['_id'] ?? '',
       user: User.fromJson(json['user'] ?? {}),
       text: json['text'] ?? '',
-      likes: RxList<String>(List<String>.from(json['likes']?.map((x) => x.toString()) ?? [])),
-      createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
-      replies: RxList<Comment>((json['replies'] as List<dynamic>?)?.map((x) => Comment.fromJson(x)).toList() ?? []),
+      // likes: RxList<String>(List<String>.from(json['likes']?.map((x) => x.toString()) ?? [])),
+      createdAt:
+          DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
+      // replies: RxList<Comment>((json['replies'] as List<dynamic>?)?.map((x) => Comment.fromJson(x)).toList() ?? []),
     );
   }
 }
