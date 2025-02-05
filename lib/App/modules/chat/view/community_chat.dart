@@ -1,4 +1,6 @@
 import 'package:civitante/App/modules/home/widgets/homeAppbar.dart';
+import 'package:civitante/App/modules/loading/empty_data.dart';
+import 'package:civitante/App/modules/shimmer/chat_bubble_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../shared/color.dart';
@@ -21,7 +23,13 @@ class CommunityChat extends StatelessWidget {
         children: [
           // Messages List
           Expanded(
-            child: Obx(() => ListView.builder(
+            child: Obx(() {
+              if (chatController.isLoading.value) {
+                return ChatBubbleShimmerList();
+              } else if (chatController.messages.isEmpty) {
+                return LottieAnimationWidget();
+              } else {
+                return ListView.builder(
                   controller: chatController.scrollController,
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                   itemCount: chatController.messages.length,
@@ -29,11 +37,17 @@ class CommunityChat extends StatelessWidget {
                     final message = chatController.messages[index];
                     return ChatBubble(
                       text: message["text"],
-                      isMe: true,
+                      isMe: message["isMe"],
                       time: message["time"],
+                      senderName: message["sender"],
+                      profileImage: message[
+                          "senderProfileImage"], // Add profile image URL if available
                     );
+                    ;
                   },
-                )),
+                );
+              }
+            }),
           ),
 
           // Text Field & Send Button
