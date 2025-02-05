@@ -44,7 +44,7 @@ class ProfileController extends GetxController {
       isLoading.value = true;
       isError.value = false;
       var response = await HttpService.get('/getProfile');
-      print('here is response of profile ${response['followers']} ');
+      print('here is response of profile ${response} ');
       final postsData = response['posts'] as List<dynamic>? ?? [];
       name.value = response['name']?.toString() ?? '';
 
