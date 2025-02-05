@@ -1,10 +1,8 @@
 import 'package:civitante/App/Models/my_community_model.dart';
 import 'package:civitante/App/modules/CommunityPost/view/community_post_screen.dart';
-import 'package:civitante/App/modules/editMyCommunity/view/edityMyCommunity.dart';
 import 'package:civitante/App/modules/mycommunites/view/invite_member.dart';
 import 'package:civitante/App/modules/mycommunites/view/members_in_community.dart';
 import 'package:flutter/material.dart';
-
 import '../../../utilse/widgets.dart';
 import '../../home/view/ramdomsized_posts.dart';
 import '../../meeting/view/new_meeting_view.dart';
@@ -13,10 +11,11 @@ import '../widgets/communityButton.dart';
 
 class MyCommunityDetail extends StatelessWidget {
   final MyCommunityModel? community;
+  final bool isAllCommunity;
   final CommunityDetailController controller =
       Get.put(CommunityDetailController());
 
-  MyCommunityDetail({super.key, this.community});
+  MyCommunityDetail({super.key, this.community, this.isAllCommunity = false});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +37,9 @@ class MyCommunityDetail extends StatelessWidget {
                       controller.isPosting.value.toString(),
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: isAllCommunity
+                          ? MainAxisAlignment.end
+                          : MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Profile Avatar with Overlay
@@ -96,25 +97,30 @@ class MyCommunityDetail extends StatelessWidget {
                           width: 60,
                         ),
                         // Action Buttons
-                        Column(
-                          spacing: 10,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            buildActionCommunityButton(AppImages.addCircle, () {
-                              Get.to(InviteMember(
-                                communityId: community!.id,
-                              ));
-                            }),
-                            buildActionCommunityButton(AppImages.eidt, () {
-                              Get.toNamed(AppRoutes.editMycommunity,
-                                  arguments: {"data": community!});
-                            }),
-                            buildActionCommunityButton(AppImages.video, () {
-                              Get.to(NewMeetingView());
-                            }),
-                          ],
-                        ),
+                        if (!isAllCommunity)
+                          Column(
+                            spacing: 10,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              buildActionCommunityButton(AppImages.addCircle,
+                                  () {
+                                Get.to(InviteMember(
+                                  communityId: community!.id,
+                                ));
+                              }),
+                              buildActionCommunityButton(AppImages.eidt, () {
+                                Get.toNamed(AppRoutes.editMycommunity,
+                                    arguments: {"data": community!});
+                              }),
+                              buildActionCommunityButton(AppImages.video, () {
+                                Get.to(NewMeetingView());
+                              }),
+                            ],
+                          ),
+                        if (isAllCommunity)
+                          buildActionCommunityButton(
+                              AppImages.addCircle, () {}),
                       ],
                     ),
                     // Community Name and Members
@@ -140,7 +146,7 @@ class MyCommunityDetail extends StatelessWidget {
                                 fontSize: 14,
                                 color: AppColors.appColor),
                             AppText(
-                                text: '100 points',
+                                text: '${community!.cost} points',
                                 fontWeight: FontWeight.w500,
                                 fontSize: 14,
                                 color: AppColors.appColor),
