@@ -66,6 +66,7 @@ class ProfileController extends GetxController {
       following.value = response['following'] as int? ?? 0;
       imageUrl.value = response['profileImage']?.toString() ?? '';
       nameController.text = name.value;
+      print("Name is ${nameController.text}");
     } catch (e, stackTrace) {
       _handleError('Failed to load profile', e, stackTrace);
     }
@@ -83,18 +84,19 @@ class ProfileController extends GetxController {
   Future<void> editUserProfile() async {
     try {
       CustomLoadingDialog.showCustomLoadingDialog("Updating profile....");
-      final locationController = LocateController.locationController;
+      // final locationController = LocateController.locationController;
       final data = {
         "name": nameController.text,
-        "location": {
-          "long": locationController.longitude.value,
-          "lat": locationController.latitude.value
-        },
+        // "location": {
+        //   "long": locationController.longitude.value,
+        //   "lat": locationController.latitude.value
+        // },
         "costPoints": costController.text,
         "profileImage": imageUrl.value
       };
+      print("The data I am giving is ${data}");
 
-      await await HttpService.put("/editProfile/$userId", data);
+      await await HttpService.put("/editProfile", data);
       await Future.wait([fetchProfileData(), fetchAndAssignPosts()]);
       CustomLoadingDialog.closeLoadingDialog();
       ToastUtil.showToast(message: 'Profile updated successfully');
