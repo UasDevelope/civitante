@@ -106,27 +106,31 @@ class PreviewProfileScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 4),
                         SizedBox(height: 8),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            side: BorderSide(
-                                color: AppColors.textFieldHintColor,
-                                width: 0.4),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                          onPressed: () {},
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: AppText(
-                                text: '+ Follow',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                                color: AppColors.Slate_gray),
-                          ),
-                        )
+                        Obx(() => ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                side: BorderSide(
+                                    color: AppColors.textFieldHintColor,
+                                    width: 0.4),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              onPressed: () {
+                                controller.followUnfollowUser();
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: AppText(
+                                    text: controller.isFollow == false
+                                        ? '+ Follow'
+                                        : 'Unfollow',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                    color: AppColors.Slate_gray),
+                              ),
+                            ))
                       ],
                     ),
                   ),
