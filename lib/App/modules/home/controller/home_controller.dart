@@ -179,6 +179,7 @@ class HomeController extends GetxController {
 
       if (response != null && response['error'] == null) {
         filteredPosts[index].isViewed.value = true;
+        filteredPosts[index].views.value = response['views'];
         print("Post details: $response");
         return response; // Returning the post details
       } else {

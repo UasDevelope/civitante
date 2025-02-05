@@ -64,7 +64,10 @@ class RandomSizedPostsScreen extends StatelessWidget {
                         final post = homeController.filteredPosts[index];
                         return GestureDetector(
                           onTap: () {
-                            homeController.viewPostById(post.id, index);
+                            var response =
+                                homeController.viewPostById(post.id, index);
+                            print('here is value ${response}');
+                           /// post.views.value = response['likesCount'];
 
                             Get.toNamed(AppRoutes.postDetail, arguments: {
                               "data": post,
@@ -412,7 +415,7 @@ class _CustomCard2State extends State<CustomCard2> {
                         fontSize: 16,
                         fontWeight: FontWeight.w600),
               ),
-              Container(
+              SizedBox(
                 height: 200,
                 child: Stack(
                   children: [
@@ -506,7 +509,7 @@ class _CustomCard2State extends State<CustomCard2> {
                   ],
                 ),
               ),
-              Container(
+              SizedBox(
                   height: Get.height * 0.07,
                   child: SliderWithLabels(
                     post: widget.post,
