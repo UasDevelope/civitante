@@ -1,9 +1,7 @@
-import 'dart:io';
-
+import 'dart:developer';
 import 'package:flutter/material.dart';
-
 import '../../../utilse/widgets.dart';
-import '../widgets/image_list.dart'; // Ensure the path and imports are correct.
+import '../widgets/image_list.dart';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
@@ -16,6 +14,11 @@ class _PostScreenState extends State<PostScreen> {
   @override
   Widget build(BuildContext context) {
     final controller = LocateController.postController;
+    final argument = Get.arguments;
+    String communityId = argument != null && argument.containsKey("communityId")
+        ? argument["communityId"]
+        : "";
+    log("Community id is $communityId");
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Obx(() => LoadingOverlay(
@@ -42,7 +45,8 @@ class _PostScreenState extends State<PostScreen> {
                             width: Get.width / 5,
                             text: AppStrings.Post,
                             onPressed: () {
-                              controller.addPost();
+                              log("Community id is $communityId");
+                              controller.addPost(communityId: communityId);
                             })
                       ],
                     ),

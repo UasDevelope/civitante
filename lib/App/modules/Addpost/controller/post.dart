@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -78,10 +79,9 @@ class PostController extends GetxController {
     await _checkPermissions();
   }
 
-  void addPost() async {
+  void addPost({String communityId = ""}) async {
     try {
-      isloading.value = true;
-
+      // isloading.value = true;
       // 1. Validate User ID
       final userID = AppConstant().userID;
       if (userID == null || userID.isEmpty) {
@@ -117,6 +117,9 @@ class PostController extends GetxController {
         return;
       }
 
+      CustomLoadingDialog.showCustomLoadingDialog(
+          "Creating  ${communityId != "" ? "Community " : ""}Post...");
+
       // 3. Prepare Post Data
       final data = {
         "title": titleController.text.trim(),
@@ -131,7 +134,9 @@ class PostController extends GetxController {
       print('Post Data: $data');
 
       // 4. Submit to API
-      final response = await HttpService.post('/addPosts', data);
+      final response = await HttpService.post(
+          communityId == "" ? '/addPosts' : '/postInCommunity/$communityId',
+          data);
 
       // 5. Handle Response
       if (response != null && response['error'] == null) {
@@ -141,24 +146,28 @@ class PostController extends GetxController {
           message: response['message'] ?? "Post created successfully!",
           backgroundColor: Colors.green,
         );
-
-        // Clear all input fields
+        CustomLoadingDialog.closeLoadingDialog();
         _clearForm();
         Get.back();
       } else {
+        log("Response is $response");
         final errorMessage = _parseErrorMessage(response);
         ToastUtil.showToast(
           message: errorMessage,
           backgroundColor: Colors.red,
         );
+        CustomLoadingDialog.closeLoadingDialog();
       }
     } catch (e) {
+      log("Error is $e");
+      CustomLoadingDialog.closeLoadingDialog();
+
       ToastUtil.showToast(
         message: "Network error: Please check your connection",
         backgroundColor: Colors.red,
       );
     } finally {
-      isloading.value = false;
+      // isloading.value = false;
     }
   }
 
