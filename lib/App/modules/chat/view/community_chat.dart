@@ -1,6 +1,7 @@
 import 'package:civitante/App/modules/home/widgets/homeAppbar.dart';
 import 'package:civitante/App/modules/loading/empty_data.dart';
 import 'package:civitante/App/modules/shimmer/chat_bubble_shimmer.dart';
+import 'package:civitante/App/service/chat_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../shared/color.dart';
@@ -15,7 +16,7 @@ class CommunityChat extends StatelessWidget {
   Widget build(BuildContext context) {
     final ChatController chatController =
         Get.put(ChatController(communityId: communityId));
-    chatController.connectSocket();
+    ChatService.connectSocket();
 
     return Scaffold(
       appBar: HomeAppbar(title: "Community Chat"),

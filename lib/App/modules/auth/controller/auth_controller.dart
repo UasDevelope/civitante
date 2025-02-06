@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
 import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/constant.dart';
 import 'package:civitante/App/utilse/pref.dart';
@@ -51,50 +52,22 @@ class AuthController extends GetxController {
     print(obSecureText.value);
   }
 
-  Future<void> pickImage(String type) async {
-    try {
-      XFile? selectedImage =
-          await _picker.pickImage(source: ImageSource.gallery);
-
-      if (selectedImage != null) {
-        // Compress the image
-        final XFile? compressedImage =
-            await ImageUtils.compressImage(selectedImage);
-
-        if (compressedImage != null) {
-          // Upload the compressed image to Firebase Storage
-          String imageUrl = await ImageUtils.uploadImageToFirebase(
-              File(compressedImage.path));
-
-          // Update the corresponding reactive variable with the image URL
-          if (type == "1") {
-            drivingLicense.value =
-                imageUrl; // Reactive variable updated with the uploaded URL
-            log("Driving License Image URL=====>$imageUrl");
-          } else {
-            passport.value =
-                imageUrl; // Reactive variable updated with the uploaded URL
-            log("Passport Image URL=====>$imageUrl");
-          }
-        } else {
-          log("Image compression failed!");
-        }
-      } else {
-        log("Oh Sorry...No Image Selected!");
-      }
-    } catch (e) {
-      log("Error: $e");
-    }
-  }
-
   void goToNext(String route) {
-    loading.value = true;
+    // loading.value = true;
+
+    String displayRoute = route.replaceFirst("/", ""); // Removes leading "/"
+
+    // Capitalize the first letter for better readability
+    displayRoute = displayRoute[0].toUpperCase() + displayRoute.substring(1);
+
+    CustomLoadingDialog.showCustomLoadingDialog("Going to $displayRoute....");
 
     Timer(Duration(seconds: 2), () {
+      CustomLoadingDialog.closeLoadingDialog();
       Get.toNamed(route);
       log('==============Redirecting to $route================>Routes-------->${route}');
 
-      loading.value = false;
+      // loading.value = false;
     });
   }
 
@@ -105,7 +78,8 @@ class AuthController extends GetxController {
 
 // Register Normal User
   void registerNormalUser() async {
-    loading.value = true;
+    // loading.value = true;
+    CustomLoadingDialog.showCustomLoadingDialog("Registering user...");
     var data = {
       "email": signupEmailController.text,
       "name": fullNameController.text,
@@ -120,16 +94,14 @@ class AuthController extends GetxController {
     var response = await HttpService.post('/register', data);
 
     if (response != null && response['error'] == null) {
-      loading.value = false;
       ToastUtil.showToast(
         message: response['message'] ?? "Registration successful!",
         backgroundColor: Colors.green,
       );
-      loading.value = false;
-
+      CustomLoadingDialog.closeLoadingDialog();
       goToNext(AppRoutes.login);
     } else {
-      loading.value = false;
+      CustomLoadingDialog.closeLoadingDialog();
       String errorMsg = response['details'] != null
           ? jsonDecode(response['details'])['message']
           : "Unknown error occurred";
@@ -144,15 +116,16 @@ class AuthController extends GetxController {
 // Register Pro User
   void registerProUser() async {
     // Indicate loading state
-    loading.value = true;
+    // loading.value = true;
+    CustomLoadingDialog.showCustomLoadingDialog("Registering Pro User...");
 
     // Prepare data for the API request
     var data = {
       "email": signupEmailController.text,
       "name": fullNameController.text,
       "location": {
-        "long": positioned.value?.longitude, // Safely access longitude
-        "lat": positioned.value?.latitude, // Safely access latitude
+        "long": locationController.longitude.value,
+        "lat": locationController.latitude.value
       },
       "password": signupPasswordController.text,
       "isPro": true,
@@ -168,8 +141,11 @@ class AuthController extends GetxController {
 
       // Handle success response
       if (response != null && response['error'] == null) {
-        loading.value = false;
-
+        // loading.value = false;
+        CustomLoadingDialog.closeLoadingDialog();
+        // PrefUtil.setString(PrefUtil.userId, response["user"]["id"]);
+        AppConstant().userID = response["user"]["id"];
+        log("Response is $response");
         // Show success message
         ToastUtil.showToast(
           message: response['message'] ?? "Registration successful!",
@@ -180,7 +156,8 @@ class AuthController extends GetxController {
         makePayment();
       } else {
         // Handle error response
-        loading.value = false;
+        // loading.value = false;
+        CustomLoadingDialog.closeLoadingDialog();
         String errorMsg = response['details'] != null
             ? jsonDecode(response['details'])['message']
             : "Unknown error occurred";
@@ -192,7 +169,8 @@ class AuthController extends GetxController {
       }
     } catch (e) {
       // Handle exceptions
-      loading.value = false;
+      // loading.value = false;
+      CustomLoadingDialog.closeLoadingDialog();
       ToastUtil.showToast(
         message: "Error: ${e.toString()}",
         backgroundColor: Colors.red,
@@ -202,6 +180,7 @@ class AuthController extends GetxController {
 
   Future<Map<String, dynamic>> createSetupIntent() async {
     try {
+      CustomLoadingDialog.showCustomLoadingDialog("Creating setup intent...");
       var response = await http.post(
         Uri.parse('https://api.stripe.com/v1/setup_intents'),
         headers: {
@@ -211,9 +190,10 @@ class AuthController extends GetxController {
       );
 
       print('Setup Intent Response: ${response.body}');
+      CustomLoadingDialog.closeLoadingDialog();
       return jsonDecode(response.body);
     } catch (err) {
-      print('Error creating setup intent: ${err.toString()}');
+      CustomLoadingDialog.closeLoadingDialog();
       rethrow;
     }
   }
@@ -224,6 +204,7 @@ class AuthController extends GetxController {
     try {
       setupIntent = await createSetupIntent(); // Create setup intent
       // Initialize the payment sheet
+      CustomLoadingDialog.showCustomLoadingDialog("Making payment...");
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           setupIntentClientSecret:
@@ -232,16 +213,19 @@ class AuthController extends GetxController {
           merchantDisplayName: 'Adnan',
         ),
       );
-
+      CustomLoadingDialog.closeLoadingDialog();
       // Display the payment sheet
       await displayPaymentSheet();
     } catch (e, s) {
+      CustomLoadingDialog.closeLoadingDialog();
       print('Exception during payment: $e $s');
     }
   }
 
   Future<void> displayPaymentSheet() async {
     try {
+      CustomLoadingDialog.showCustomLoadingDialog(
+          "Displaying payment sheet...");
       await Stripe.instance.presentPaymentSheet().then((value) async {
         print('Card details saved successfully!');
 
@@ -250,9 +234,9 @@ class AuthController extends GetxController {
           var updatedIntent =
               await retrieveSetupIntent(setupIntent!['client_secret']);
           if (updatedIntent != null) {
-            print("here user id${AppConstant().userID}");
+            CustomLoadingDialog.closeLoadingDialog();
             savePaymentMethod(
-                AppConstant().userID, updatedIntent['payment_method']);
+                AppConstant().userID!, updatedIntent['payment_method']);
 
             print('Payment Method ID: ${updatedIntent['payment_method']}');
           }
@@ -289,21 +273,25 @@ class AuthController extends GetxController {
     }
   }
 
-  void savePaymentMethod(String? userId, String token) async {
+  void savePaymentMethod(String userId, String token) async {
+    CustomLoadingDialog.showCustomLoadingDialog("Saving payment method...");
     var data = {
       "userId": userId,
       "paymentId": token,
     };
+    print("data is $data");
 
     var response = await HttpService.post('/savePaymentMethod', data);
     print('response: ${response}');
     if (response != null && response['error'] == null) {
+      CustomLoadingDialog.closeLoadingDialog();
       ToastUtil.showToast(
         message: response['message'] ?? "Payment method saved successfully!",
         backgroundColor: Colors.green,
       );
       upgradeToPro();
     } else {
+      CustomLoadingDialog.closeLoadingDialog();
       String errorMsg = response['details'] != null
           ? jsonDecode(response['details'])['message']
           : "Unknown error occurred";
@@ -317,14 +305,17 @@ class AuthController extends GetxController {
   // update Pro user
 
   void upgradeToPro() async {
+    CustomLoadingDialog.showCustomLoadingDialog("Upgrading To Pro....");
     print('Update User ${AppConstant().userID}');
     var data = {"userId": AppConstant().userID, "amount": 100};
 
     var response = await HttpService.post(AppConstant().charge, data);
 
     if (response != null && response['error'] == null) {
+      CustomLoadingDialog.closeLoadingDialog();
       goToNext(AppRoutes.login);
     } else {
+      CustomLoadingDialog.closeLoadingDialog();
       String errorMsg = response['details'] != null
           ? jsonDecode(response['details'])['message']
           : "Unknown error occurred";
@@ -337,7 +328,8 @@ class AuthController extends GetxController {
   // Login Functions
 
   void loginUser() async {
-    loading.value = true;
+    // loading.value = true;
+    CustomLoadingDialog.showCustomLoadingDialog("Logging in user....");
     var data = {
       "email": loginEmailController.text,
       "password": loginPassworedController.text,
@@ -350,11 +342,11 @@ class AuthController extends GetxController {
         message: response['message'] ?? "Login successful!",
         backgroundColor: Colors.green,
       );
-      loading.value = false;
       String token = response['token'];
       print('${response['token']}');
       PrefUtil.setString(PrefUtil.userId, token);
       AppConstant().userID = token;
+      CustomLoadingDialog.closeLoadingDialog();
       LocateController.profileController;
       // await SharedPreferencesHelper.saveUserId(response['user']['id']);
       //upgradeToPro();
@@ -365,6 +357,7 @@ class AuthController extends GetxController {
       print("User ID: ${user['id']}");
       print("Email: ${user['email']}");
     } else {
+      CustomLoadingDialog.closeLoadingDialog();
       String errorMsg = response['details'] != null
           ? jsonDecode(response['details'])['message']
           : "Unknown error occurred";
@@ -373,7 +366,7 @@ class AuthController extends GetxController {
         message: "Error: $errorMsg",
         backgroundColor: Colors.red,
       );
-      loading.value = false;
+      // loading.value = false;
     }
   }
 }

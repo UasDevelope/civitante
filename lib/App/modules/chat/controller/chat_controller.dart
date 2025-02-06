@@ -1,8 +1,8 @@
 import 'package:civitante/App/utilse/pref.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import '../../../service/chat_service.dart';
 
 class ChatController extends GetxController {
   final String communityId;
@@ -12,118 +12,76 @@ class ChatController extends GetxController {
   final TextEditingController messageController = TextEditingController();
   final ScrollController scrollController = ScrollController();
   var messages = <Map<String, dynamic>>[].obs;
-  var isLoading = false.obs; // Track loading state
+  var isLoading = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    connectSocket();
+    _initializeChat();
   }
 
   @override
   void onClose() {
-    print("Disconnecting socket...");
     socket.disconnect();
     socket.dispose();
     super.onClose();
   }
 
-  String decodeToken(String userToken) {
-    if (userToken.isNotEmpty) {
-      Map<String, dynamic> decodedToken = JwtDecoder.decode(userToken);
-      return decodedToken["id"];
-    } else {
-      return "";
-    }
-  }
-
-  Future<void> connectSocket() async {
+  Future<void> _initializeChat() async {
     isLoading.value = true;
-    String userToken = PrefUtil.getString(PrefUtil.userId);
-    String userId = decodeToken(userToken);
-
-    print("Connecting to socket with token: $userToken"); // Debug log
-
-    socket = IO.io("https://civitante.onrender.com/", <String, dynamic>{
-      "transports": ["websocket"],
-      "autoConnect": false,
-      "auth": {
-        "token": userToken,
-      },
-    });
-
-    socket.connect();
+    socket = await ChatService.connectSocket();
 
     socket.onConnect((_) {
-      print("Connected to socket!"); // Debug log
-      joinCommunity(userId);
-    });
-
-    socket.on("disconnect", (data) {
-      print("Data from server is $data");
+      print("Connected to socket!");
+      _joinCommunity();
     });
 
     socket.on("receiveMessage", (data) {
-      print("Received message: ${data}"); // Debug log
-      messages.add({
-        "_id": data["_id"],
-        "text": data["message"],
-        "isMe": data["sender"]["id"] == userId,
-        "time": _formatTime(data["createdAt"]),
-        "sender": data["sender"]["name"],
-        "profileImage": data["sender"]["profileImage"],
-      });
-
-      _scrollToBottom();
+      _handleReceivedMessage(data);
     });
 
-    socket.onDisconnect((_) {
-      print("Disconnected from socket"); // Debug log
-    });
+    socket.onDisconnect((_) => print("Disconnected from socket"));
+    socket.onError((error) => print("Socket error: $error"));
 
-    socket.onError((error) {
-      print("Socket error: $error"); // Debug log
-    });
-
-    isLoading.value = false; // Stop loading after connection
+    isLoading.value = false;
   }
 
-  void joinCommunity(String userId) {
-    print("Joining community: $communityId"); // Debug log
-    isLoading.value = true; // Start loading while fetching messages
+  void _joinCommunity() {
+    String userToken = PrefUtil.getString(PrefUtil.userId);
+    String userId = ChatService.decodeToken(userToken);
 
-    socket.emit("joinCommunityChat", {"communityId": communityId});
-
-    socket.on("joinedCommunity", (data) {
-      messages.clear();
-      if (data["recentMessage"] != null) {
-        for (var msg in data["recentMessage"]) {
-          messages.add({
-            "_id": msg["_id"],
-            "text": msg["message"],
-            "isMe": msg["sender"]["_id"] == userId,
-            "time": _formatTime(msg["createdAt"]),
-            "sender": msg["sender"]["name"],
-            "profileImage": msg["sender"]["profileImage"]
-          });
-        }
-      }
-      _scrollToBottom();
-      isLoading.value = false; // Stop loading after fetching messages
-    });
+    ChatService.joinCommunity(
+      socket: socket,
+      communityId: communityId,
+      userId: userId,
+      messages: messages,
+      onMessagesUpdated: _scrollToBottom,
+    );
   }
 
   void sendMessage() {
-    if (messageController.text.trim().isNotEmpty) {
-      print("Sending message: ${messageController.text.trim()}"); // Debug log
-      socket.emit("sendMessage", {
-        "communityId": communityId,
-        "message": messageController.text.trim(),
-      });
+    ChatService.sendMessage(
+      socket: socket,
+      communityId: communityId,
+      messageController: messageController,
+      onMessageSent: _scrollToBottom,
+    );
+  }
 
-      messageController.clear();
-      _scrollToBottom();
-    }
+  void _handleReceivedMessage(Map<String, dynamic> data) {
+    String userToken = PrefUtil.getString(PrefUtil.userId);
+    String userId = ChatService.decodeToken(userToken);
+
+    messages.add({
+      "_id": data["_id"],
+      "text": data["message"],
+      "isMe": data["sender"]["id"] == userId,
+      "time": _formatTime(data["createdAt"]),
+      "sender": data["sender"]["name"],
+      "profileImage": data["sender"]["profileImage"],
+    });
+
+    _scrollToBottom();
   }
 
   void _scrollToBottom() {
@@ -138,6 +96,6 @@ class ChatController extends GetxController {
 
   String _formatTime(String timestamp) {
     DateTime dateTime = DateTime.parse(timestamp).toLocal();
-    return "${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')} ${dateTime.hour >= 12 ? 'PM' : 'AM'}";
+    return "\${dateTime.hour}:\${dateTime.minute.toString().padLeft(2, '0')} \${dateTime.hour >= 12 ? 'PM' : 'AM'}";
   }
 }

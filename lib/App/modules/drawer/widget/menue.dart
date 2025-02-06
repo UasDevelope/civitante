@@ -1,3 +1,4 @@
+import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
 import 'package:civitante/App/utilse/constant.dart';
 import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/widgets.dart';
@@ -31,9 +32,10 @@ class MenuItem extends StatelessWidget {
           color: AppColors.appColor), // Title text
       onTap: () async {
         if (routeName == '/login') {
-          print('remove token');
+          CustomLoadingDialog.showCustomLoadingDialog("Logging out....");
           AppConstant().userID = null;
           PrefUtil.remove(PrefUtil.userId);
+          CustomLoadingDialog.closeLoadingDialog();
         }
         Get.toNamed(routeName); // Navigate to the route name when tapped
         print("routeName${routeName}");
