@@ -156,7 +156,7 @@ class WalletScreen extends StatelessWidget {
           ],
         ),
       ),
-      drawer: CustomDrawer(),
+      // drawer: CustomDrawer(),
     );
   }
 }

@@ -90,12 +90,12 @@ class AuthController extends GetxController {
   void goToNext(String route) {
     loading.value = true;
 
-    Timer(Duration(seconds: 2), () {
+    // Timer(Duration(seconds: 2), () {
       Get.toNamed(route);
       log('==============Redirecting to $route================>Routes-------->${route}');
 
       loading.value = false;
-    });
+    // });
   }
 
   void assignLocationValue() {
@@ -151,8 +151,8 @@ class AuthController extends GetxController {
       "email": signupEmailController.text,
       "name": fullNameController.text,
       "location": {
-        "long": positioned.value?.longitude, // Safely access longitude
-        "lat": positioned.value?.latitude, // Safely access latitude
+        "long": locationController.longitude.value, // Safely access longitude
+        "lat": locationController.latitude.value, // Safely access latitude
       },
       "password": signupPasswordController.text,
       "isPro": true,
