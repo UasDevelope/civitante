@@ -62,13 +62,13 @@ class AuthController extends GetxController {
 
     CustomLoadingDialog.showCustomLoadingDialog("Going to $displayRoute....");
 
-    Timer(Duration(seconds: 2), () {
-      CustomLoadingDialog.closeLoadingDialog();
+    // Timer(Duration(seconds: 2), () {
       Get.toNamed(route);
       log('==============Redirecting to $route================>Routes-------->${route}');
 
-      // loading.value = false;
-    });
+      loading.value = false;
+    // });
+
   }
 
   void assignLocationValue() {
@@ -124,8 +124,10 @@ class AuthController extends GetxController {
       "email": signupEmailController.text,
       "name": fullNameController.text,
       "location": {
+
         "long": locationController.longitude.value,
         "lat": locationController.latitude.value
+
       },
       "password": signupPasswordController.text,
       "isPro": true,

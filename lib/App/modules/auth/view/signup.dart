@@ -35,11 +35,11 @@ class SignupScreen extends StatelessWidget {
                         // SizedBox(
                         //   height: Get.height * 0.0010,
                         // ),
-                        AppText(
-                            text: AppStrings.signUpPro,
-                            color: AppColors.appColor,
-                            fontSize: 30,
-                            fontWeight: FontWeight.w500),
+                        // AppText(
+                        //     text: AppStrings.signUpPro,
+                        //     color: AppColors.appColor,
+                        //     fontSize: 30,
+                        //     fontWeight: FontWeight.w500),
                         SizedBox(
                           height: Get.height * 0.01,
                         ),
@@ -137,24 +137,24 @@ class SignupScreen extends StatelessWidget {
                                 controller.registerNormalUser();
                               }),
                         ),
-                        SizedBox(
-                          height: Get.height * 0.005,
-                        ),
-                        Center(
-                          child: AppButton(
-                              useGradient: false,
-                              textColor: AppColors.white,
-                              text: AppStrings.go,
-                              height: 60.0,
-                              width: Get.width,
-                              radius: 30,
-                              onPressed: () {
-                                // if (controller.signupGlobalKey.currentState!
-                                //     .validate()) {
-                                controller.goToNext(AppRoutes.proAccound);
-                                // }
-                              }),
-                        ),
+                        // SizedBox(
+                        //   height: Get.height * 0.005,
+                        // ),
+                        // Center(
+                        //   child: AppButton(
+                        //       useGradient: false,
+                        //       textColor: AppColors.white,
+                        //       text: AppStrings.go,
+                        //       height: 60.0,
+                        //       width: Get.width,
+                        //       radius: 30,
+                        //       onPressed: () {
+                        //         // if (controller.signupGlobalKey.currentState!
+                        //         //     .validate()) {
+                        //         controller.goToNext(AppRoutes.proAccound);
+                        //         // }
+                        //       }),
+                        // ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -175,9 +175,9 @@ class SignupScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: Get.height * 0.0001,
-                        ),
+                        // SizedBox(
+                        //   height: Get.height * 0.0001,
+                        // ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment
                               .center, // Aligns the content properly

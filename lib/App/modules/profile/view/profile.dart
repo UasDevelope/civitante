@@ -22,9 +22,9 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final ProfileController controller = Get.put(ProfileController(true));
     return Scaffold(
-      drawer: currentUser
-          ? CustomDrawer()
-          : null, // Hide drawer if currentUser is false
+      // drawer: currentUser
+      //     ? CustomDrawer()
+      //     : null, // Hide drawer if currentUser is false
       appBar: HomeAppbar(
         title: "Profile",
         rightIcon: AppImages.notification,

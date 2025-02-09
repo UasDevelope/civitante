@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart'; // Ensure GetX is imported
 import '../../../utilse/widgets.dart';
-import '../../bottom/controller/bottom_nave_controller.dart';
 import '../../bottom/view/bottom_nav.dart';
 import '../widget/menue.dart';
 

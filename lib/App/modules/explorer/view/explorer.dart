@@ -18,7 +18,7 @@ class ExplorerScreen extends StatelessWidget {
       body: RandomSizedPostsScreen(
         explore: true,
       ),
-      drawer: CustomDrawer(),
+     // drawer: CustomDrawer(),
     );
   }
 }

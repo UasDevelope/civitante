@@ -24,7 +24,7 @@ class MyCommunitiesScreen extends StatelessWidget {
               : AppImages.notification,
           onRightIconPressed: () {},
         ),
-        drawer: CustomDrawer(),
+     //   drawer: CustomDrawer(),
         body: Obx(() => SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
