@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:civitante/App/utilse/uploadImage.dart';
 import 'package:flutter/material.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 
@@ -86,7 +87,9 @@ class ProAccountScren extends StatelessWidget {
                           ),
                           InkWell(
                             onTap: () {
-                              controller.pickImage("1");
+                              ImageUtils.pickAndUpdateImage(
+                                  controller.drivingLicense);
+                              // controller.pickImage("1");
                             },
                             child: Container(
                               height: 150,
@@ -107,7 +110,8 @@ class ProAccountScren extends StatelessWidget {
                           ),
                           InkWell(
                             onTap: () {
-                              controller.pickImage("2");
+                              ImageUtils.pickAndUpdateImage(
+                                  controller.passport);
                             },
                             child: Container(
                               height: 150,

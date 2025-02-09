@@ -9,7 +9,7 @@ class HttpService {
   static Future<dynamic> post(
       String endpoint, Map<String, dynamic> data) async {
     final url = Uri.parse('$_baseUrl$endpoint');
-    print(data);
+    print("User id is ${AppConstant().userID}");
     try {
       final response = await http.post(
         url,
