@@ -4,7 +4,7 @@ import 'package:civitante/App/utilse/constant.dart';
 import 'package:http/http.dart' as http;
 
 class HttpService {
-  static const String _baseUrl = 'https://civitante.onrender.com/user';
+  static const String _baseUrl = 'http://16.170.211.87:5000/user';
 
   static Future<dynamic> post(
       String endpoint, Map<String, dynamic> data) async {
@@ -28,13 +28,14 @@ class HttpService {
 
   static Future<dynamic> get(String endpoint) async {
     final url = Uri.parse('$_baseUrl$endpoint');
-    log(" get Url is $url");
+    log(" get Url is $url ");
+    log(" get token is ${AppConstant().userID} ");
     try {
       var header = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${AppConstant().userID}',
       };
-      log("Header is $header");
+      // log("Header is $header");
       final response = await http.get(
         url,
         headers: header,

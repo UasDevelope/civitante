@@ -114,9 +114,9 @@ class _PostScreenState extends State<PostScreen> {
                         onSubmitted: (value) {
                           if (value.isNotEmpty &&
                               !controller.tags!.contains(value)) {
-                            setState(() {
+
                               controller.tags!.add(value);
-                            });
+
                             controller.tagController
                                 .clear(); // Clear input after adding
                           }

@@ -81,7 +81,7 @@ class PostController extends GetxController {
 
   void addPost({String communityId = ""}) async {
     try {
-      // isloading.value = true;
+      isloading.value = true;
       // 1. Validate User ID
       final userID = AppConstant().userID;
       if (userID == null || userID.isEmpty) {
@@ -117,8 +117,8 @@ class PostController extends GetxController {
         return;
       }
 
-      CustomLoadingDialog.showCustomLoadingDialog(
-          "Creating  ${communityId != "" ? "Community " : ""}Post...");
+      // CustomLoadingDialog.showCustomLoadingDialog(
+      //     "Creating  ${communityId != "" ? "Community " : ""}Post...");
 
       // 3. Prepare Post Data
       final data = {
@@ -146,23 +146,27 @@ class PostController extends GetxController {
           message: response['message'] ?? "Post created successfully!",
           backgroundColor: Colors.green,
         );
-        CustomLoadingDialog.closeLoadingDialog();
+        isloading.value = false;
+      //  CustomLoadingDialog.closeLoadingDialog();
         final controller = LocateController.homeController;
         controller.fetchAndAssignPosts(communityId: communityId);
         _clearForm();
         Get.back();
       } else {
+        isloading.value = false;
         log("Response is $response");
         final errorMessage = _parseErrorMessage(response);
         ToastUtil.showToast(
           message: errorMessage,
           backgroundColor: Colors.red,
         );
-        CustomLoadingDialog.closeLoadingDialog();
+
+      //  CustomLoadingDialog.closeLoadingDialog();
       }
     } catch (e) {
+      isloading.value = false;
       log("Error is $e");
-      CustomLoadingDialog.closeLoadingDialog();
+      //CustomLoadingDialog.closeLoadingDialog();
 
       ToastUtil.showToast(
         message: "Network error: Please check your connection",

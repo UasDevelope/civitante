@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../utilse/widgets.dart';
 import '../../notification/view/notification.dart';
 import '../controller/home_controller.dart';
-import '../widgets/home_search.dart';
+
 import '../widgets/tab_bar.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -12,7 +12,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeController = Get.find<HomeController>();
-    homeController.fetchAndAssignPosts();
+    homeController.fetchAndAssignPosts(
+        followed: true, randomized: false, communityId: '');
     return Scaffold(
       backgroundColor: Colors.white, // Change the background color
       appBar: HomeAppbar(
@@ -23,7 +24,7 @@ class HomeScreen extends StatelessWidget {
           Get.to(NotificationsScreen());
         },
       ),
-      drawer: CustomDrawer(), // Add the drawer here
+      // drawer: CustomDrawer(), // Add the drawer here
       body: Column(
         children: [
           SizedBox(

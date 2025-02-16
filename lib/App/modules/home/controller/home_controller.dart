@@ -57,15 +57,17 @@ class HomeController extends GetxController {
   }
 
   /// Fetch and assign posts
-  Future<void> fetchAndAssignPosts({String communityId = ""}) async {
+  Future<void> fetchAndAssignPosts({String communityId = "", bool? followed, bool? randomized }) async {
     try {
-      if (communityId != "") {
-        posts.clear();
-        filteredPosts.clear();
-        log("Last community id $communityId");
-      }
+      posts.clear();
+      filteredPosts.clear();
+      // if (communityId != "") {
+      //   posts.clear();
+      //   filteredPosts.clear();
+      //   log("Last community id $communityId");
+      // }
       isPostLoading.value = true;
-      final result = await getPosts(communityId: communityId);
+      final result = await getPosts(communityId: communityId,followed: followed,randomized: randomized);
 
       // Ensure the fetched list is not null before assigning
       if (result.isNotEmpty) {
@@ -98,38 +100,48 @@ class HomeController extends GetxController {
   }
 
   /// Fetch posts from API
-  Future<List<Post>> getPosts({String communityId = ""}) async {
+  Future<List<Post>> getPosts({String? communityId, bool? followed, bool? randomized}) async {
     try {
-      bool isCommunity = communityId != "" ? true : false;
-      var response =
-          await HttpService.get('/getPosts/${isCommunity ? communityId : ""}');
-      log("Raw Response: $response");
+      // Construct the request URL based on priority
+      String endpoint = '/getPosts';
+
+      if (communityId != null && communityId.isNotEmpty) {
+        endpoint += '/$communityId';
+      } else if (followed == true) {
+        endpoint += '?followed=true';
+      } else if (randomized == true) {
+        endpoint += '?randomized=true';
+      }
+
+      log("Fetching: $endpoint");
+
+      var response = await HttpService.get(endpoint);
+     log("Raw Response: $response");
 
       // Decode JSON response if it's a string
       if (response is String) {
         response = jsonDecode(response);
       }
 
-      // Check if the response is a valid map with a `posts` list
-      if (response is Map<String, dynamic> && response.containsKey('posts')) {
-        if (response['posts'] is List) {
-          log("Parsed Posts: ${response['posts']}");
+      // Ensure response is a valid map and contains either 'posts' or 'error'
+      if (response is Map<String, dynamic>) {
+        if (response.containsKey('posts') && response['posts'] is List) {
+         // log("Parsed Posts: ${response['posts']}");
           return parsePosts(response['posts']);
+        }
+
+        if (response.containsKey('error')) {
+          throw Exception(response['error']);
         }
       }
 
-      // Handle error messages from the API
-      if (response is Map<String, dynamic> && response.containsKey('error')) {
-        throw Exception(response['error']);
-      }
-
-      // If format is incorrect, throw an error
       throw Exception('Invalid response format');
     } catch (e) {
       log("Fetch Error: $e");
       throw Exception('Failed to fetch posts: ${e.toString()}');
     }
   }
+
 
   Future<void> addComments(String postId) async {
     String userId = PrefUtil.getString(PrefUtil.userId);
@@ -241,7 +253,7 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    fetchAndAssignPosts();
+    fetchAndAssignPosts(followed: true,randomized: false,communityId: '');
     super.onInit();
   }
 }
