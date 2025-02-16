@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class AppConstant {
   // Private constructor
   AppConstant._privateConstructor();
@@ -10,7 +12,8 @@ class AppConstant {
   }
 
   String? userID;
-  String baseUrl = 'https://civitante.vercel.app/user';
+  bool? paymentID;
+  String baseUrl = 'http://16.170.211.87:5000/user';
 
   // Cloudinary
   String Cloudinary_API_KEY = "239661546466672";

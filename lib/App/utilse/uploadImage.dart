@@ -68,6 +68,7 @@ class ImageUtils {
 
       // Upload the file to Firebase Storage
       final uploadTask = imageRef.putFile(image);
+      await uploadTask.whenComplete(() => log("Upload task completed"));
 
       // Wait for the upload to complete
       final taskSnapshot = await uploadTask;

@@ -142,25 +142,25 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Center(
-                        child: AppButton(
-                          useGradient: false,
-                          color: AppColors.white,
-                          hasBorder: true,
-                          image: AppImages.google,
-                          borderColor: AppColors.textFieldHintColor,
-                          textColor: AppColors.appColor,
-                          text: AppStrings.loginwithGoogle,
-                          height: 60.0,
-                          width: Get.width,
-                          // color: Colors.,
-                          radius: 30,
-                          onPressed: () {
-                            controller.loginUser();
-                            // Get.toNamed(AppRoutes.login);
-                          },
-                        ),
-                      ),
+                      // Center(
+                      //   child: AppButton(
+                      //     useGradient: false,
+                      //     color: AppColors.white,
+                      //     hasBorder: true,
+                      //     image: AppImages.google,
+                      //     borderColor: AppColors.textFieldHintColor,
+                      //     textColor: AppColors.appColor,
+                      //     text: AppStrings.loginwithGoogle,
+                      //     height: 60.0,
+                      //     width: Get.width,
+                      //     // color: Colors.,
+                      //     radius: 30,
+                      //     onPressed: () {
+                      //       controller.loginUser();
+                      //       // Get.toNamed(AppRoutes.login);
+                      //     },
+                      //   ),
+                      // ),
                     ],
                   )),
             ),

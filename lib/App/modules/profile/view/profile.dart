@@ -1,4 +1,3 @@
-import 'package:civitante/App/modules/drawer/view/drawer.dart';
 import 'package:civitante/App/modules/home/widgets/homeAppbar.dart';
 import 'package:civitante/App/shared/app_button.dart';
 import 'package:civitante/App/shared/app_text.dart';
@@ -8,7 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../Models/Post.dart';
 import '../../../routes/routes.dart';
+import '../../../utilse/constant.dart';
+import '../../../utilse/pref.dart';
 import '../../home/widgets/engament_row.dart';
+import '../../loading/custom_loading_dialogue.dart';
 import '../../shimmer/profile_gridview_shimmer.dart';
 import '../controller/profile_controller.dart';
 import '../widget/status_row.dart';
@@ -28,6 +30,16 @@ class ProfileScreen extends StatelessWidget {
       appBar: HomeAppbar(
         title: "Profile",
         rightIcon: AppImages.notification,
+        rightIcon2: AppImages.logout,
+        onRightIconPressed1: () {
+          controller.isLoading.value=true;
+        //  CustomLoadingDialog.showCustomLoadingDialog("Logging out....");
+          AppConstant().userID = null;
+          PrefUtil.remove(PrefUtil.userId);
+          //CustomLoadingDialog.closeLoadingDialog();
+          controller.isLoading.value=false;
+          Get.toNamed('/login'); // Navigate to the route name when tapped
+        },
       ),
       backgroundColor: Colors.white,
       body: Obx(() => RefreshIndicator(

@@ -86,7 +86,8 @@ class ProfileController extends GetxController {
   Future<void> editUserProfile() async {
     try {
       // final locationController = LocateController.locationController;
-      CustomLoadingDialog.showCustomLoadingDialog("Updating profile....");
+      isLoading.value=true;
+    //  CustomLoadingDialog.showCustomLoadingDialog("Updating profile....");
       final data = {
         "name": nameController.text,
         // "location": {
@@ -100,10 +101,12 @@ class ProfileController extends GetxController {
 
       await await HttpService.put("/editProfile/$userId", data);
       await Future.wait([fetchAndAssignPosts()]);
-      CustomLoadingDialog.closeLoadingDialog();
+      isLoading.value=false;
+    //  CustomLoadingDialog.closeLoadingDialog();
 
       ToastUtil.showToast(message: 'Profile updated successfully');
     } catch (e, stackTrace) {
+      isLoading.value=false;
       _handleError('Profile update failed', e, stackTrace);
     } finally {}
   }

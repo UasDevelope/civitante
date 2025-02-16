@@ -6,22 +6,27 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String? imagePath; // Optional icon for the title
   final String? rightIcon; // Optional icon on the right
+  final String? rightIcon2;
   final VoidCallback? onRightIconPressed;
+  final VoidCallback? onRightIconPressed1;
 
-  const HomeAppbar({
-    Key? key,
-    required this.title,
-    this.imagePath, // Pass an icon to display next to the title
-    this.rightIcon, // Pass an icon for the right side
-    this.onRightIconPressed, // Action for the right icon
-  }) : super(key: key);
+  const HomeAppbar(
+      {Key? key,
+      required this.title,
+      this.imagePath, // Pass an icon to display next to the title
+      this.rightIcon,
+      this.rightIcon2, // Pass an icon for the right side
+      this.onRightIconPressed,
+      this.onRightIconPressed1 // Action for the right icon
+      })
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
-      centerTitle: true,
+      // centerTitle: true,
       title: Row(
         mainAxisSize: MainAxisSize.min, // Ensure title stays compact
         children: [
@@ -41,6 +46,15 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       actions: [
+        if (rightIcon2 != null)
+          IconButton(
+            icon: Image.asset(
+              rightIcon2.toString(),
+              color: Colors.black,
+              height: 30,
+            ),
+            onPressed: onRightIconPressed,
+          ),
         if (rightIcon != null)
           IconButton(
             icon: Image.asset(
@@ -48,7 +62,7 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
               color: Colors.black,
               height: 30,
             ),
-            onPressed: onRightIconPressed,
+            onPressed: onRightIconPressed1,
           ),
       ],
     );

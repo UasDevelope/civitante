@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../Models/Post.dart';
+import '../../../utilse/MediumNativeAd.dart';
 import '../../shimmer/randomized_shimmer_post.dart';
 import '../controller/home_controller.dart';
 import '../widgets/engament_row.dart';
@@ -21,8 +22,14 @@ import '../widgets/slider_label.dart';
 class RandomSizedPostsScreen extends StatelessWidget {
   final String communityId;
   final bool explore;
+  final bool? followed;
+  final bool? randomized;
   const RandomSizedPostsScreen(
-      {super.key, this.communityId = "", this.explore = false});
+      {super.key,
+      this.communityId = "",
+      this.explore = false,
+      this.followed = false,
+      this.randomized = false});
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +73,9 @@ class RandomSizedPostsScreen extends StatelessWidget {
                 onRefresh: () async {
                   // Call your refresh method from the controller
                   await homeController.fetchAndAssignPosts(
-                      communityId: communityId);
+                      communityId: communityId,
+                      randomized: randomized,
+                      followed: followed);
                 },
                 child: Obx(() {
                   if (homeController.isPostLoading.value) {
@@ -101,6 +110,7 @@ class RandomSizedPostsScreen extends StatelessWidget {
                             post: post,
                             index: index,
                           ),
+                          // child:  MediumNativeAd(), // Add the native ad here,
                         );
                       },
                     );
@@ -114,8 +124,6 @@ class RandomSizedPostsScreen extends StatelessWidget {
     );
   }
 }
-
-
 
 class CustomCard2 extends StatefulWidget {
   CustomCard2(
@@ -251,7 +259,7 @@ class _CustomCard2State extends State<CustomCard2> {
                                     : AppColors.white,
                               ),
                               label: widget.post.views.toString(),
-                              textColor: AppColors.white,
+                              textColor: AppColors.blue,
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -278,7 +286,7 @@ class _CustomCard2State extends State<CustomCard2> {
                                 ),
                                 label: widget.post.likesCount
                                     .toString(), // Use .value
-                                textColor: AppColors.white,
+                                textColor: AppColors.blue,
                               ),
                             );
                           }),
@@ -291,7 +299,7 @@ class _CustomCard2State extends State<CustomCard2> {
                             ),
                             label: widget.post.commentsCount.toString(),
                             // label: post.comments.length.toString(),
-                            textColor: AppColors.white,
+                            textColor: AppColors.blue,
                           ),
                           const SizedBox(width: 10),
                         ],
@@ -664,5 +672,3 @@ class _CustomCard2State extends State<CustomCard2> {
         ));
   }
 }
-
-
