@@ -15,6 +15,7 @@ class HomeController extends GetxController {
   final TextEditingController commentController = TextEditingController();
   RxBool isPostLoading = false.obs;
   RxString searchedValue = "".obs;
+
   RxList<String> Images = [
     "assets/images/img.png",
     "assets/images/img_1.png",

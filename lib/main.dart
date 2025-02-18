@@ -2,7 +2,6 @@ import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-// import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
   //
@@ -14,10 +13,23 @@ void main() async {
   await Stripe.instance.applySettings();
   PrefUtil.init();
 
+//
   runApp(CivitanteApp());
 }
 
-class CivitanteApp extends StatelessWidget {
+class CivitanteApp extends StatefulWidget {
+  @override
+  State<CivitanteApp> createState() => _CivitanteAppState();
+}
+
+class _CivitanteAppState extends State<CivitanteApp> {
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(

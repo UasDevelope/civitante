@@ -53,19 +53,19 @@ class SliderWithLabels extends StatelessWidget {
               SizedBox(
                 width: 10,
               ),
-              InkWell(
-                onTap: () {
-                  commentsBottomSheet(post: post);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Image.asset(
-                    AppImages.lock,
-                    color: AppColors.Slate_gray,
-                    height: 30,
-                  ),
-                ),
-              )
+              // InkWell(
+              //   onTap: () {
+              //     commentsBottomSheet(post: post);
+              //   },
+              //   child: Padding(
+              //     padding: const EdgeInsets.only(top: 8.0),
+              //     child: Image.asset(
+              //       AppImages.lock,
+              //       color: AppColors.Slate_gray,
+              //       height: 30,
+              //     ),
+              //   ),
+              // )
             ],
           ),
           // Labels Row
