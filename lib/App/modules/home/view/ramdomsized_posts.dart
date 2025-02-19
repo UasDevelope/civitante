@@ -206,6 +206,15 @@ class _CustomCard2State extends State<CustomCard2> {
                                       widget.post.id, widget.index);
                             },
                           ),
+                          PopupMenuItem(
+                            child: AppText(
+                                text: "Block",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                            onTap: () async {
+                              log("Block Button Click");
+                            },
+                          ),
                         ],
                       )
                     : AppText(
