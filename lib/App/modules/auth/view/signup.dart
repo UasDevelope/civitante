@@ -8,12 +8,9 @@ class SignupScreen extends StatelessWidget {
     final controller = LocateController.authController;
     return Obx(() => LoadingOverlay(
         isLoading: controller.loading.value,
-        child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: AppColors.white,
-            ),
-            backgroundColor: AppColors.white,
-            body: Padding(
+        child: Material(
+            color: AppColors.white,
+            child: Padding(
               padding: const EdgeInsets.only(right: 15, left: 15),
               child: SingleChildScrollView(
                 padding: EdgeInsets.zero,
