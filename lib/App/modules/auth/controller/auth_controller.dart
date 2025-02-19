@@ -6,9 +6,11 @@ import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/constant.dart';
 import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
+import '../../../service/auth_services.dart';
 import '../../../utilse/toast_util.dart';
 import '../../../utilse/uploadImage.dart';
 
@@ -51,6 +53,14 @@ class AuthController extends GetxController {
   void changeObsecure() {
     obSecureText.value = !obSecureText.value;
     print(obSecureText.value);
+  }
+
+  var isRememberMeChecked = false.obs;
+
+  void toggleRememberMe(bool? value) {
+    if (value != null) {
+      isRememberMeChecked.value = value;
+    }
   }
 
   void goToNext(String route) {
@@ -98,9 +108,17 @@ class AuthController extends GetxController {
         message: response['message'] ?? "Registration successful!",
         backgroundColor: Colors.green,
       );
+      String token = response['token'];
+      PrefUtil.setString(PrefUtil.userId, token);
+      AppConstant().userID = token;
       loading.value = false;
+      signupEmailController.clear();
+      fullNameController.clear();
+      signupLocationController.clear();
+      signupPasswordController.clear();
+      SignupConfirmPasswordController.clear();
      // CustomLoadingDialog.closeLoadingDialog();
-      goToNext(AppRoutes.login);
+      goToNext(AppRoutes.bottomNav);
     } else {
       //CustomLoadingDialog.closeLoadingDialog();
       loading.value = false;
@@ -352,6 +370,8 @@ class AuthController extends GetxController {
       loading.value = false;
       // await SharedPreferencesHelper.saveUserId(response['user']['id']);
       //upgradeToPro();
+      loginEmailController.clear();
+      loginPassworedController.clear();
       goToNext(AppRoutes.bottomNav);
 
       // Optional: Handle the returned user data
@@ -360,6 +380,7 @@ class AuthController extends GetxController {
       print("Email: ${user['email']}");
     } else {
       loading.value = false;
+
 
       // CustomLoadingDialog.closeLoadingDialog();
       String errorMsg = response['details'] != null
@@ -373,4 +394,122 @@ class AuthController extends GetxController {
        loading.value = false;
     }
   }
+  final AuthServices authService = AuthServices();
+  var user = Rxn<UserCredential>();
+
+  Future<void> loginWithGoogle() async {
+    try {
+      loading.value = true;
+      user.value = await authService.googleSignInMethod();
+
+      if (user.value != null) {
+        User? firebaseUser = user.value?.user;
+        String? email = firebaseUser?.email;
+        String? accessToken = await firebaseUser?.getIdToken();
+        var data = {
+          "email": email,
+          "password": accessToken,
+        };
+
+        var response = await HttpService.post('/login', data);
+        print(response);
+        if (response != null && response['error'] == null) {
+          ToastUtil.showToast(
+            message: response['message'] ?? "Login successful!",
+            backgroundColor: Colors.green,
+          );
+          String token = response['token'];
+
+          PrefUtil.setString(PrefUtil.userId, token);
+          AppConstant().userID = token;
+
+          loading.value = false;
+          goToNext(AppRoutes.bottomNav);
+        } else {
+          loading.value = false;
+          String errorMsg = response['details'] != null
+              ? jsonDecode(response['details'])['message']
+              : "Unknown error occurred";
+
+          ToastUtil.showToast(
+            message: "Error: $errorMsg",
+            backgroundColor: Colors.red,
+          );
+          loading.value = false;
+        }
+        log("User Info: Email: $email, Token: $accessToken");
+      } else {
+        ToastUtil.showToast(
+          message: "Google Sign-In Failed",
+          backgroundColor: Colors.red,
+        );
+      }
+    } catch (e) {
+      print("Exception: $e");
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  Future<void> signUpWithGoogle() async {
+    try {
+      loading.value = true;
+      user.value = await authService.googleSignInMethod();
+
+      if (user.value != null) {
+        User? firebaseUser = user.value?.user;
+        String? fullName = firebaseUser?.displayName;
+        String? email = firebaseUser?.email;
+        String? accessToken = await firebaseUser?.getIdToken();
+        var data = {
+          "email": email,
+          "name": fullName,
+          "location": {
+            "long": locationController.longitude.value,
+            "lat": locationController.latitude.value
+          },
+          "password": accessToken,
+          "costPoints": 10
+        };
+        var response = await HttpService.post('/register', data);
+        print(response);
+        if (response != null && response['error'] == null) {
+          ToastUtil.showToast(
+            message: response['message'] ?? "Signup successful!",
+            backgroundColor: Colors.green,
+          );
+          String token = response['token'];
+
+          PrefUtil.setString(PrefUtil.userId, token);
+          AppConstant().userID = token;
+          loading.value = false;
+          goToNext(AppRoutes.bottomNav);
+        } else {
+          loading.value = false;
+          String errorMsg = response['details'] != null
+              ? jsonDecode(response['details'])['message']
+              : "Unknown error occurred";
+
+          ToastUtil.showToast(
+            message: "Error: $errorMsg",
+            backgroundColor: Colors.red,
+          );
+          loading.value = false;
+        }
+
+        // Log the data
+        log("User Info: Full Name: $fullName, Email: $email, Token: $accessToken");
+      } else {
+        ToastUtil.showToast(
+          message: "Google Sign-Up Failed",
+          backgroundColor: Colors.red,
+        );
+      }
+    } catch (e) {
+      print("Exception: $e");
+    } finally {
+      loading.value = false;
+    }
+  }
+
 }
