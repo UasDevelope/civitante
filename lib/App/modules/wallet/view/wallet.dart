@@ -25,6 +25,7 @@ class WalletScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: HomeAppbar(
+        backButton: false,
         title: AppStrings.Wallet,
         rightIcon: AppImages.notification,
       ),

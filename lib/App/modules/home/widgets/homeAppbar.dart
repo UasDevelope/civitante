@@ -7,6 +7,7 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String? imagePath; // Optional icon for the title
   final String? rightIcon; // Optional icon on the right
   final String? rightIcon2;
+  final bool backButton;
   final VoidCallback? onRightIconPressed;
   final VoidCallback? onRightIconPressed1;
 
@@ -17,7 +18,7 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
       this.rightIcon,
       this.rightIcon2, // Pass an icon for the right side
       this.onRightIconPressed,
-      this.onRightIconPressed1 // Action for the right icon
+      this.onRightIconPressed1, this.backButton = true // Action for the right icon
       })
       : super(key: key);
 
@@ -26,6 +27,7 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
+      automaticallyImplyLeading: backButton,
       // centerTitle: true,
       title: Row(
         mainAxisSize: MainAxisSize.min, // Ensure title stays compact

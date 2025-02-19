@@ -28,6 +28,7 @@ class ProfileScreen extends StatelessWidget {
       //     ? CustomDrawer()
       //     : null, // Hide drawer if currentUser is false
       appBar: HomeAppbar(
+        backButton: false,
         title: "Profile",
         rightIcon: AppImages.notification,
         rightIcon2: AppImages.logout,
