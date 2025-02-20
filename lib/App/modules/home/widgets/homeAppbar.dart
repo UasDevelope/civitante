@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:civitante/App/shared/app_text.dart';
 import 'package:civitante/App/shared/color.dart';
 import 'package:civitante/App/utilse/location_controller.dart';
