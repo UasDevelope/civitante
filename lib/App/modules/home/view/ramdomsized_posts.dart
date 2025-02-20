@@ -106,6 +106,7 @@ class RandomSizedPostsScreen extends StatelessWidget {
                             // Get.to(() => PostsDetailsScreen());
                           },
                           child: CustomCard2(
+                            haveDescAndTags: false,
                             post: post,
                             index: index,
                           ),
@@ -130,9 +131,10 @@ class CustomCard2 extends StatefulWidget {
       this.haveComments = false,
       required this.post,
       this.currentUser = false,
-      this.index = 0});
+      this.index = 0, required this.haveDescAndTags});
   final bool haveComments;
   final Post post;
+  final bool haveDescAndTags;
   bool currentUser;
   int index;
 
@@ -221,6 +223,20 @@ class _CustomCard2State extends State<CustomCard2> {
                         text: AppStrings.Reported,
                         fontSize: 16,
                         fontWeight: FontWeight.w600),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 0, bottom: 10, left: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppText(
+                      text: widget.post.title,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    SizedBox(height: 4),
+                  ],
+                ),
               ),
               SizedBox(
                 height: 200,
@@ -338,17 +354,11 @@ class _CustomCard2State extends State<CustomCard2> {
                   child: SliderWithLabels(
                     post: widget.post,
                   )),
-              Padding(
+             widget.haveDescAndTags? Padding(
                 padding: EdgeInsets.only(top: 0, bottom: 10, left: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppText(
-                      text: widget.post.title,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    SizedBox(height: 8),
                     AppText(
                       text: widget.post.description,
                       fontSize: 16,
@@ -369,7 +379,7 @@ class _CustomCard2State extends State<CustomCard2> {
                     ),
                   ],
                 ),
-              ),
+              ):SizedBox.shrink(),
               widget.haveComments
                   ? Column(
                       children: [

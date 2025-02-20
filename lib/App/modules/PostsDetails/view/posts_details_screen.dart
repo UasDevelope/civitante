@@ -108,6 +108,7 @@ class PostsDetailsScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: CustomCard2(
+                haveDescAndTags: true,
                 post: post,
                 currentUser: currentUser,
                 haveComments: true,

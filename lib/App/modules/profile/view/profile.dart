@@ -31,16 +31,16 @@ class ProfileScreen extends StatelessWidget {
         backButton: false,
         title: "Profile",
         imagePath: AppImages.location,
-        rightIcon: AppImages.notification,
+        rightIcon: AppImages.setting,
         rightIcon2: AppImages.logout,
-        onRightIconPressed1: () {
+        onRightIconPressed: () {
           controller.isLoading.value=true;
         //  CustomLoadingDialog.showCustomLoadingDialog("Logging out....");
           AppConstant().userID = null;
           PrefUtil.remove(PrefUtil.userId);
           //CustomLoadingDialog.closeLoadingDialog();
           controller.isLoading.value=false;
-          Get.toNamed('/login'); // Navigate to the route name when tapped
+          Get.offAllNamed('/login'); // Navigate to the route name when tapped
         },
       ),
       backgroundColor: Colors.white,
