@@ -4,10 +4,10 @@ class Validators  {
     if (value.isEmpty) {
       return "Email cannot be empty";
     }
-    final emailRgx = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
-    if (!emailRgx.hasMatch(value)) {
-      return "Please enter a valid email";
-    }
+    // final emailRgx = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    // if (!emailRgx.hasMatch(value)) {
+    //   return "Please enter a valid email";
+    // }
     return null;
   }
 

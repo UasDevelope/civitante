@@ -8,12 +8,9 @@ class SignupScreen extends StatelessWidget {
     final controller = LocateController.authController;
     return Obx(() => LoadingOverlay(
         isLoading: controller.loading.value,
-        child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: AppColors.white,
-            ),
-            backgroundColor: AppColors.white,
-            body: Padding(
+        child: Material(
+            color: AppColors.white,
+            child: Padding(
               padding: const EdgeInsets.only(right: 15, left: 15),
               child: SingleChildScrollView(
                 padding: EdgeInsets.zero,
@@ -61,22 +58,22 @@ class SignupScreen extends StatelessWidget {
                             hintText: AppStrings.enterUsernameEmail,
                             borderColor: AppColors.textFieldHintColor,
                             controller: controller.signupEmailController),
-                        SizedBox(
-                          height: Get.height * 0.008,
-                        ),
-                        customTextFormField(
-                            validatore: (value) {
-                              return Validators.locationValidator(value!);
-                            },
-                            obsecureonTap: () {
-                              controller.assignLocationValue();
-                            },
-                            width: Get.width / 2,
-                            icon: Icons.location_on_outlined,
-                            borderRadius: 25,
-                            hintText: AppStrings.location,
-                            borderColor: AppColors.textFieldHintColor,
-                            controller: controller.signupLocationController),
+                        // SizedBox(
+                        //   height: Get.height * 0.008,
+                        // ),
+                        // customTextFormField(
+                        //     validatore: (value) {
+                        //       return Validators.locationValidator(value!);
+                        //     },
+                        //     obsecureonTap: () {
+                        //       controller.assignLocationValue();
+                        //     },
+                        //     width: Get.width / 2,
+                        //     icon: Icons.location_on_outlined,
+                        //     borderRadius: 25,
+                        //     hintText: AppStrings.location,
+                        //     borderColor: AppColors.textFieldHintColor,
+                        //     controller: controller.signupLocationController),
                         SizedBox(
                           height: Get.height * 0.008,
                         ),
@@ -166,6 +163,11 @@ class SignupScreen extends StatelessWidget {
                             TextButton(
                               onPressed: () {
                                 controller.goToNext(AppRoutes.login);
+                                controller.signupEmailController.clear();
+                                controller.fullNameController.clear();
+                                controller.signupLocationController.clear();
+                                controller.signupPasswordController.clear();
+                                controller.SignupConfirmPasswordController.clear();
                               },
                               child: AppText(
                                   text: AppStrings.login,
@@ -203,22 +205,24 @@ class SignupScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        // Center(
-                        //   child: AppButton(
-                        //     useGradient: false,
-                        //     color: AppColors.white,
-                        //     hasBorder: true,
-                        //     image: AppImages.google,
-                        //     borderColor: AppColors.textFieldHintColor,
-                        //     textColor: AppColors.appColor,
-                        //     text: AppStrings.loginwithGoogle,
-                        //     height: 60.0,
-                        //     width: Get.width,
-                        //     // color: Colors.,
-                        //     radius: 30,
-                        //     onPressed: () {},
-                        //   ),
-                        // ),
+                        Center(
+                          child: AppButton(
+                            useGradient: false,
+                            color: AppColors.white,
+                            hasBorder: true,
+                            image: AppImages.google,
+                            borderColor: AppColors.textFieldHintColor,
+                            textColor: AppColors.appColor,
+                            text: AppStrings.loginwithGoogle,
+                            height: 60.0,
+                            width: Get.width,
+                            // color: Colors.,
+                            radius: 30,
+                            onPressed: () {
+                              controller.signUpWithGoogle();
+                            },
+                          ),
+                        ),
                         SizedBox(
                           height: Get.height * 0.01,
                         ),

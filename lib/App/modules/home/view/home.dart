@@ -17,6 +17,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white, // Change the background color
       appBar: HomeAppbar(
+        backButton: false,
         title: "Bangalore",
         imagePath: AppImages.location, // Optional, can be null
         rightIcon: AppImages.notification,
@@ -30,7 +31,8 @@ class HomeScreen extends StatelessWidget {
           SizedBox(
             height: 20,
           ),
-          Container(height: Get.height / 1.45, child: HomeTabBar()),
+          Container(
+              height: Get.height / 1.32, child: HomeTabBar()),
         ],
       ),
     );

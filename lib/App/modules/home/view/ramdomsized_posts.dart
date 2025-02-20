@@ -206,6 +206,15 @@ class _CustomCard2State extends State<CustomCard2> {
                                       widget.post.id, widget.index);
                             },
                           ),
+                          PopupMenuItem(
+                            child: AppText(
+                                text: "Block",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                            onTap: () async {
+                              log("Block Button Click");
+                            },
+                          ),
                         ],
                       )
                     : AppText(
@@ -217,28 +226,45 @@ class _CustomCard2State extends State<CustomCard2> {
                 height: 200,
                 child: Stack(
                   children: [
-                    PageView.builder(
-                      itemCount: widget.post.mediaUrls.length,
-                      itemBuilder: (context, index) {
-                        return Image.network(
-                          widget.post.mediaUrls[index],
-                          fit: BoxFit.cover,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes !=
-                                        null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                    : null,
-                              ),
-                            );
-                          },
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(Icons.error),
+                    // PageView.builder(
+                    //   itemCount: widget.post.mediaUrls.length,
+                    //   itemBuilder: (context, index) {
+                    //     return Image.network(
+                    //       widget.post.mediaUrls[index],
+                    //       fit: BoxFit.cover,
+                    //       loadingBuilder: (context, child, loadingProgress) {
+                    //         if (loadingProgress == null) return child;
+                    //         return Center(
+                    //           child: CircularProgressIndicator(
+                    //             value: loadingProgress.expectedTotalBytes !=
+                    //                 null
+                    //                 ? loadingProgress.cumulativeBytesLoaded /
+                    //                 loadingProgress.expectedTotalBytes!
+                    //                 : null,
+                    //           ),
+                    //         );
+                    //       },
+                    //       errorBuilder: (context, error, stackTrace) =>
+                    //       const Icon(Icons.error),
+                    //     );
+                    //   },
+                    // ),
+                    Image.network(
+                      widget.post.mediaUrls.isNotEmpty ? widget.post.mediaUrls.first : '',
+                      fit: BoxFit.fitWidth,
+                      width: Get.width,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
                         );
                       },
+                      errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
                     ),
                     Positioned(
                       bottom: 8,
