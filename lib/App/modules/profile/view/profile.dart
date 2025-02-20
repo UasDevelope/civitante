@@ -30,6 +30,7 @@ class ProfileScreen extends StatelessWidget {
       appBar: HomeAppbar(
         backButton: false,
         title: "Profile",
+        imagePath: AppImages.location,
         rightIcon: AppImages.notification,
         rightIcon2: AppImages.logout,
         onRightIconPressed1: () {

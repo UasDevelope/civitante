@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:civitante/App/shared/app_text.dart';
 import 'package:civitante/App/shared/color.dart';
+import 'package:civitante/App/utilse/location_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -24,6 +28,8 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    LocationController locationController = Get.put(LocationController());
+    log("Location here:>>>>>>>>>>>>>>>>>>>>>>> ${locationController.userLocation.toString()}");
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
@@ -41,7 +47,7 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
             const SizedBox(width: 8), // Add spacing between icon and text
           ],
           AppText(
-              text: title,
+              text: locationController.userLocation["city"] != null ?locationController.userLocation["city"]:"Location",
               fontSize: 16,
               fontWeight: FontWeight.w500,
               color: AppColors.appColor)

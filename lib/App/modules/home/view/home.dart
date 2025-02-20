@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
     homeController.fetchAndAssignPosts(
         followed: true, randomized: false, communityId: '');
     return Scaffold(
-      backgroundColor: Colors.white, // Change the background color
+      backgroundColor: Colors.white,
       appBar: HomeAppbar(
         backButton: false,
         title: "Bangalore",

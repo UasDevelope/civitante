@@ -27,6 +27,7 @@ class WalletScreen extends StatelessWidget {
       appBar: HomeAppbar(
         backButton: false,
         title: AppStrings.Wallet,
+        imagePath: AppImages.location,
         rightIcon: AppImages.notification,
       ),
       body: Obx(() {
