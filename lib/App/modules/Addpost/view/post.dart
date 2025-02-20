@@ -26,61 +26,61 @@ class _PostScreenState extends State<PostScreen> {
             child: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Get.back();
-                          },
-                          child: AppText(text: AppStrings.Cancel),
-                        ),
-                        AppButton(
-                            radius: 20,
-                            height: 40,
-                            textColor: AppColors.white,
-                            color: AppColors.appColor,
-                            width: Get.width / 5,
-                            text: AppStrings.Post,
-                            onPressed: () {
-                              log("Community id is $communityId");
-                              controller.addPost(communityId: communityId);
-                            })
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Image.asset(
-                          AppImages.happend,
-                          height: 30,
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextField(
-                            controller: controller
-                                .titleController, // Add this controller in your controller class
-                            decoration: InputDecoration(
-                              hintText: AppStrings.Add_title,
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.zero,
-                              isDense: true,
-                            ),
-                            style: TextStyle(
-                              fontSize:
-                                  16, // Adjust to match your original text style
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Get.back();
+                            },
+                            child: AppText(text: AppStrings.Cancel),
+                          ),
+                          AppButton(
+                              radius: 20,
+                              height: 40,
+                              textColor: AppColors.white,
+                              color: AppColors.appColor,
+                              width: Get.width / 5,
+                              text: AppStrings.Post,
+                              onPressed: () {
+                                log("Community id is $communityId");
+                                controller.addPost(communityId: communityId);
+                              })
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Image.asset(
+                            AppImages.happend,
+                            height: 30,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: TextField(
+                              controller: controller
+                                  .titleController, // Add this controller in your controller class
+                              decoration: InputDecoration(
+                                hintText: AppStrings.Add_title,
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.zero,
+                                isDense: true,
+                              ),
+                              style: TextStyle(
+                                fontSize:
+                                    16, // Adjust to match your original text style
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    Expanded(
-                      child: TextField(
+                        ],
+                      ),
+                      SizedBox(height: 16),
+                      TextField(
                         controller: controller.descController,
-                        maxLines: 10, // Show 10 lines by default
-                        minLines: 10, // Force 10-line height
+                        maxLines: 5, // Show 10 lines by default
+                        minLines: 5, // Force 10-line height
                         decoration: InputDecoration(
                           hintText: AppStrings.Add_Desc,
                           // Border styling
@@ -101,115 +101,128 @@ class _PostScreenState extends State<PostScreen> {
                         ),
                         style: TextStyle(fontSize: 16),
                       ),
-                    ),
-                    SizedBox(height: 16),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: TextField(
-                        controller: controller.tagController,
-                        decoration: const InputDecoration(
-                          hintText: "Enter a tag",
-                          border: InputBorder.none,
-                        ),
-                        onSubmitted: (value) {
-                          if (value.isNotEmpty &&
-                              !controller.tags!.contains(value)) {
-
-                              controller.tags!.add(value);
-
-                            controller.tagController
-                                .clear(); // Clear input after adding
-                          }
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3, // Number of columns
-                        crossAxisSpacing: 8.0,
-                        mainAxisSpacing: 16.0,
-                        childAspectRatio:
-                            3.0, // Adjust based on your chip dimensions
-                      ),
-                      shrinkWrap: true,
-                      physics:
-                          NeverScrollableScrollPhysics(), // Prevents scrolling within the GridView
-                      itemCount: controller.tags.length,
-                      itemBuilder: (context, index) {
-                        final tag = controller.tags[index];
-                        return Chip(
-                          label: Text(tag),
-                          deleteIcon: const Icon(Icons.cancel),
-                          onDeleted: () {
-                            // Remove the tag
-                            controller.tags.removeAt(index);
-                            (context as Element)
-                                .markNeedsBuild(); // Refresh the UI
-                          },
-                        );
-                      },
-                    ),
-                    SizedBox(height: 16),
-                    Spacer(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            controller.pickImage();
-                          },
-                          child: Container(
-                              height: 50,
-                              width: 100,
-                              padding: const EdgeInsets.only(
-                                left: 10,
-                                right: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: Colors.grey, width: 1), // Border
-                                borderRadius: BorderRadius.circular(
-                                    15), // Rounded corners
-                              ),
-                              child: Icon(Icons.camera_alt)),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.only(left: 10, right: 10),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors.grey, width: 1), // Border
-                            borderRadius:
-                                BorderRadius.circular(15), // Rounded corners
+                      SizedBox(height: 16),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: TextField(
+                          controller: controller.tagController,
+                          decoration: const InputDecoration(
+                            hintText: "Enter a tag",
+                            border: InputBorder.none,
                           ),
-                          child: DropdownButton<String>(
-                            hint: const Text(
-                                "Select a category"), // Display hint text when no value is selected
-                            value: controller.selectCatagory
-                                .value, // Bind this to a variable in your state
-                            items: controller.categories.map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (String? value) {
-                              if (value != null) {
-                                // Update the selected category
-                                controller.selectCatagory.value = value;
-                              }
+                          onSubmitted: (value) {
+                            if (value.isNotEmpty &&
+                                !controller.tags!.contains(value)) {
+
+                                controller.tags!.add(value);
+
+                              controller.tagController
+                                  .clear(); // Clear input after adding
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      SizedBox(
+                        height: 100,
+                        child: GridView.builder(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3, // Number of columns
+                            crossAxisSpacing: 8.0,
+                            mainAxisSpacing: 16.0,
+                            childAspectRatio:
+                                3.0, // Adjust based on your chip dimensions
+                          ),
+                          shrinkWrap: true,
+                          physics:
+                              NeverScrollableScrollPhysics(), // Prevents scrolling within the GridView
+                          itemCount: controller.tags.length,
+                          itemBuilder: (context, index) {
+                            final tag = controller.tags[index];
+                            return Chip(
+                              label: Text(tag),
+                              deleteIcon: const Icon(Icons.cancel),
+                              onDeleted: () {
+                                // Remove the tag
+                                controller.tags.removeAt(index);
+                                (context as Element)
+                                    .markNeedsBuild(); // Refresh the UI
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 16),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              controller.pickSingleImage();
                             },
+                            child: Container(
+                                height: 50,
+                                width: 100,
+                                padding: const EdgeInsets.only(
+                                  left: 10,
+                                  right: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.grey, width: 1), // Border
+                                  borderRadius: BorderRadius.circular(
+                                      15), // Rounded corners
+                                ),
+                                child: Icon(Icons.camera_alt)),
                           ),
+                          Container(
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Colors.grey, width: 1), // Border
+                              borderRadius:
+                                  BorderRadius.circular(15), // Rounded corners
+                            ),
+                            child: DropdownButton<String>(
+                              hint: const Text(
+                                  "Select a category"), // Display hint text when no value is selected
+                              value: controller.selectCatagory
+                                  .value, // Bind this to a variable in your state
+                              items: controller.categories.map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (String? value) {
+                                if (value != null) {
+                                  // Update the selected category
+                                  controller.selectCatagory.value = value;
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      // Container(
+                      //   height: 85,
+                      //   width: 400,
+                      //   //  width: 78,
+                      //   child: ImageListView(),
+                      // ),
+                      controller.singleImage.value != '' || controller.singleImage.value.isNotEmpty?Container(
+                        width: Get.width / 2,
+                      height: 150,
+                        margin: EdgeInsets.only(top: 28),
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12)
                         ),
-                      ],
-                    ),
-                    Container(
-                      height: 78,
-                      width: 400,
-                      //  width: 78,
-                      child: ImageListView(),
-                    ),
-                  ],
+                        child: Image.network(controller.singleImage.value,fit: BoxFit.cover,),
+                      ):SizedBox.shrink(),
+                    ],
+                  ),
                 ),
               ),
             ),

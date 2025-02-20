@@ -28,6 +28,7 @@ class ProfileScreen extends StatelessWidget {
       //     ? CustomDrawer()
       //     : null, // Hide drawer if currentUser is false
       appBar: HomeAppbar(
+        backButton: false,
         title: "Profile",
         rightIcon: AppImages.notification,
         rightIcon2: AppImages.logout,
@@ -263,7 +264,7 @@ class GridItem extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
-              image: NetworkImage(post.mediaUrls[0]),
+              image: NetworkImage(post.mediaUrls.first),
               fit: BoxFit.cover,
             ),
           ),

@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:civitante/App/shared/strings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_recaptcha_v2/flutter_easy_recaptcha_v2.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import '../../../shared/validators.dart';
 import '../../../utilse/widgets.dart';
@@ -33,7 +34,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                       Image.asset(
                         AppImages.logo,
-                        height: 200,
+                        height: 150,
                         fit: BoxFit.cover,
                       ),
                       AppText(
@@ -41,9 +42,9 @@ class LoginScreen extends StatelessWidget {
                           color: AppColors.appColor,
                           fontSize: 30,
                           fontWeight: FontWeight.w500),
-                      SizedBox(
-                        height: Get.height * 0.01,
-                      ),
+                      // SizedBox(
+                      //   height: 5,
+                      // ),
                       customTextFormField(
                           validatore: (value) {
                             return Validators.emailValidator(value!);
@@ -72,12 +73,41 @@ class LoginScreen extends StatelessWidget {
                         child: InkWell(
                             onTap: () {
                               controller.goToNext(AppRoutes.forgetPassword);
+                              controller.loginEmailController.clear();
+                              controller.loginPassworedController.clear();
                             },
                             child: AppText(
                                 text: AppStrings.forgetPassword,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.blue)),
+                      ),
+
+                      Row(
+                        children: [
+                          Obx(() => Checkbox(
+                              activeColor: AppColors.blue,
+                              value: controller.isRememberMeChecked.value, onChanged: controller.toggleRememberMe)),
+                          AppText(text: "Remember me")
+                        ],
+                      ),
+                      SizedBox(
+                        height: 80,
+                        child: RecaptchaV2(
+                          apiKey: "6Ldqv9sqAAAAAGUMIuQcWL-1WSySnEq_S6I66YbZ",
+                          onVerifiedSuccessfully: (token) async {
+                            log("Recaptcha token $token");
+                            final bool isTokenVerified = await verifyRecaptchaV2Token(
+                              token: token,
+                              apiSecret: "6Ldqv9sqAAAAACQSGDktRo0Ur0X6TNnkhk71phoh",
+                            );
+                            if (isTokenVerified) {
+                              log("Token verified successfully");
+                            } else {
+                              log("Token verification failed");
+                            }
+                          },
+                        ),
                       ),
                       Center(
                         child: AppButton(
@@ -108,6 +138,8 @@ class LoginScreen extends StatelessWidget {
                           InkWell(
                             onTap: () {
                               controller.goToNext(AppRoutes.signup);
+                              controller.loginEmailController.clear();
+                              controller.loginPassworedController.clear();
                             },
                             child: AppText(
                                 text: AppStrings.signup,
@@ -142,25 +174,25 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      // Center(
-                      //   child: AppButton(
-                      //     useGradient: false,
-                      //     color: AppColors.white,
-                      //     hasBorder: true,
-                      //     image: AppImages.google,
-                      //     borderColor: AppColors.textFieldHintColor,
-                      //     textColor: AppColors.appColor,
-                      //     text: AppStrings.loginwithGoogle,
-                      //     height: 60.0,
-                      //     width: Get.width,
-                      //     // color: Colors.,
-                      //     radius: 30,
-                      //     onPressed: () {
-                      //       controller.loginUser();
-                      //       // Get.toNamed(AppRoutes.login);
-                      //     },
-                      //   ),
-                      // ),
+                      Center(
+                        child: AppButton(
+                          useGradient: false,
+                          color: AppColors.white,
+                          hasBorder: true,
+                          image: AppImages.google,
+                          borderColor: AppColors.textFieldHintColor,
+                          textColor: AppColors.appColor,
+                          text: AppStrings.loginwithGoogle,
+                          height: 60.0,
+                          width: Get.width,
+                          // color: Colors.,
+                          radius: 30,
+                          onPressed: () {
+                            controller.loginWithGoogle();
+                            // Get.toNamed(AppRoutes.login);
+                          },
+                        ),
+                      ),
                     ],
                   )),
             ),

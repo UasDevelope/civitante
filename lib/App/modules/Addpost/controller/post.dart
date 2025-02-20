@@ -74,6 +74,42 @@ class PostController extends GetxController {
     isloading.value = false;
   }
 
+  RxString singleImage = ''.obs;
+  Future<void> pickSingleImage() async {
+    isloading.value = true;
+    try {
+      final ImagePicker picker = ImagePicker();
+      // Pick image from gallery
+      final XFile? pickedFile =
+      await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        // Compress the image
+        final XFile? compressedImage =
+        await ImageUtils.compressImage(pickedFile);
+
+        if (compressedImage != null) {
+          // Upload to Firebase Storage
+          String imageUrl = await ImageUtils.uploadImageToFirebase(
+              File(compressedImage.path));
+
+          // Assign URL to a single variable instead of a list
+          singleImage.value = imageUrl;
+          isloading.value = false;
+          log("Single image uploaded! URL: $imageUrl");
+        } else {
+          log("Image compression failed.");
+        }
+      } else {
+        log("No image selected.");
+      }
+    } catch (e) {
+      log("Error during image pick/upload: $e");
+    }
+    isloading.value = false;
+  }
+
+
   // Method to trigger permission check and image pick
   Future<void> pickImageWithPermission() async {
     await _checkPermissions();
@@ -109,7 +145,7 @@ class PostController extends GetxController {
         return;
       }
 
-      if (images.isEmpty) {
+      if (singleImage.isEmpty) {
         ToastUtil.showToast(
           message: "Please add at least one image",
           backgroundColor: Colors.orange,
@@ -127,7 +163,7 @@ class PostController extends GetxController {
         "tags": tags.whereType<String>().toList(), // Ensure valid tags
         "category": "test1",
         "media": ["image"],
-        "mediaUrls": images,
+        "mediaUrls": [singleImage.value],
         "createdBy": userID,
       };
 

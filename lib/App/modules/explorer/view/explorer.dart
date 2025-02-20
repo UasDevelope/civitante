@@ -10,6 +10,7 @@ class ExplorerScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: HomeAppbar(
+        backButton: false,
         title: AppStrings.Explore,
         // imagePath: AppImages.location, // Optional, can be null
         rightIcon: AppImages.notification,
