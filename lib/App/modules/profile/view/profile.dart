@@ -266,67 +266,43 @@ class GridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        InkWell(
-          onLongPress: () {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  backgroundColor: Colors.black, // Black background
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15), // Rounded edges
-                  ),
-                  title: Text(
-                    "Confirm Delete",
-                    style: TextStyle(
-                      color: Colors.white, // White text
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  content: Text(
-                    "Are you sure you want to delete this item?",
-                    style: TextStyle(color: Colors.white70), // Slightly faded white
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context); // Close dialog
-                      },
-                      child: Text(
-                        "Cancel",
-                        style: TextStyle(color: Colors.white), // White text
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        HttpService.delete("/deletePost/${post.id}");
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        "Delete",
-                        style: TextStyle(
-                          color: Colors.redAccent, // Red to indicate danger
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(
-                image: NetworkImage(post.mediaUrls.first),
-                fit: BoxFit.cover,
-              ),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            image: DecorationImage(
+              image: NetworkImage(post.mediaUrls.first),
+              fit: BoxFit.cover,
             ),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              InkWell(
+                onTap: () async {
+                  final response = await HttpService.delete("/deletePost/${post.id}");
+                  if (response is Map && response.containsKey('error')) {
+                    ToastUtil.showToast(
+                      message: "Error: ${response['error']}",
+                      backgroundColor: Colors.green,
+                    );
+                  } else {
+                    ToastUtil.showToast(
+                      message: "Post deleted Successfully",
+                      backgroundColor: Colors.green,
+                    );
+                  }
+                },
+                child: Container(
+                  margin: EdgeInsets.all(4),
+                  padding: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      shape: BoxShape.circle
+                    ),
+                    child: Icon(Icons.delete,color: AppColors.red_color,)),
+              ),
+              Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -371,7 +347,7 @@ class GridItem extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ],
