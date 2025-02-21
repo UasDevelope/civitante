@@ -34,16 +34,6 @@ class ProfileScreen extends StatelessWidget {
         title: "Profile",
         imagePath: AppImages.location,
         rightIcon: AppImages.setting,
-        rightIcon2: AppImages.logout,
-        onRightIconPressed: () {
-          controller.isLoading.value=true;
-        //  CustomLoadingDialog.showCustomLoadingDialog("Logging out....");
-          AppConstant().userID = null;
-          PrefUtil.remove(PrefUtil.userId);
-          //CustomLoadingDialog.closeLoadingDialog();
-          controller.isLoading.value=false;
-          Get.offAllNamed('/login'); // Navigate to the route name when tapped
-        },
         onRightIconPressed1: () {
           Get.toNamed(AppRoutes.setting);
         },

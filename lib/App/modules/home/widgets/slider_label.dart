@@ -17,10 +17,12 @@ class SliderWithLabels extends StatelessWidget {
       padding: const EdgeInsets.only(left: 8.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Slider Row with dots
           Row(
             children: [
+              SizedBox(width: 5,),
               Dot(),
               Expanded(
                 child: Divider(
@@ -36,23 +38,24 @@ class SliderWithLabels extends StatelessWidget {
                 ),
               ),
               Dot(),
-              Expanded(
-                child: Divider(
-                  thickness: 1,
-                  color: AppColors.Slate_gray,
-                ),
-              ),
-              Dot(),
-              Expanded(
-                child: Divider(
-                  thickness: 1,
-                  color: AppColors.Slate_gray,
-                ),
-              ),
-              Dot(),
-              SizedBox(
-                width: 10,
-              ),
+              SizedBox(width: 25,),
+              // Expanded(
+              //   child: Divider(
+              //     thickness: 1,
+              //     color: AppColors.Slate_gray,
+              //   ),
+              // ),
+              // Dot(),
+              // Expanded(
+              //   child: Divider(
+              //     thickness: 1,
+              //     color: AppColors.Slate_gray,
+              //   ),
+              // ),
+              // Dot(),
+              // SizedBox(
+              //   width: 10,
+              // ),
               // InkWell(
               //   onTap: () {
               //     commentsBottomSheet(post: post);
@@ -72,7 +75,7 @@ class SliderWithLabels extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // AppText(
                 //     text: AppStrings.Calling_it_BS,
@@ -87,18 +90,19 @@ class SliderWithLabels extends StatelessWidget {
                     color: AppColors.Slate_gray,
                     fontWeight: FontWeight.w400,
                     fontSize: 8),
-                SizedBox(
-                  width: 6,
-                ),
+
+                // SizedBox(
+                //   width: 6,
+                // ),
                 AppText(
-                  text: 'Up',
+                  text: '     Up',
                   fontWeight: FontWeight.w400,
                   fontSize: 8,
                   color: AppColors.Slate_gray,
                 ),
-                SizedBox(
-                  width: 40,
-                ),
+                // SizedBox(
+                //   width: 40,
+                // ),
                 // AppText(
                 //     text: AppStrings.l_ll_buy_that,
                 //     fontWeight: FontWeight.w400,
@@ -113,7 +117,7 @@ class SliderWithLabels extends StatelessWidget {
                   fontSize: 8,
                   color: AppColors.Slate_gray,
                 ),
-                SizedBox(),
+                // SizedBox(),
               ],
             ),
           ),

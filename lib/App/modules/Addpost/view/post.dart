@@ -31,12 +31,20 @@ class _PostScreenState extends State<PostScreen> {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           InkWell(
                             onTap: () {
                               Get.back();
                             },
-                            child: AppText(text: AppStrings.Cancel),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(width: 0.5,color: AppColors.Slate_gray)
+                              ),
+                                height: 40,
+                                child: Center(child: AppText(text: AppStrings.Cancel,fontSize: 14,fontWeight: FontWeight.w500))),
                           ),
                           AppButton(
                               radius: 20,
@@ -51,6 +59,7 @@ class _PostScreenState extends State<PostScreen> {
                               })
                         ],
                       ),
+                      SizedBox(height: 12,),
                       Row(
                         children: [
                           Image.asset(

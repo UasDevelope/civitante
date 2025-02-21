@@ -40,7 +40,7 @@ class SettingScreen extends StatelessWidget {
           color: AppColors.appColor,
           fontSize: 20,
         ),
-        centerTitle: true,
+        centerTitle: false,
       ),
       body: Column(
         spacing: 14,
@@ -50,7 +50,7 @@ class SettingScreen extends StatelessWidget {
             elevation: 1,
             color: AppColors.white,
             child: Padding(
-              padding: const EdgeInsets.only(left: 8.0, bottom: 8, top: 8),
+              padding: const EdgeInsets.only(left: 8.0, bottom: 16, top: 8),
               child: Column(
                 spacing: Get.height * 0.02,
                 children: [
@@ -90,42 +90,7 @@ class SettingScreen extends StatelessWidget {
                   //     title: AppStrings.Bucket),
                   // buildDivider(),
                   // buildSectionRow(title: AppStrings.Notifications),
-                ],
-              ),
-            ),
-          ),
-          // Padding(
-          //   padding: const EdgeInsets.only(left: 8.0),
-          //   child: _buildSectionHeader(title: AppStrings.General),
-          // ),
-          SizedBox(
-            height: Get.height * 0.08,
-          ),
-          Card(
-            elevation: 1,
-            color: AppColors.white,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8.0, left: 8, bottom: 8),
-              child: Column(
-                spacing: 10,
-                children: [
-                  // buildDivider(),
-                  // buildSectionRow(title: AppStrings.Display_and_sound),
-                  // buildDivider(),
-                  // buildSectionRow(
-                  //   title: AppStrings.Light_Theme,
-                  //   trailing: Obx(() => Switch(
-                  //         value: controller.isLightTheme.value,
-                  //         onChanged: (value) {
-                  //           controller.isLightTheme.value =
-                  //               value; // Update state
-                  //         },
-                  //       )),
-                  // ),
-                  // buildDivider(),
-                  // buildSectionRow(title: AppStrings.Two_Factor_Authentication),
-                  // buildDivider(),
-
+                  buildDivider(),
                   buildSectionRow(
                     title: AppStrings.Logout,
                     leading: Padding(
@@ -147,10 +112,17 @@ class SettingScreen extends StatelessWidget {
                       Get.offAll(AppRoutes.login);
                     },
                   ),
+                  buildDivider(),
+                  AppText(text: "Delete Account",fontWeight: FontWeight.w500,fontSize: 16,color: AppColors.red_color),
+
                 ],
               ),
             ),
           ),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 8.0),
+          //   child: _buildSectionHeader(title: AppStrings.General),
+          // ),
         ],
       ),
     );

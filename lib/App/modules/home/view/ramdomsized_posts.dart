@@ -136,7 +136,7 @@ class RandomSizedPostsScreen extends StatelessWidget {
                               "data": post,
                               "currentUser": false
                             });
-                            Get.to(() => PostsDetailsScreen());
+                            // Get.to(() => PostsDetailsScreen());
                           },
                           child: CustomCard2(
                             haveDescAndTags: false,
@@ -408,7 +408,7 @@ class _CustomCard2State extends State<CustomCard2> {
                 ),
               ),
               SizedBox(
-                  height: Get.height * 0.08,
+                  height: Get.height * 0.05,
                   child: SliderWithLabels(
                     post: widget.post,
                   )),
