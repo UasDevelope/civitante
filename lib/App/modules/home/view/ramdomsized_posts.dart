@@ -136,7 +136,7 @@ class RandomSizedPostsScreen extends StatelessWidget {
                               "data": post,
                               "currentUser": false
                             });
-                            // Get.to(() => PostsDetailsScreen());
+                            Get.to(() => PostsDetailsScreen());
                           },
                           child: CustomCard2(
                             haveDescAndTags: false,
@@ -208,10 +208,17 @@ class _CustomCard2State extends State<CustomCard2> {
                                 AppImages.person), // Replace with your image
                   ),
                 ),
-                title: AppText(
-                    text: widget.post.createdBy.name.toString(),
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16),
+                title: InkWell(
+                  onTap: () {
+                    Get.to(PreviewProfileScreen(
+                      id: widget.post.createdBy.id,
+                    ));
+                  },
+                  child: AppText(
+                      text: widget.post.createdBy.name.toString(),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16),
+                ),
                 trailing: homeController
                             .filteredPosts[widget.index].isReported.value !=
                         true
@@ -275,32 +282,32 @@ class _CustomCard2State extends State<CustomCard2> {
                 ),
               ),
               SizedBox(
-                height: widget.topTitle? 200:450,
+                height: widget.topTitle? 200:600,
                 child: Stack(
                   children: [
-                    // PageView.builder(
-                    //   itemCount: widget.post.mediaUrls.length,
-                    //   itemBuilder: (context, index) {
-                    //     return Image.network(
-                    //       widget.post.mediaUrls[index],
-                    //       fit: BoxFit.cover,
-                    //       loadingBuilder: (context, child, loadingProgress) {
-                    //         if (loadingProgress == null) return child;
-                    //         return Center(
-                    //           child: CircularProgressIndicator(
-                    //             value: loadingProgress.expectedTotalBytes !=
-                    //                 null
-                    //                 ? loadingProgress.cumulativeBytesLoaded /
-                    //                 loadingProgress.expectedTotalBytes!
-                    //                 : null,
-                    //           ),
-                    //         );
-                    //       },
-                    //       errorBuilder: (context, error, stackTrace) =>
-                    //       const Icon(Icons.error),
-                    //     );
-                    //   },
-                    // ),
+                     widget.haveDescAndTags? PageView.builder(
+                      itemCount: widget.post.mediaUrls.length,
+                      itemBuilder: (context, index) {
+                        return Image.network(
+                          widget.post.mediaUrls[index],
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes !=
+                                    null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.error),
+                        );
+                      },
+                    ):
                     Image.network(
                       widget.post.mediaUrls.isNotEmpty ? widget.post.mediaUrls.first : '',
                       fit: BoxFit.fitWidth,
@@ -487,6 +494,7 @@ class _CustomCard2State extends State<CustomCard2> {
                                                   SizedBox(
                                                     width: 4,
                                                   ),
+
                                                   // Text(
                                                   //   "@kiero_d ·2d",
                                                   //   style: GoogleFonts.poppins(
@@ -520,20 +528,30 @@ class _CustomCard2State extends State<CustomCard2> {
                                               SizedBox(
                                                 height: 4,
                                               ),
-                                              SizedBox(
-                                                width: Get.width * 0.6,
-                                                child: Text(
-                                                  maxLines: 3,
-                                                  textAlign: TextAlign.start,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  "${widget.post.comments[index].text}",
-                                                  style: GoogleFonts.poppins(
-                                                      fontSize: 15,
-                                                      color: AppColors.appColor,
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                                ),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  SizedBox(
+                                                    width: Get.width * 0.6,
+                                                    child: Text(
+                                                      maxLines: 3,
+                                                      textAlign: TextAlign.start,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      "${widget.post.comments[index].text}",
+                                                      style: GoogleFonts.poppins(
+                                                          fontSize: 15,
+                                                          color: AppColors.appColor,
+                                                          fontWeight:
+                                                              FontWeight.w400),
+                                                    ),
+                                                  ),
+                                                  GestureDetector(
+                                                      onTap: () {
+                                                        HttpService.post("/addLikeToComment/${widget.post.id}/${widget.post.comments[index].id}", {});
+                                                      },
+                                                      child: Icon(widget.post.comments[index].isCommentLikedByUser == true? Icons.thumb_up_alt:Icons.thumb_up_alt_outlined,size: 20,color: widget.post.comments[index].isCommentLikedByUser == true? AppColors.green:AppColor.black,))
+                                                ],
                                               ),
                                               // Padding(
                                               //   padding: const EdgeInsets.all(8.0),
@@ -572,7 +590,8 @@ class _CustomCard2State extends State<CustomCard2> {
                                               //   ),
                                               // ),
                                             ],
-                                          )
+                                          ),
+
                                         ],
                                       ),
                                       SizedBox(

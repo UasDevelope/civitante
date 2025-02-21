@@ -81,7 +81,7 @@ class _PostScreenState extends State<PostScreen> {
                         children: [
                           InkWell(
                             onTap: () {
-                              controller.pickSingleImage();
+                              controller.pickImage();
                             },
                             child: Container(
                                 height: 50,
@@ -127,22 +127,22 @@ class _PostScreenState extends State<PostScreen> {
                           ),
                         ],
                       ),
-                      // Container(
-                      //   height: 85,
-                      //   width: 400,
-                      //   //  width: 78,
-                      //   child: ImageListView(),
-                      // ),
-                      controller.singleImage.value != '' || controller.singleImage.value.isNotEmpty?Container(
-                        width: Get.width,
-                        height: 250,
-                        margin: EdgeInsets.only(top: 28),
-                        clipBehavior: Clip.antiAlias,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12)
-                        ),
-                        child: Image.network(controller.singleImage.value,fit: BoxFit.cover,),
-                      ):SizedBox.shrink(),
+                      Container(
+                        height: 85,
+                        width: 400,
+                        //  width: 78,
+                        child: ImageListView(),
+                      ),
+                      // controller.singleImage.value != '' || controller.singleImage.value.isNotEmpty?Container(
+                      //   width: Get.width,
+                      //   height: 250,
+                      //   margin: EdgeInsets.only(top: 28),
+                      //   clipBehavior: Clip.antiAlias,
+                      //   decoration: BoxDecoration(
+                      //       borderRadius: BorderRadius.circular(12)
+                      //   ),
+                      //   child: Image.network(controller.singleImage.value,fit: BoxFit.cover,),
+                      // ):SizedBox.shrink(),
                       SizedBox(height: 16),
                       TextField(
                         controller: controller.descController,

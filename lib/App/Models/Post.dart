@@ -94,15 +94,19 @@ class Comment {
   final String id;
   final User user;
   final String text;
-  // Using RxList for likes
   final DateTime createdAt;
-  // Using RxList for replies
+  RxList<String>? likes;  // Made optional
+  RxList<Comment>? replies; // Made optional
+  RxBool? isCommentLikedByUser;
 
   Comment({
     required this.id,
     required this.user,
     required this.text,
     required this.createdAt,
+    this.likes, // Optional
+    this.replies, // Optional
+    this.isCommentLikedByUser,
   });
 
   factory Comment.fromJson(Map<String, dynamic> json) {
@@ -110,10 +114,14 @@ class Comment {
       id: json['_id'] ?? '',
       user: User.fromJson(json['user'] ?? {}),
       text: json['text'] ?? '',
-      // likes: RxList<String>(List<String>.from(json['likes']?.map((x) => x.toString()) ?? [])),
-      createdAt:
-          DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
-      // replies: RxList<Comment>((json['replies'] as List<dynamic>?)?.map((x) => Comment.fromJson(x)).toList() ?? []),
+      createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
+      likes: json['likes'] != null
+          ? RxList<String>((json['likes'] as List<dynamic>).map((e) => e.toString()).toList())
+          : null,
+      replies: json['replies'] != null
+          ? RxList<Comment>((json['replies'] as List<dynamic>).map((x) => Comment.fromJson(x)).toList())
+          : null,
+      isCommentLikedByUser: RxBool(json['isCommentLikedByUser'] ?? false),
     );
   }
 }

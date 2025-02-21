@@ -44,6 +44,9 @@ class ProfileScreen extends StatelessWidget {
           controller.isLoading.value=false;
           Get.offAllNamed('/login'); // Navigate to the route name when tapped
         },
+        onRightIconPressed1: () {
+          Get.toNamed(AppRoutes.setting);
+        },
       ),
       backgroundColor: Colors.white,
       body: Obx(() => RefreshIndicator(
@@ -269,27 +272,50 @@ class GridItem extends StatelessWidget {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text("Confirm Delete"),
-                  content: Text("Are you sure you want to delete this item?"),
+                  backgroundColor: Colors.black, // Black background
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15), // Rounded edges
+                  ),
+                  title: Text(
+                    "Confirm Delete",
+                    style: TextStyle(
+                      color: Colors.white, // White text
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  content: Text(
+                    "Are you sure you want to delete this item?",
+                    style: TextStyle(color: Colors.white70), // Slightly faded white
+                  ),
                   actions: [
                     TextButton(
                       onPressed: () {
                         Navigator.pop(context); // Close dialog
                       },
-                      child: Text("Cancel"),
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.white), // White text
+                      ),
                     ),
                     TextButton(
                       onPressed: () {
                         HttpService.delete("/deletePost/${post.id}");
                         Navigator.pop(context);
                       },
-                      child: Text("Delete", style: TextStyle(color: Colors.red)),
+                      child: Text(
+                        "Delete",
+                        style: TextStyle(
+                          color: Colors.redAccent, // Red to indicate danger
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ],
                 );
               },
             );
           },
+
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),

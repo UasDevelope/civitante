@@ -145,7 +145,7 @@ class PostController extends GetxController {
         return;
       }
 
-      if (singleImage.isEmpty) {
+      if (images.isEmpty) {
         ToastUtil.showToast(
           message: "Please add at least one image",
           backgroundColor: Colors.orange,
@@ -163,7 +163,7 @@ class PostController extends GetxController {
         "tags": tags.whereType<String>().toList(), // Ensure valid tags
         "category": "test1",
         "media": ["image"],
-        "mediaUrls": [singleImage.value],
+        "mediaUrls":  images,
         "createdBy": userID,
       };
 

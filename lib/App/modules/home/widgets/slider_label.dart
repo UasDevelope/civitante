@@ -74,24 +74,24 @@ class SliderWithLabels extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
+                // AppText(
+                //     text: AppStrings.Calling_it_BS,
+                //     color: AppColors.Slate_gray,
+                //     fontWeight: FontWeight.w400,
+                //     fontSize: 8),
+                // SizedBox(
+                //   width: 2,
+                // ),
                 AppText(
-                    text: AppStrings.Calling_it_BS,
+                    text: "Wow",
                     color: AppColors.Slate_gray,
                     fontWeight: FontWeight.w400,
                     fontSize: 8),
                 SizedBox(
-                  width: 2,
+                  width: 6,
                 ),
                 AppText(
-                    text: "I'm not \nbuying this",
-                    color: AppColors.Slate_gray,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 8),
-                SizedBox(
-                  width: 5,
-                ),
-                AppText(
-                  text: 'Zero',
+                  text: 'Up',
                   fontWeight: FontWeight.w400,
                   fontSize: 8,
                   color: AppColors.Slate_gray,
@@ -99,16 +99,16 @@ class SliderWithLabels extends StatelessWidget {
                 SizedBox(
                   width: 40,
                 ),
+                // AppText(
+                //     text: AppStrings.l_ll_buy_that,
+                //     fontWeight: FontWeight.w400,
+                //     color: AppColors.Slate_gray,
+                //     fontSize: 8),
+                // SizedBox(
+                //   width: 1,
+                // ),
                 AppText(
-                    text: AppStrings.l_ll_buy_that,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.Slate_gray,
-                    fontSize: 8),
-                SizedBox(
-                  width: 1,
-                ),
-                AppText(
-                  text: 'Love it',
+                  text: 'Awesome',
                   fontWeight: FontWeight.w400,
                   fontSize: 8,
                   color: AppColors.Slate_gray,
