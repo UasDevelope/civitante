@@ -12,7 +12,7 @@ class ExplorerScreen extends StatelessWidget {
       appBar: HomeAppbar(
         backButton: false,
         title: AppStrings.Explore,
-        // imagePath: AppImages.location, // Optional, can be null
+        imagePath: AppImages.location, // Optional, can be null
         rightIcon: AppImages.notification,
         onRightIconPressed: () {},
       ),

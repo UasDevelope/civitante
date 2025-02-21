@@ -27,6 +27,7 @@ class WalletScreen extends StatelessWidget {
       appBar: HomeAppbar(
         backButton: false,
         title: AppStrings.Wallet,
+        imagePath: AppImages.location,
         rightIcon: AppImages.notification,
       ),
       body: Obx(() {
@@ -156,7 +157,7 @@ class WalletScreen extends StatelessWidget {
   }
 
   void _handleBuyPoints(BuildContext context) async {
-    if (controller.pointsData.value?.paymentId == true) {
+    if (controller.pointsData.value?.paymentId != true) {
       Get.to(() => BuyPointsScreen());
     } else {
       final success = await PaymentService().makePayment(context);

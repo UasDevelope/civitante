@@ -86,6 +86,7 @@ class AppPages {
     GetPage(
         name: AppRoutes.postDetail,
         page: () => PostsDetailsScreen(),
+        transition: Transition.zoom,
         binding: InitialBinding()),
     GetPage(
         name: AppRoutes.addCommunity,

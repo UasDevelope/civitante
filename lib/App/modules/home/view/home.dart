@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
     homeController.fetchAndAssignPosts(
         followed: true, randomized: false, communityId: '');
     return Scaffold(
-      backgroundColor: Colors.white, // Change the background color
+      backgroundColor: Colors.white,
       appBar: HomeAppbar(
         backButton: false,
         title: "Bangalore",
@@ -27,12 +27,17 @@ class HomeScreen extends StatelessWidget {
       ),
       // drawer: CustomDrawer(), // Add the drawer here
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
             height: 20,
           ),
-          Container(
-              height: Get.height / 1.32, child: HomeTabBar()),
+          Center(
+            child: Container(
+              padding: EdgeInsets.zero,
+                height: Get.height / 1.32, child: Center(child: HomeTabBar())),
+          ),
         ],
       ),
     );

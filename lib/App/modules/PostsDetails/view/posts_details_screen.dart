@@ -29,9 +29,9 @@ class PostsDetailsScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
-              height: 20,
-            ),
+            // SizedBox(
+            //   height: 20,
+            // ),
             // Padding(
             //   padding: const EdgeInsets.only(left: 15, right: 15),
             //   child: HomeSerchField(
@@ -102,12 +102,14 @@ class PostsDetailsScreen extends StatelessWidget {
             //     ),
             //   ),
             // ),
-            SizedBox(
-              height: Get.height * 0.02,
-            ),
+            // SizedBox(
+            //   height: Get.height * 0.02,
+            // ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 6),
               child: CustomCard2(
+                haveDescAndTags: true,
+                topTitle: false,
                 post: post,
                 currentUser: currentUser,
                 haveComments: true,

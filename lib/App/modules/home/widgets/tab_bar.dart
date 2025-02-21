@@ -17,7 +17,7 @@ class HomeTabBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TabBar(
-            isScrollable: true,
+            isScrollable: false,
             dividerColor: AppColors.white,
             indicator: BoxDecoration(
               color: Colors.black,
@@ -61,8 +61,8 @@ class HomeTabBar extends StatelessWidget {
             final bool isSelected = tabController.index == index;
 
             return Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              //  margin: EdgeInsets.symmetric(horizontal: 8),
+              width: Get.width* 0.8, // Set a fixed width
+              padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Colors.black,
@@ -71,16 +71,19 @@ class HomeTabBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(30),
                 color: isSelected ? Colors.black : Colors.transparent,
               ),
-              child: AppText(
-                text: text,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: isSelected ? Colors.white : AppColors.appColor,
+              child: Center( // Ensure text alignment stays consistent
+                child: AppText(
+                  text: text,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                  color: isSelected ? Colors.white : AppColors.appColor,
+                ),
               ),
             );
           },
         );
       },
     );
+
   }
 }
