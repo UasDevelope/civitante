@@ -21,7 +21,8 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
       this.rightIcon,
       this.rightIcon2, // Pass an icon for the right side
       this.onRightIconPressed,
-      this.onRightIconPressed1, this.backButton = true // Action for the right icon
+      this.onRightIconPressed1,
+      this.backButton = true // Action for the right icon
       })
       : super(key: key);
 
@@ -31,6 +32,7 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
     log("Location here:>>>>>>>>>>>>>>>>>>>>>>> ${locationController.userLocation.toString()}");
     return AppBar(
       backgroundColor: Colors.white,
+      centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: backButton,
       // centerTitle: true,
@@ -46,7 +48,9 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
             const SizedBox(width: 8), // Add spacing between icon and text
           ],
           AppText(
-              text: locationController.userLocation["city"] != null ?locationController.userLocation["city"]:"Location",
+              text: locationController.userLocation["city"] != null
+                  ? locationController.userLocation["city"]
+                  : "Location",
               fontSize: 16,
               fontWeight: FontWeight.w500,
               color: AppColors.appColor)
