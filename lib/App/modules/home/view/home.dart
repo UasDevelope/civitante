@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../utilse/location_controller.dart';
 import '../../../utilse/widgets.dart';
 import '../../notification/view/notification.dart';
 import '../controller/home_controller.dart';
@@ -12,6 +13,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeController = Get.find<HomeController>();
+    LocationController locationController = Get.put(LocationController());
     homeController.fetchAndAssignPosts(
         followed: true, randomized: false, communityId: '');
     return Scaffold(

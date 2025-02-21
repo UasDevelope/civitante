@@ -12,6 +12,7 @@ class AppConstant {
   }
 
   String? userID;
+  String? cityName;
   bool? paymentID;
   String baseUrl = 'http://16.170.211.87:5000/user';
 

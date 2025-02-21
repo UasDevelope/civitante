@@ -14,29 +14,28 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onRightIconPressed;
   final VoidCallback? onRightIconPressed1;
 
-  const HomeAppbar(
-      {Key? key,
-      required this.title,
-      this.imagePath, // Pass an icon to display next to the title
-      this.rightIcon,
-      this.rightIcon2, // Pass an icon for the right side
-      this.onRightIconPressed,
-      this.onRightIconPressed1, this.backButton = true // Action for the right icon
-      })
-      : super(key: key);
+  const HomeAppbar({
+    Key? key,
+    required this.title,
+    this.imagePath,
+    this.rightIcon,
+    this.rightIcon2,
+    this.onRightIconPressed,
+    this.onRightIconPressed1,
+    this.backButton = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    LocationController locationController = Get.put(LocationController());
-    log("Location here:>>>>>>>>>>>>>>>>>>>>>>> ${locationController.userLocation.toString()}");
+    final LocationController locationController = Get.find<LocationController>();
+
     return AppBar(
       backgroundColor: Colors.white,
       centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: backButton,
-      // centerTitle: true,
       title: Row(
-        mainAxisSize: MainAxisSize.min, // Ensure title stays compact
+        mainAxisSize: MainAxisSize.min,
         children: [
           if (imagePath != null) ...[
             Image.asset(
@@ -44,13 +43,18 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
               color: AppColors.appColor,
               height: 20,
             ),
-            const SizedBox(width: 8), // Add spacing between icon and text
+            const SizedBox(width: 8),
           ],
-          AppText(
-              text: locationController.userLocation["city"] != null ?locationController.userLocation["city"]:"Location",
+          // Use Obx to rebuild when location updates
+          Obx(() {
+            log("Updated Location: ${locationController.userLocation}");
+            return AppText(
+              text: locationController.userLocation["city"] ?? "Location",
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: AppColors.appColor)
+              color: AppColors.appColor,
+            );
+          }),
         ],
       ),
       actions: [
