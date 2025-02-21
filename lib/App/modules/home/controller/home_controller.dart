@@ -14,7 +14,19 @@ class HomeController extends GetxController {
   RxList<Post> filteredPosts = <Post>[].obs; // New list for filtered posts
   final TextEditingController commentController = TextEditingController();
   RxBool isPostLoading = false.obs;
+  RxString selectCatagory = "General".obs;
+  RxList<String> categories =
+      ['General', 'Tech', 'Lifestyle', 'Business', 'Health'].obs;
   RxString searchedValue = "".obs;
+  void filterPostsByCategory() {
+    if (selectCatagory.value == "General") {
+      filteredPosts.value = filteredPosts; // Show all posts if "General" is selected
+    } else {
+      filteredPosts.value = filteredPosts
+          .where((post) => post.category == selectCatagory.value)
+          .toList();
+    }
+  }
 
   RxList<String> Images = [
     "assets/images/img.png",
@@ -56,6 +68,19 @@ class HomeController extends GetxController {
     filteredPosts.value = List.from(filteredPosts.value)
       ..sort((a, b) => b.commentsCount.value.compareTo(a.commentsCount.value));
   }
+  void sortPosts() {
+    print('Sorting by Likes and Comments...');
+    filteredPosts.value = List.from(filteredPosts.value)
+      ..sort((a, b) {
+        int likesComparison = b.likesCount.value.compareTo(a.likesCount.value);
+        if (likesComparison != 0) {
+          return likesComparison;
+        }
+        return b.commentsCount.value.compareTo(a.commentsCount.value); // Sort by comments if likes are equal
+      });
+  }
+
+
 
   /// Fetch and assign posts
   Future<void> fetchAndAssignPosts({String communityId = "", bool? followed, bool? randomized }) async {

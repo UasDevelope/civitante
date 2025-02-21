@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
+import '../../../utilse/constant.dart';
 import '../widget/devider.dart';
 import '../widget/rowsection.dart';
 
@@ -140,6 +141,9 @@ class SettingScreen extends StatelessWidget {
                     // ),
                     onTap: () {
                       PrefUtil.remove(PrefUtil.userId);
+                      AppConstant().userID = null;
+                      PrefUtil.remove(PrefUtil.userId);
+                      Get.offAllNamed('/login');
                       Get.offAll(AppRoutes.login);
                     },
                   ),

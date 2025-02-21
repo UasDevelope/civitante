@@ -30,23 +30,23 @@ class HomeFilterMenues extends StatelessWidget {
       onSelected: onSelected,
       itemBuilder: (BuildContext context) {
         return [
-          PopupMenuItem(
-            height: 30,
-            value: AppStrings.comments,
-            child: AppText(
-                text: AppStrings.comments,
-                color: AppColors.appColor,
-                fontSize: 12,
-                fontWeight: FontWeight.w400),
-          ),
-          PopupMenuDivider(
-            height: 1,// Thickness of the divider
-          ),
+          // PopupMenuItem(
+          //   height: 30,
+          //   value: AppStrings.comments,
+          //   child: AppText(
+          //       text: AppStrings.comments,
+          //       color: AppColors.appColor,
+          //       fontSize: 12,
+          //       fontWeight: FontWeight.w400),
+          // ),
+          // PopupMenuDivider(
+          //   height: 1,// Thickness of the divider
+          // ),
           PopupMenuItem(
             height: 30,
             value: 'Likes',
             child: AppText(
-                text: AppStrings.likes,
+                text: "The Top",
                 color: AppColors.appColor,
                 fontSize: 12,
                 fontWeight: FontWeight.w400),

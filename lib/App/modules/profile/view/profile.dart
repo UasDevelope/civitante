@@ -1,4 +1,5 @@
 import 'package:civitante/App/modules/home/widgets/homeAppbar.dart';
+import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/shared/app_button.dart';
 import 'package:civitante/App/shared/app_text.dart';
 import 'package:civitante/App/shared/color.dart';
@@ -9,6 +10,7 @@ import '../../../Models/Post.dart';
 import '../../../routes/routes.dart';
 import '../../../utilse/constant.dart';
 import '../../../utilse/pref.dart';
+import '../../../utilse/toast_util.dart';
 import '../../home/widgets/engament_row.dart';
 import '../../loading/custom_loading_dialogue.dart';
 import '../../shimmer/profile_gridview_shimmer.dart';
@@ -30,16 +32,20 @@ class ProfileScreen extends StatelessWidget {
       appBar: HomeAppbar(
         backButton: false,
         title: "Profile",
-        rightIcon: AppImages.notification,
+        imagePath: AppImages.location,
+        rightIcon: AppImages.setting,
         rightIcon2: AppImages.logout,
-        onRightIconPressed1: () {
+        onRightIconPressed: () {
           controller.isLoading.value=true;
         //  CustomLoadingDialog.showCustomLoadingDialog("Logging out....");
           AppConstant().userID = null;
           PrefUtil.remove(PrefUtil.userId);
           //CustomLoadingDialog.closeLoadingDialog();
           controller.isLoading.value=false;
-          Get.toNamed('/login'); // Navigate to the route name when tapped
+          Get.offAllNamed('/login'); // Navigate to the route name when tapped
+        },
+        onRightIconPressed1: () {
+          Get.toNamed(AppRoutes.setting);
         },
       ),
       backgroundColor: Colors.white,
@@ -268,53 +274,80 @@ class GridItem extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  // Views Row
-                  buildStatItem(
-                    icon: Image.asset(
-                      AppImages.view,
-                      height: 25,
-                      color: post.views > 0 ? AppColors.green : AppColors.white,
-                    ),
-                    label: post.views.toString(),
-                    textColor: AppColors.white,
-                  ),
-                  SizedBox(width: 10),
-
-                  // Likes Row
-                  buildStatItem(
-                    icon: Image.asset(
-                      AppImages.like,
-                      height: 25,
-                      color: post.likesCount > 0
-                          ? AppColors.appColor
-                          : AppColors.white,
-                    ),
-                    label: post.likesCount.toString(),
-                    textColor: AppColors.white,
-                  ),
-                  SizedBox(width: 10),
-
-                  // Comments Row
-                  buildStatItem(
-                    icon: Image.asset(
-                      AppImages.comment,
-                      height: 25,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              InkWell(
+                onTap: () async {
+                  final response = await HttpService.delete("/deletePost/${post.id}");
+                  if (response is Map && response.containsKey('error')) {
+                    ToastUtil.showToast(
+                      message: "Error: ${response['error']}",
+                      backgroundColor: Colors.green,
+                    );
+                  } else {
+                    ToastUtil.showToast(
+                      message: "Post deleted Successfully",
+                      backgroundColor: Colors.green,
+                    );
+                  }
+                },
+                child: Container(
+                  margin: EdgeInsets.all(4),
+                  padding: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
                       color: AppColors.white,
+                      shape: BoxShape.circle
                     ),
-                    label: post.commentsCount.toString(),
-                    textColor: AppColors.white,
-                  ),
-                  SizedBox(width: 10),
-                ],
+                    child: Icon(Icons.delete,color: AppColors.red_color,)),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    // Views Row
+                    buildStatItem(
+                      icon: Image.asset(
+                        AppImages.view,
+                        height: 25,
+                        color: post.views > 0 ? AppColors.green : AppColors.white,
+                      ),
+                      label: post.views.toString(),
+                      textColor: AppColors.white,
+                    ),
+                    SizedBox(width: 10),
+
+                    // Likes Row
+                    buildStatItem(
+                      icon: Image.asset(
+                        AppImages.like,
+                        height: 25,
+                        color: post.likesCount > 0
+                            ? AppColors.appColor
+                            : AppColors.white,
+                      ),
+                      label: post.likesCount.toString(),
+                      textColor: AppColors.white,
+                    ),
+                    SizedBox(width: 10),
+
+                    // Comments Row
+                    buildStatItem(
+                      icon: Image.asset(
+                        AppImages.comment,
+                        height: 25,
+                        color: AppColors.white,
+                      ),
+                      label: post.commentsCount.toString(),
+                      textColor: AppColors.white,
+                    ),
+                    SizedBox(width: 10),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ],
