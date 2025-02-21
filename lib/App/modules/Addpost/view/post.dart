@@ -76,6 +76,73 @@ class _PostScreenState extends State<PostScreen> {
                           ),
                         ],
                       ),
+                      SizedBox(height: 16),                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              controller.pickSingleImage();
+                            },
+                            child: Container(
+                                height: 50,
+                                width: 100,
+                                padding: const EdgeInsets.only(
+                                  left: 10,
+                                  right: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.grey, width: 1), // Border
+                                  borderRadius: BorderRadius.circular(
+                                      15), // Rounded corners
+                                ),
+                                child: Icon(Icons.camera_alt)),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Colors.grey, width: 1), // Border
+                              borderRadius:
+                              BorderRadius.circular(15), // Rounded corners
+                            ),
+                            child: DropdownButton<String>(
+                              hint: const Text(
+                                  "Select a category"), // Display hint text when no value is selected
+                              value: controller.selectCatagory
+                                  .value, // Bind this to a variable in your state
+                              items: controller.categories.map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (String? value) {
+                                if (value != null) {
+                                  // Update the selected category
+                                  controller.selectCatagory.value = value;
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      // Container(
+                      //   height: 85,
+                      //   width: 400,
+                      //   //  width: 78,
+                      //   child: ImageListView(),
+                      // ),
+                      controller.singleImage.value != '' || controller.singleImage.value.isNotEmpty?Container(
+                        width: Get.width,
+                        height: 250,
+                        margin: EdgeInsets.only(top: 28),
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12)
+                        ),
+                        child: Image.network(controller.singleImage.value,fit: BoxFit.cover,),
+                      ):SizedBox.shrink(),
                       SizedBox(height: 16),
                       TextField(
                         controller: controller.descController,
@@ -104,20 +171,21 @@ class _PostScreenState extends State<PostScreen> {
                       SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey, width: 1), // Add border
+                          borderRadius: BorderRadius.circular(10), // Rounded corners
+                        ),
                         child: TextField(
                           controller: controller.tagController,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             hintText: "Enter a tag",
-                            border: InputBorder.none,
+                            border: InputBorder.none, // Remove default border
+                            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
                           ),
                           onSubmitted: (value) {
-                            if (value.isNotEmpty &&
-                                !controller.tags!.contains(value)) {
-
-                                controller.tags!.add(value);
-
-                              controller.tagController
-                                  .clear(); // Clear input after adding
+                            if (value.isNotEmpty && !controller.tags.contains(value)) {
+                              controller.tags.add(value);
+                              controller.tagController.clear(); // Clear input after adding
                             }
                           },
                         ),
@@ -152,75 +220,7 @@ class _PostScreenState extends State<PostScreen> {
                           },
                         ),
                       ),
-                      SizedBox(height: 16),
 
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              controller.pickSingleImage();
-                            },
-                            child: Container(
-                                height: 50,
-                                width: 100,
-                                padding: const EdgeInsets.only(
-                                  left: 10,
-                                  right: 10,
-                                ),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.grey, width: 1), // Border
-                                  borderRadius: BorderRadius.circular(
-                                      15), // Rounded corners
-                                ),
-                                child: Icon(Icons.camera_alt)),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(left: 10, right: 10),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Colors.grey, width: 1), // Border
-                              borderRadius:
-                                  BorderRadius.circular(15), // Rounded corners
-                            ),
-                            child: DropdownButton<String>(
-                              hint: const Text(
-                                  "Select a category"), // Display hint text when no value is selected
-                              value: controller.selectCatagory
-                                  .value, // Bind this to a variable in your state
-                              items: controller.categories.map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                              onChanged: (String? value) {
-                                if (value != null) {
-                                  // Update the selected category
-                                  controller.selectCatagory.value = value;
-                                }
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      // Container(
-                      //   height: 85,
-                      //   width: 400,
-                      //   //  width: 78,
-                      //   child: ImageListView(),
-                      // ),
-                      controller.singleImage.value != '' || controller.singleImage.value.isNotEmpty?Container(
-                        width: Get.width / 2,
-                      height: 150,
-                        margin: EdgeInsets.only(top: 28),
-                        clipBehavior: Clip.antiAlias,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12)
-                        ),
-                        child: Image.network(controller.singleImage.value,fit: BoxFit.cover,),
-                      ):SizedBox.shrink(),
                     ],
                   ),
                 ),

@@ -24,7 +24,7 @@ class PostController extends GetxController {
   final descController = TextEditingController();
   RxBool isloading = false.obs;
 
-  RxList<String> tags = [""].obs;
+  RxList<String> tags = <String>[].obs;
   var images = <String>[].obs; // Observable list of image paths
 
   // Method to check and request permission
