@@ -38,16 +38,17 @@ class LocationService {
       if (placemarks.isNotEmpty) {
         Placemark placemark = placemarks.first;
 
-        String city = placemark.locality ?? "Unknown City";
+        // Log all details for debugging
+        lg.log("Full Placemark details: $placemark");
+
+        // Use fallback for city if locality is null
+        String city = placemark.locality ?? placemark.subAdministrativeArea ?? "Unknown City";
         String state = placemark.administrativeArea ?? "Unknown State";
         String country = placemark.country ?? "Unknown Country";
-
         String locationName = placemark.name ?? "";
 
-        // Log the location details
-        lg.log(
-            "Current location: Lat: ${position.latitude}, Lon: ${position.longitude}, Location Name: $locationName");
-        // CustomLoadingDialog.closeLoadingDialog();
+        lg.log("Current location: Lat: ${position.latitude}, Lon: ${position.longitude}, Location Name: $locationName");
+
         return {
           'lng': position.longitude,
           'lat': position.latitude,
@@ -59,12 +60,12 @@ class LocationService {
           },
         };
       } else {
-        // CustomLoadingDialog.closeLoadingDialog();
         ToastUtil.showToast(
             message: "Unable to determine location name",
             backgroundColor: Colors.red);
         throw Exception("Unable to determine location name.");
       }
+
     } catch (e) {
       lg.log("Error fetching location: $e");
       ToastUtil.showToast(
