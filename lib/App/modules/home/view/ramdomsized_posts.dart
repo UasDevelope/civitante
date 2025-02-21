@@ -136,7 +136,7 @@ class RandomSizedPostsScreen extends StatelessWidget {
                               "data": post,
                               "currentUser": false
                             });
-                            Get.to(() => PostsDetailsScreen());
+                            // Get.to(() => PostsDetailsScreen());
                           },
                           child: CustomCard2(
                             haveDescAndTags: false,
