@@ -31,6 +31,7 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
     log("Location here:>>>>>>>>>>>>>>>>>>>>>>> ${locationController.userLocation.toString()}");
     return AppBar(
       backgroundColor: Colors.white,
+      centerTitle: false,
       elevation: 0,
       automaticallyImplyLeading: backButton,
       // centerTitle: true,
