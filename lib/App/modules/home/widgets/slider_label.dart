@@ -17,6 +17,7 @@ class SliderWithLabels extends StatelessWidget {
       padding: const EdgeInsets.only(left: 8.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Slider Row with dots
           Row(

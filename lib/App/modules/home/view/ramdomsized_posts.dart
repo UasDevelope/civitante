@@ -393,7 +393,7 @@ class _CustomCard2State extends State<CustomCard2> {
                 ),
               ),
               SizedBox(
-                  height: Get.height * 0.08,
+                  height: Get.height * 0.05,
                   child: SliderWithLabels(
                     post: widget.post,
                   )),

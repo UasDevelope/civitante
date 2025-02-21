@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
         title: "Bangalore",
         imagePath: AppImages.location, // Optional, can be null
         rightIcon: AppImages.notification,
-        onRightIconPressed: () {
+        onRightIconPressed1: () {
           Get.to(NotificationsScreen());
         },
       ),
