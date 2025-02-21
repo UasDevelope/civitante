@@ -4,6 +4,7 @@ import 'package:civitante/App/modules/home/widgets/filter_menues.dart';
 import 'package:civitante/App/modules/loading/empty_data.dart';
 
 import 'package:civitante/App/modules/previewUserProfile/view/previewprofile.dart';
+import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/shared/app_text.dart';
 import 'package:civitante/App/shared/color.dart';
 import 'package:civitante/App/shared/image.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../Models/Post.dart';
+import '../../PostsDetails/view/posts_details_screen.dart';
 import '../../shimmer/randomized_shimmer_post.dart';
 import '../controller/home_controller.dart';
 import '../widgets/engament_row.dart';
@@ -53,18 +55,49 @@ class RandomSizedPostsScreen extends StatelessWidget {
               ),
             if (explore == true) SizedBox(height: 10),
             if (explore == false)
-              Align(
-                alignment: Alignment.topRight,
-                child: HomeFilterMenues(
-                  onSelected: (value) {
-                    if (value == 'Comments') {
-                      homeController.sortByComments();
-                    } else {
-                      homeController.sortByLikes();
-                    }
-                    print("selected=>$value");
-                  },
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Container(
+                  //   padding: const EdgeInsets.only(left: 10, right: 10),
+                  //   decoration: BoxDecoration(
+                  //     border: Border.all(
+                  //         color: Colors.grey, width: 1), // Border
+                  //     borderRadius:
+                  //     BorderRadius.circular(15), // Rounded corners
+                  //   ),
+                  //   child: DropdownButton<String>(
+                  //     hint: const Text(
+                  //         "Select a category"), // Display hint text when no value is selected
+                  //     value: homeController.selectCatagory
+                  //         .value, // Bind this to a variable in your state
+                  //     items: homeController.categories.map((String value) {
+                  //       return DropdownMenuItem<String>(
+                  //         value: value,
+                  //         child: Text(value),
+                  //       );
+                  //     }).toList(),
+                  //     onChanged: (String? value) {
+                  //       if (value != null) {
+                  //         homeController.selectCatagory.value = value;
+                  //         homeController.filterPostsByCategory();
+                  //       }
+                  //     },
+                  //   ),
+                  // ),
+                  // SizedBox(height: 10,),
+                  HomeFilterMenues(
+                    onSelected: (value) {
+                      if (value == 'Comments') {
+                        homeController.sortByComments();
+                      } else {
+                        homeController.sortPosts();
+                      }
+                      print("selected=>$value");
+                    },
+                  ),
+                ],
               ),
             Expanded(
               child: RefreshIndicator(
@@ -131,10 +164,11 @@ class CustomCard2 extends StatefulWidget {
       this.haveComments = false,
       required this.post,
       this.currentUser = false,
-      this.index = 0, required this.haveDescAndTags});
+      this.index = 0, required this.haveDescAndTags, this.topTitle = true});
   final bool haveComments;
   final Post post;
   final bool haveDescAndTags;
+  final bool topTitle;
   bool currentUser;
   int index;
 
@@ -214,6 +248,8 @@ class _CustomCard2State extends State<CustomCard2> {
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600),
                             onTap: () async {
+                              HttpService.post("/blockPost/${homeController.filteredPosts[widget.index].id}", {});
+                              Get.back();
                               log("Block Button Click");
                             },
                           ),
@@ -229,17 +265,17 @@ class _CustomCard2State extends State<CustomCard2> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppText(
+                    widget.topTitle?AppText(
                       text: widget.post.title,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                    ),
+                    ):SizedBox.shrink(),
                     SizedBox(height: 4),
                   ],
                 ),
               ),
               SizedBox(
-                height: 200,
+                height: widget.topTitle? 200:450,
                 child: Stack(
                   children: [
                     // PageView.builder(
@@ -359,6 +395,11 @@ class _CustomCard2State extends State<CustomCard2> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    !widget.topTitle?AppText(
+                      text: widget.post.title,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ):SizedBox.shrink(),
                     AppText(
                       text: widget.post.description,
                       fontSize: 16,

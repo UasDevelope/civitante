@@ -26,6 +26,7 @@ class HttpService {
     }
   }
 
+
   static Future<dynamic> get(String endpoint) async {
     final url = Uri.parse('$_baseUrl$endpoint');
     log(" get Url is $url ");

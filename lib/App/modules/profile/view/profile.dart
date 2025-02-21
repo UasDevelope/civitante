@@ -1,4 +1,5 @@
 import 'package:civitante/App/modules/home/widgets/homeAppbar.dart';
+import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/shared/app_button.dart';
 import 'package:civitante/App/shared/app_text.dart';
 import 'package:civitante/App/shared/color.dart';
@@ -9,6 +10,7 @@ import '../../../Models/Post.dart';
 import '../../../routes/routes.dart';
 import '../../../utilse/constant.dart';
 import '../../../utilse/pref.dart';
+import '../../../utilse/toast_util.dart';
 import '../../home/widgets/engament_row.dart';
 import '../../loading/custom_loading_dialogue.dart';
 import '../../shimmer/profile_gridview_shimmer.dart';
@@ -261,59 +263,87 @@ class GridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            image: DecorationImage(
-              image: NetworkImage(post.mediaUrls.first),
-              fit: BoxFit.cover,
+        InkWell(
+          onLongPress: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Confirm Delete"),
+                  content: Text("Are you sure you want to delete this item?"),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Close dialog
+                      },
+                      child: Text("Cancel"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        HttpService.delete("/deletePost/${post.id}");
+                        Navigator.pop(context);
+                      },
+                      child: Text("Delete", style: TextStyle(color: Colors.red)),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              image: DecorationImage(
+                image: NetworkImage(post.mediaUrls.first),
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  // Views Row
-                  buildStatItem(
-                    icon: Image.asset(
-                      AppImages.view,
-                      height: 25,
-                      color: post.views > 0 ? AppColors.green : AppColors.white,
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    // Views Row
+                    buildStatItem(
+                      icon: Image.asset(
+                        AppImages.view,
+                        height: 25,
+                        color: post.views > 0 ? AppColors.green : AppColors.white,
+                      ),
+                      label: post.views.toString(),
+                      textColor: AppColors.white,
                     ),
-                    label: post.views.toString(),
-                    textColor: AppColors.white,
-                  ),
-                  SizedBox(width: 10),
+                    SizedBox(width: 10),
 
-                  // Likes Row
-                  buildStatItem(
-                    icon: Image.asset(
-                      AppImages.like,
-                      height: 25,
-                      color: post.likesCount > 0
-                          ? AppColors.appColor
-                          : AppColors.white,
+                    // Likes Row
+                    buildStatItem(
+                      icon: Image.asset(
+                        AppImages.like,
+                        height: 25,
+                        color: post.likesCount > 0
+                            ? AppColors.appColor
+                            : AppColors.white,
+                      ),
+                      label: post.likesCount.toString(),
+                      textColor: AppColors.white,
                     ),
-                    label: post.likesCount.toString(),
-                    textColor: AppColors.white,
-                  ),
-                  SizedBox(width: 10),
+                    SizedBox(width: 10),
 
-                  // Comments Row
-                  buildStatItem(
-                    icon: Image.asset(
-                      AppImages.comment,
-                      height: 25,
-                      color: AppColors.white,
+                    // Comments Row
+                    buildStatItem(
+                      icon: Image.asset(
+                        AppImages.comment,
+                        height: 25,
+                        color: AppColors.white,
+                      ),
+                      label: post.commentsCount.toString(),
+                      textColor: AppColors.white,
                     ),
-                    label: post.commentsCount.toString(),
-                    textColor: AppColors.white,
-                  ),
-                  SizedBox(width: 10),
-                ],
+                    SizedBox(width: 10),
+                  ],
+                ),
               ),
             ),
           ),
