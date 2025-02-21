@@ -25,6 +25,7 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
     this.backButton = true,
   }) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
     final LocationController locationController = Get.find<LocationController>();
@@ -45,16 +46,27 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
             ),
             const SizedBox(width: 8),
           ],
-          // Use Obx to rebuild when location updates
-          Obx(() {
-            log("Updated Location: ${locationController.userLocation}");
-            return AppText(
-              text: locationController.userLocation["city"] ?? "Location",
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: AppColors.appColor,
-            );
-          }),
+
+
+          AppText(
+            text: (locationController.userLocation["city"] != null &&
+                    locationController.userLocation["city"]
+                        .toString()
+                        .trim()
+                        .isNotEmpty)
+                ? locationController.userLocation["city"]
+                : (locationController.userLocation["state"] != null &&
+                        locationController.userLocation["state"]
+                            .toString()
+                            .trim()
+                            .isNotEmpty)
+                    ? locationController.userLocation["state"]
+                    : locationController.userLocation["country"] ?? '',
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: AppColors.appColor,
+          )
+
         ],
       ),
       actions: [

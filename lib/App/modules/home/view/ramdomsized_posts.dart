@@ -164,7 +164,9 @@ class CustomCard2 extends StatefulWidget {
       this.haveComments = false,
       required this.post,
       this.currentUser = false,
-      this.index = 0, required this.haveDescAndTags, this.topTitle = true});
+      this.index = 0,
+      required this.haveDescAndTags,
+      this.topTitle = true});
   final bool haveComments;
   final Post post;
   final bool haveDescAndTags;
@@ -255,7 +257,9 @@ class _CustomCard2State extends State<CustomCard2> {
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600),
                             onTap: () async {
-                              HttpService.post("/blockPost/${homeController.filteredPosts[widget.index].id}", {});
+                              HttpService.post(
+                                  "/blockPost/${homeController.filteredPosts[widget.index].id}",
+                                  {});
                               Get.back();
                               log("Block Button Click");
                             },
@@ -272,59 +276,70 @@ class _CustomCard2State extends State<CustomCard2> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    widget.topTitle?AppText(
-                      text: widget.post.title,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ):SizedBox.shrink(),
+                    widget.topTitle
+                        ? AppText(
+                            text: widget.post.title,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          )
+                        : SizedBox.shrink(),
                     SizedBox(height: 4),
                   ],
                 ),
               ),
               SizedBox(
-                height: widget.topTitle? 200:600,
+                height: widget.topTitle ? 200 : 600,
                 child: Stack(
                   children: [
-                     widget.haveDescAndTags? PageView.builder(
-                      itemCount: widget.post.mediaUrls.length,
-                      itemBuilder: (context, index) {
-                        return Image.network(
-                          widget.post.mediaUrls[index],
-                          fit: BoxFit.cover,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes !=
-                                    null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                    : null,
-                              ),
-                            );
-                          },
-                          errorBuilder: (context, error, stackTrace) =>
-                          const Icon(Icons.error),
-                        );
-                      },
-                    ):
-                    Image.network(
-                      widget.post.mediaUrls.isNotEmpty ? widget.post.mediaUrls.first : '',
-                      fit: BoxFit.fitWidth,
-                      width: Get.width,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                                : null,
+                    widget.haveDescAndTags
+                        ? PageView.builder(
+                            itemCount: widget.post.mediaUrls.length,
+                            itemBuilder: (context, index) {
+                              return Image.network(
+                                widget.post.mediaUrls[index],
+                                fit: BoxFit.cover,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                    ),
+                                  );
+                                },
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Icon(Icons.error),
+                              );
+                            },
+                          )
+                        : Image.network(
+                            widget.post.mediaUrls.isNotEmpty
+                                ? widget.post.mediaUrls.first
+                                : '',
+                            fit: BoxFit.fitWidth,
+                            width: Get.width,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(Icons.error),
                           ),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
-                    ),
                     Positioned(
                       bottom: 8,
                       right: 8,
@@ -397,37 +412,41 @@ class _CustomCard2State extends State<CustomCard2> {
                   child: SliderWithLabels(
                     post: widget.post,
                   )),
-             widget.haveDescAndTags? Padding(
-                padding: EdgeInsets.only(top: 0, bottom: 10, left: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    !widget.topTitle?AppText(
-                      text: widget.post.title,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ):SizedBox.shrink(),
-                    AppText(
-                      text: widget.post.description,
-                      fontSize: 16,
-                      color: AppColors.Slate_gray,
-                    ),
-                    SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8,
-                      children: widget.post.tags
-                          .map((tag) => Chip(
-                                label: AppText(
-                                  text: "#$tag",
-                                  color: AppColors.appColor,
-                                ),
-                                backgroundColor: AppColors.light_gray,
-                              ))
-                          .toList(),
-                    ),
-                  ],
-                ),
-              ):SizedBox.shrink(),
+              widget.haveDescAndTags
+                  ? Padding(
+                      padding: EdgeInsets.only(top: 0, bottom: 10, left: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          !widget.topTitle
+                              ? AppText(
+                                  text: widget.post.title,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                )
+                              : SizedBox.shrink(),
+                          AppText(
+                            text: widget.post.description,
+                            fontSize: 16,
+                            color: AppColors.Slate_gray,
+                          ),
+                          SizedBox(height: 8),
+                          Wrap(
+                            spacing: 8,
+                            children: widget.post.tags
+                                .map((tag) => Chip(
+                                      label: AppText(
+                                        text: "#$tag",
+                                        color: AppColors.appColor,
+                                      ),
+                                      backgroundColor: AppColors.light_gray,
+                                    ))
+                                .toList(),
+                          ),
+                        ],
+                      ),
+                    )
+                  : SizedBox.shrink(),
               widget.haveComments
                   ? Column(
                       children: [
@@ -529,28 +548,55 @@ class _CustomCard2State extends State<CustomCard2> {
                                                 height: 4,
                                               ),
                                               Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
                                                   SizedBox(
                                                     width: Get.width * 0.6,
                                                     child: Text(
                                                       maxLines: 3,
-                                                      textAlign: TextAlign.start,
+                                                      textAlign:
+                                                          TextAlign.start,
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                       "${widget.post.comments[index].text}",
-                                                      style: GoogleFonts.poppins(
-                                                          fontSize: 15,
-                                                          color: AppColors.appColor,
-                                                          fontWeight:
-                                                              FontWeight.w400),
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                              fontSize: 15,
+                                                              color: AppColors
+                                                                  .appColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400),
                                                     ),
                                                   ),
                                                   GestureDetector(
                                                       onTap: () {
-                                                        HttpService.post("/addLikeToComment/${widget.post.id}/${widget.post.comments[index].id}", {});
+                                                        HttpService.post(
+                                                            "/addLikeToComment/${widget.post.id}/${widget.post.comments[index].id}",
+                                                            {});
                                                       },
-                                                      child: Icon(widget.post.comments[index].isCommentLikedByUser == true? Icons.thumb_up_alt:Icons.thumb_up_alt_outlined,size: 20,color: widget.post.comments[index].isCommentLikedByUser == true? AppColors.green:AppColor.black,))
+                                                      child: Icon(
+                                                        widget
+                                                                    .post
+                                                                    .comments[
+                                                                        index]
+                                                                    .isCommentLikedByUser ==
+                                                                true
+                                                            ? Icons.thumb_up_alt
+                                                            : Icons
+                                                                .thumb_up_alt_outlined,
+                                                        size: 20,
+                                                        color: widget
+                                                                    .post
+                                                                    .comments[
+                                                                        index]
+                                                                    .isCommentLikedByUser ==
+                                                                true
+                                                            ? AppColors.green
+                                                            : AppColor.black,
+                                                      ))
                                                 ],
                                               ),
                                               // Padding(
@@ -591,7 +637,6 @@ class _CustomCard2State extends State<CustomCard2> {
                                               // ),
                                             ],
                                           ),
-
                                         ],
                                       ),
                                       SizedBox(

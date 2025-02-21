@@ -20,6 +20,7 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: HomeAppbar(
         backButton: false,
+
         title: "Bangalore",
         imagePath: AppImages.location, // Optional, can be null
         rightIcon: AppImages.notification,
