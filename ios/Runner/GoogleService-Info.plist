@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CLIENT_ID</key>
+	<string>452022753540-sg1m0kp8n6eqgru7con6397m5jfqpnd8.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.452022753540-sg1m0kp8n6eqgru7con6397m5jfqpnd8</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>452022753540-4fplhmji9fhpv79rf79s1tjpihq1hrp4.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyAkYIVbEOR9bu_ScqDXrwxq816WL3oHrZQ</string>
 	<key>GCM_SENDER_ID</key>
@@ -9,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.runpickquick.app</string>
+	<string>com.civiats.app</string>
 	<key>PROJECT_ID</key>
 	<string>civitante</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:452022753540:ios:48492d4c43ad1218d8d851</string>
+	<string>1:452022753540:ios:fb3c6b3a34e824a5d8d851</string>
 </dict>
 </plist>

@@ -14,9 +14,10 @@ class AuthServices {
       if (googleUser == null) return null; // User canceled sign-in
 
       final GoogleSignInAuthentication authentication =
-      await googleUser.authentication;
+          await googleUser.authentication;
 
-      if (authentication.accessToken == null || authentication.idToken == null) {
+      if (authentication.accessToken == null ||
+          authentication.idToken == null) {
         print("Google Sign-In failed: Missing tokens");
         return null;
       }
