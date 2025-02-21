@@ -57,6 +57,7 @@ class AppPages {
     GetPage(
         name: AppRoutes.bottomNav,
         page: () => BottomNavScreen(),
+        transition: Transition.zoom,
         binding: InitialBinding()),
     GetPage(
         name: AppRoutes.myCommunity,
