@@ -8,7 +8,7 @@ class LocationController extends GetxController {
   RxMap<String, dynamic> userLocation = <String, dynamic>{}.obs;
   Future<void> fetchUserLocation() async {
     Map<String, dynamic> locationName =
-        await LocationService.getCurrentLocation();
+    await LocationService.getCurrentLocation();
     final location = locationName["locationName"];
     log("Fetched location is $locationName");
     longitude.value = locationName["lng"];
