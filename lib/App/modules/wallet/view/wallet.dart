@@ -1,3 +1,4 @@
+import 'package:civitante/App/modules/notification/view/notification.dart';
 import 'package:civitante/App/utilse/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,6 +30,9 @@ class WalletScreen extends StatelessWidget {
         title: AppStrings.Wallet,
         imagePath: AppImages.location,
         rightIcon: AppImages.notification,
+        onRightIconPressed1: () {
+          Get.to(NotificationsScreen());
+        },
       ),
       body: Obx(() {
         if (controller.isLoading.value) {

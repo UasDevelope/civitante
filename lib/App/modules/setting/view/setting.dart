@@ -40,7 +40,7 @@ class SettingScreen extends StatelessWidget {
           color: AppColors.appColor,
           fontSize: 20,
         ),
-        centerTitle: true,
+        centerTitle: false,
       ),
       body: Column(
         spacing: 14,
@@ -99,15 +99,14 @@ class SettingScreen extends StatelessWidget {
           //   child: _buildSectionHeader(title: AppStrings.General),
           // ),
           SizedBox(
-            height: Get.height * 0.08,
+            height: Get.height * 0.04,
           ),
           Card(
             elevation: 1,
             color: AppColors.white,
             child: Padding(
-              padding: const EdgeInsets.only(top: 8.0, left: 8, bottom: 8),
+              padding: const EdgeInsets.only(top: 1.0, left: 8, bottom: 8),
               child: Column(
-                spacing: 10,
                 children: [
                   // buildDivider(),
                   // buildSectionRow(title: AppStrings.Display_and_sound),
@@ -125,7 +124,6 @@ class SettingScreen extends StatelessWidget {
                   // buildDivider(),
                   // buildSectionRow(title: AppStrings.Two_Factor_Authentication),
                   // buildDivider(),
-
                   buildSectionRow(
                     title: AppStrings.Logout,
                     leading: Padding(
@@ -146,6 +144,20 @@ class SettingScreen extends StatelessWidget {
                       Get.offAllNamed('/login');
                       Get.offAll(AppRoutes.login);
                     },
+                  ),
+                  SizedBox(height: 20,),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 50),
+                    child: buildSectionRow(
+                      title: "Delete Account",
+                      leading: Padding(
+                        padding: const EdgeInsets.only(right: 20),
+                        child: Icon(Icons.delete,color: AppColors.red_color,size: 24,),
+                      ),
+
+                      onTap: () {
+                      },
+                    ),
                   ),
                 ],
               ),
