@@ -56,7 +56,7 @@ class RandomSizedPostsScreen extends StatelessWidget {
             if (explore == true) SizedBox(height: 10),
             if (explore == false)
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Container(
