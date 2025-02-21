@@ -63,6 +63,8 @@ dependencies:
   firebase_auth: ^5.5.0
   flutter_easy_recaptcha_v2:
   google_sign_in: ^6.2.2
+  sign_in_with_apple: ^6.1.4
+  auth_buttons: ^3.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

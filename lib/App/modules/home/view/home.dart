@@ -39,7 +39,7 @@ class HomeScreen extends StatelessWidget {
           Center(
             child: Container(
               padding: EdgeInsets.zero,
-                height: Get.height / 1.32, child: Center(child: HomeTabBar())),
+                height: Get.height / 1.37, child: Center(child: HomeTabBar())),
           ),
         ],
       ),

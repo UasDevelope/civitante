@@ -34,8 +34,8 @@ class HomeTabBar extends StatelessWidget {
               }
             },
             tabs: [
-              _buildTab("Followed Accounts", 0),
-              _buildTab("Randomized Posts", 1),
+              _buildTab("Following", 0),
+              _buildTab("Random", 1),
             ],
           ),
           Expanded(

@@ -18,7 +18,7 @@ class AuthController extends GetxController {
   RxBool obSecureText = RxBool(false);
   Rx<Position?> positioned = Rx<Position?>(null);
   RxBool isLocationFetched = RxBool(false);
-  var isLoading=false.obs;
+  var isLoading = false.obs;
   static final ImagePicker _picker = ImagePicker();
 
   ///<Login> Controllers
@@ -88,8 +88,8 @@ class AuthController extends GetxController {
 
 // Register Normal User
   void registerNormalUser() async {
-     loading.value = true;
-  //  CustomLoadingDialog.showCustomLoadingDialog("Registering user...");
+    loading.value = true;
+    //  CustomLoadingDialog.showCustomLoadingDialog("Registering user...");
     var data = {
       "email": signupEmailController.text,
       "name": fullNameController.text,
@@ -117,7 +117,7 @@ class AuthController extends GetxController {
       signupLocationController.clear();
       signupPasswordController.clear();
       SignupConfirmPasswordController.clear();
-     // CustomLoadingDialog.closeLoadingDialog();
+      // CustomLoadingDialog.closeLoadingDialog();
       goToNext(AppRoutes.bottomNav);
     } else {
       //CustomLoadingDialog.closeLoadingDialog();
@@ -136,8 +136,8 @@ class AuthController extends GetxController {
 // Register Pro User
   void registerProUser() async {
     // Indicate loading state
-     loading.value = true;
-  //  CustomLoadingDialog.showCustomLoadingDialog("Registering Pro User...");
+    loading.value = true;
+    //  CustomLoadingDialog.showCustomLoadingDialog("Registering Pro User...");
 
     // Prepare data for the API request
     var data = {
@@ -161,8 +161,8 @@ class AuthController extends GetxController {
 
       // Handle success response
       if (response != null && response['error'] == null) {
-         loading.value = false;
-     //   CustomLoadingDialog.closeLoadingDialog();
+        loading.value = false;
+        //   CustomLoadingDialog.closeLoadingDialog();
         // PrefUtil.setString(PrefUtil.userId, response["user"]["id"]);
         AppConstant().userID = response["user"]["id"];
         log("Response is $response");
@@ -176,8 +176,8 @@ class AuthController extends GetxController {
         makePayment();
       } else {
         // Handle error response
-         loading.value = false;
-       // CustomLoadingDialog.closeLoadingDialog();
+        loading.value = false;
+        // CustomLoadingDialog.closeLoadingDialog();
         String errorMsg = response['details'] != null
             ? jsonDecode(response['details'])['message']
             : "Unknown error occurred";
@@ -189,8 +189,8 @@ class AuthController extends GetxController {
       }
     } catch (e) {
       // Handle exceptions
-       loading.value = false;
-     // CustomLoadingDialog.closeLoadingDialog();
+      loading.value = false;
+      // CustomLoadingDialog.closeLoadingDialog();
       ToastUtil.showToast(
         message: "Error: ${e.toString()}",
         backgroundColor: Colors.red,
@@ -200,7 +200,7 @@ class AuthController extends GetxController {
 
   Future<Map<String, dynamic>> createSetupIntent() async {
     try {
-     // CustomLoadingDialog.showCustomLoadingDialog("Creating setup intent...");
+      // CustomLoadingDialog.showCustomLoadingDialog("Creating setup intent...");
       var response = await http.post(
         Uri.parse('https://api.stripe.com/v1/setup_intents'),
         headers: {
@@ -210,10 +210,10 @@ class AuthController extends GetxController {
       );
 
       print('Setup Intent Response: ${response.body}');
-     // CustomLoadingDialog.closeLoadingDialog();
+      // CustomLoadingDialog.closeLoadingDialog();
       return jsonDecode(response.body);
     } catch (err) {
-    //  CustomLoadingDialog.closeLoadingDialog();
+      //  CustomLoadingDialog.closeLoadingDialog();
       rethrow;
     }
   }
@@ -224,7 +224,7 @@ class AuthController extends GetxController {
     try {
       setupIntent = await createSetupIntent(); // Create setup intent
       // Initialize the payment sheet
-     // CustomLoadingDialog.showCustomLoadingDialog("Making payment...");
+      // CustomLoadingDialog.showCustomLoadingDialog("Making payment...");
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           setupIntentClientSecret:
@@ -233,19 +233,19 @@ class AuthController extends GetxController {
           merchantDisplayName: 'Adnan',
         ),
       );
-    //  CustomLoadingDialog.closeLoadingDialog();
+      //  CustomLoadingDialog.closeLoadingDialog();
       // Display the payment sheet
       await displayPaymentSheet();
     } catch (e, s) {
-     // CustomLoadingDialog.closeLoadingDialog();
+      // CustomLoadingDialog.closeLoadingDialog();
       print('Exception during payment: $e $s');
     }
   }
 
   Future<void> displayPaymentSheet() async {
     try {
-     // CustomLoadingDialog.showCustomLoadingDialog(
-        //  "Displaying payment sheet...");
+      // CustomLoadingDialog.showCustomLoadingDialog(
+      //  "Displaying payment sheet...");
       await Stripe.instance.presentPaymentSheet().then((value) async {
         print('Card details saved successfully!');
 
@@ -254,7 +254,7 @@ class AuthController extends GetxController {
           var updatedIntent =
               await retrieveSetupIntent(setupIntent!['client_secret']);
           if (updatedIntent != null) {
-           // CustomLoadingDialog.closeLoadingDialog();
+            // CustomLoadingDialog.closeLoadingDialog();
             savePaymentMethod(
                 AppConstant().userID!, updatedIntent['payment_method']);
 
@@ -294,7 +294,7 @@ class AuthController extends GetxController {
   }
 
   void savePaymentMethod(String userId, String token) async {
-   // CustomLoadingDialog.showCustomLoadingDialog("Saving payment method...");
+    // CustomLoadingDialog.showCustomLoadingDialog("Saving payment method...");
     var data = {
       "userId": userId,
       "paymentId": token,
@@ -304,14 +304,14 @@ class AuthController extends GetxController {
     var response = await HttpService.post('/savePaymentMethod', data);
     print('response: ${response}');
     if (response != null && response['error'] == null) {
-     // CustomLoadingDialog.closeLoadingDialog();
+      // CustomLoadingDialog.closeLoadingDialog();
       ToastUtil.showToast(
         message: response['message'] ?? "Payment method saved successfully!",
         backgroundColor: Colors.green,
       );
       upgradeToPro();
     } else {
-   //   CustomLoadingDialog.closeLoadingDialog();
+      //   CustomLoadingDialog.closeLoadingDialog();
       String errorMsg = response['details'] != null
           ? jsonDecode(response['details'])['message']
           : "Unknown error occurred";
@@ -325,14 +325,14 @@ class AuthController extends GetxController {
   // update Pro user
 
   void upgradeToPro() async {
- //   CustomLoadingDialog.showCustomLoadingDialog("Upgrading To Pro....");
+    //   CustomLoadingDialog.showCustomLoadingDialog("Upgrading To Pro....");
     print('Update User ${AppConstant().userID}');
     var data = {"userId": AppConstant().userID, "amount": 100};
 
     var response = await HttpService.post(AppConstant().charge, data);
 
     if (response != null && response['error'] == null) {
-   //   CustomLoadingDialog.closeLoadingDialog();
+      //   CustomLoadingDialog.closeLoadingDialog();
       goToNext(AppRoutes.login);
     } else {
       //CustomLoadingDialog.closeLoadingDialog();
@@ -349,7 +349,8 @@ class AuthController extends GetxController {
 
   void loginUser() async {
     loading.value = true;
-   /// CustomLoadingDialog.showCustomLoadingDialog("Logging in user....");
+
+    /// CustomLoadingDialog.showCustomLoadingDialog("Logging in user....");
     var data = {
       "email": loginEmailController.text,
       "password": loginPassworedController.text,
@@ -381,7 +382,6 @@ class AuthController extends GetxController {
     } else {
       loading.value = false;
 
-
       // CustomLoadingDialog.closeLoadingDialog();
       String errorMsg = response['details'] != null
           ? jsonDecode(response['details'])['message']
@@ -391,9 +391,10 @@ class AuthController extends GetxController {
         message: "Error: $errorMsg",
         backgroundColor: Colors.red,
       );
-       loading.value = false;
+      loading.value = false;
     }
   }
+
   final AuthServices authService = AuthServices();
   var user = Rxn<UserCredential>();
 
@@ -512,4 +513,119 @@ class AuthController extends GetxController {
     }
   }
 
+  Future<void> signUpWithApple() async {
+    try {
+      loading.value = true;
+      user.value = await authService.appleSignInMethod();
+
+      if (user.value != null) {
+        User? firebaseUser = user.value?.user;
+        String? fullName = firebaseUser?.displayName;
+        String? email = firebaseUser?.email;
+        String? accessToken = await firebaseUser?.getIdToken();
+        var data = {
+          "email": email,
+          "name": fullName ?? 'Demo',
+          "location": {
+            "long": locationController.longitude.value,
+            "lat": locationController.latitude.value
+          },
+          "password": accessToken,
+          "costPoints": 10
+        };
+        print('Daata here : $data');
+        var response = await HttpService.post('/register', data);
+        print(response);
+        if (response != null && response['error'] == null) {
+          ToastUtil.showToast(
+            message: response['message'] ?? "Signup successful!",
+            backgroundColor: Colors.green,
+          );
+          String token = response['user']['token'];
+
+          PrefUtil.setString(PrefUtil.userId, token);
+          AppConstant().userID = token;
+          loading.value = false;
+          goToNext(AppRoutes.bottomNav);
+        } else {
+          loading.value = false;
+          String errorMsg = response['details'] != null
+              ? jsonDecode(response['details'])['message']
+              : "Unknown error occurred";
+
+          ToastUtil.showToast(
+            message: "Error: $errorMsg",
+            backgroundColor: Colors.red,
+          );
+          loading.value = false;
+        }
+
+        // Log the data
+        log("User Info: Full Name: $fullName, Email: $email, Token: $accessToken");
+      } else {
+        ToastUtil.showToast(
+          message: "Apple Sign-Up Failed",
+          backgroundColor: Colors.red,
+        );
+      }
+    } catch (e) {
+      print("Exception: $e");
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  Future<void> loginWithApple() async {
+    try {
+      loading.value = true;
+      user.value = await authService.appleSignInMethod();
+
+      if (user.value != null) {
+        User? firebaseUser = user.value?.user;
+        String? email = firebaseUser?.email;
+        String? accessToken = await firebaseUser?.getIdToken();
+        var data = {
+          "email": email,
+          "password": accessToken,
+        };
+
+        var response = await HttpService.post('/login', data);
+        print(response);
+        if (response != null && response['error'] == null) {
+          ToastUtil.showToast(
+            message: response['message'] ?? "Login successful!",
+            backgroundColor: Colors.green,
+          );
+          String token = response['token'];
+
+          PrefUtil.setString(PrefUtil.userId, token);
+          AppConstant().userID = token;
+
+          loading.value = false;
+          goToNext(AppRoutes.bottomNav);
+        } else {
+          loading.value = false;
+          String errorMsg = response['details'] != null
+              ? jsonDecode(response['details'])['message']
+              : "Unknown error occurred";
+
+          ToastUtil.showToast(
+            message: "Error: $errorMsg",
+            backgroundColor: Colors.red,
+          );
+          loading.value = false;
+        }
+        log("User Info: Email: $email, Token: $accessToken");
+      } else {
+        ToastUtil.showToast(
+          message: "Google Sign-In Failed",
+          backgroundColor: Colors.red,
+        );
+      }
+    } catch (e) {
+      print("Exception: $e");
+    } finally {
+      loading.value = false;
+    }
+  }
 }
