@@ -25,6 +25,7 @@ class RandomSizedPostsScreen extends StatelessWidget {
   final bool explore;
   final bool? followed;
   final bool? randomized;
+
   const RandomSizedPostsScreen(
       {super.key,
       this.communityId = "",
@@ -35,6 +36,10 @@ class RandomSizedPostsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeController = Get.find<HomeController>();
+     homeController.fetchAndAssignPosts(
+        communityId: communityId,
+        randomized: randomized,
+        followed: followed);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -53,7 +58,41 @@ class RandomSizedPostsScreen extends StatelessWidget {
                   },
                 ),
               ),
-            if (explore == true) SizedBox(height: 10),
+            if (explore == true)
+              Column(
+                children: [
+                  SizedBox(height: 10,),
+                  Wrap(
+                    spacing: 8.0,
+                    runSpacing: 8.0,
+                    children: homeController.categoriesList.map((category) {
+                      return Obx(() => InkWell(
+                        onTap: () {
+                          homeController.selectedCategory.value = category; // Update selected category
+                          print("Selected Category: ${homeController.selectedCategory.value}");
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: homeController.selectedCategory.value == category
+                                ? AppColors.Slate_gray
+                                : AppColors.light_gray,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: AppText(
+                            text: category,
+                            fontSize: 14,
+                            color: homeController.selectedCategory.value == category
+                                ? Colors.white
+                                : Colors.black, // Change text color for better visibility
+                          ),
+                        ),
+                      ));
+                    }).toList(),
+                  ),
+                  SizedBox(height: 10,),
+                ],
+              ),
             if (explore == false)
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -99,6 +138,7 @@ class RandomSizedPostsScreen extends StatelessWidget {
                   ),
                 ],
               ),
+            if(explore == false)
             Expanded(
               child: RefreshIndicator(
                 color: AppColors.appColor,
@@ -151,6 +191,63 @@ class RandomSizedPostsScreen extends StatelessWidget {
                 }),
               ),
             ),
+            if(explore == true)
+              Expanded(
+                child: RefreshIndicator(
+                  color: AppColors.appColor,
+                  onRefresh: () async {
+                    // Call your refresh method from the controller
+                    await homeController.fetchAndAssignPosts(
+                        communityId: communityId,
+                        randomized: randomized,
+                        followed: followed);
+                  },
+                  child: Obx(() {
+                    if (homeController.isPostLoading.value) {
+                      return RandomizedShimmerPost();
+                    }
+                    //For the empty post
+                    else if (homeController.filteredPosts.isEmpty) {
+                      return LottieAnimationWidget();
+                    } else {
+                      return Obx(
+                        () =>  ListView.builder(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.zero,
+                          itemCount: homeController.filteredPosts
+                              .where((post) => post.category == homeController.selectedCategory.value)
+                              .length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final filteredPosts = homeController.filteredPosts
+                                .where((post) => post.category == homeController.selectedCategory.value)
+                                .toList();
+
+                            final post = filteredPosts[index];
+
+                            return GestureDetector(
+                              onTap: () {
+                                var response = homeController.viewPostById(post.id, index);
+                                print('Here is value: $response');
+
+                                Get.toNamed(AppRoutes.postDetail, arguments: {
+                                  "data": post,
+                                  "currentUser": false
+                                });
+                              },
+                              child: CustomCard2(
+                                haveDescAndTags: false,
+                                post: post,
+                                index: index,
+                              ),
+                            );
+                          },
+                        ),
+                      );
+
+                    }
+                  }),
+                ),
+              ),
           ],
         ),
       ),
@@ -167,6 +264,7 @@ class CustomCard2 extends StatefulWidget {
       this.index = 0,
       required this.haveDescAndTags,
       this.topTitle = true});
+
   final bool haveComments;
   final Post post;
   final bool haveDescAndTags;

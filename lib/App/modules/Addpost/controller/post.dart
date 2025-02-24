@@ -161,7 +161,7 @@ class PostController extends GetxController {
         "title": titleController.text.trim(),
         "description": descController.text.trim(),
         "tags": tags.whereType<String>().toList(), // Ensure valid tags
-        "category": "test1",
+        "category": selectCatagory.value,
         "media": ["image"],
         "mediaUrls":  images,
         "createdBy": userID,

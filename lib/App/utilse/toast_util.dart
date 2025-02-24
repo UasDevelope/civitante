@@ -6,7 +6,7 @@ class ToastUtil {
     required String message,
     Color backgroundColor = Colors.black,
     Color textColor = Colors.white,
-    ToastGravity gravity = ToastGravity.BOTTOM,
+    ToastGravity gravity = ToastGravity.TOP,
     Toast toastLength = Toast.LENGTH_SHORT,
   }) {
     Fluttertoast.showToast(

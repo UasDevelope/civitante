@@ -43,6 +43,7 @@ class AppImages {
   static String get emojie => "emojie".png;
   static String get user => "user".png;
   static String get chat => "chat".png;
+  static String get history => "history".png;
 }
 
 extension on String {

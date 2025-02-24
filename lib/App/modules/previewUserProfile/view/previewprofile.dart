@@ -176,8 +176,10 @@ class PreviewProfileScreen extends StatelessWidget {
               ),
             )),
 
+        SizedBox(height: 6),
+        Divider(),
         SizedBox(height: 16),
-        StatsRow(),
+        // StatsRow(),
 
         Obx(() => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -254,47 +256,50 @@ class GridItem extends StatelessWidget {
             alignment: Alignment.bottomRight,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  // Views Row
-                  buildStatItem(
-                    icon: Image.asset(
-                      AppImages.view,
-                      height: 25,
-                      color: post.views > 0 ? AppColors.green : AppColors.white,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    // Views Row
+                    buildStatItem(
+                      icon: Image.asset(
+                        AppImages.view,
+                        height: 25,
+                        color: post.views > 0 ? AppColors.green : AppColors.white,
+                      ),
+                      label: post.views.toString(),
+                      textColor: AppColors.white,
                     ),
-                    label: post.views.toString(),
-                    textColor: AppColors.white,
-                  ),
-                  SizedBox(width: 10),
+                    SizedBox(width: 10),
 
-                  // Likes Row
-                  buildStatItem(
-                    icon: Image.asset(
-                      AppImages.like,
-                      height: 25,
-                      color: post.likesCount > 0
-                          ? AppColors.appColor
-                          : AppColors.white,
+                    // Likes Row
+                    buildStatItem(
+                      icon: Image.asset(
+                        AppImages.like,
+                        height: 25,
+                        color: post.likesCount > 0
+                            ? AppColors.appColor
+                            : AppColors.white,
+                      ),
+                      label: post.likesCount.toString(),
+                      textColor: AppColors.white,
                     ),
-                    label: post.likesCount.toString(),
-                    textColor: AppColors.white,
-                  ),
-                  SizedBox(width: 10),
+                    SizedBox(width: 10),
 
-                  // Comments Row
-                  buildStatItem(
-                    icon: Image.asset(
-                      AppImages.comment,
-                      height: 25,
-                      color: AppColors.white,
+                    // Comments Row
+                    buildStatItem(
+                      icon: Image.asset(
+                        AppImages.comment,
+                        height: 25,
+                        color: AppColors.white,
+                      ),
+                      label: post.commentsCount.toString(),
+                      textColor: AppColors.white,
                     ),
-                    label: post.commentsCount.toString(),
-                    textColor: AppColors.white,
-                  ),
-                  SizedBox(width: 10),
-                ],
+                    SizedBox(width: 10),
+                  ],
+                ),
               ),
             ),
           ),

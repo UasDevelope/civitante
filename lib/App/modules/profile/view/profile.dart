@@ -35,7 +35,7 @@ class ProfileScreen extends StatelessWidget {
         imagePath: AppImages.location,
         rightIcon: AppImages.setting,
         onRightIconPressed1: () {
-          Get.toNamed(AppRoutes.setting);
+          Get.toNamed(AppRoutes.setting,);
         },
       ),
       backgroundColor: Colors.white,
@@ -89,7 +89,7 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 40,
-                    backgroundImage: AssetImage(AppImages.person),
+                    backgroundImage: controller.imageUrl.value == null || controller.imageUrl.value == ''?AssetImage(AppImages.person):NetworkImage(controller.imageUrl.value),
                   ),
                   SizedBox(width: 16),
                   Expanded(
@@ -183,9 +183,10 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
             )),
+        Divider(),
 
         SizedBox(height: 16),
-        StatsRow(),
+        // StatsRow(),
 
         Obx(() {
           if (controller.isLoading.value) {
@@ -294,47 +295,50 @@ class GridItem extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    // Views Row
-                    buildStatItem(
-                      icon: Image.asset(
-                        AppImages.view,
-                        height: 25,
-                        color: post.views > 0 ? AppColors.green : AppColors.white,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      // Views Row
+                      buildStatItem(
+                        icon: Image.asset(
+                          AppImages.view,
+                          height: 25,
+                          color: post.views > 0 ? AppColors.green : AppColors.white,
+                        ),
+                        label: post.views.toString(),
+                        textColor: AppColors.white,
                       ),
-                      label: post.views.toString(),
-                      textColor: AppColors.white,
-                    ),
-                    SizedBox(width: 10),
-
-                    // Likes Row
-                    buildStatItem(
-                      icon: Image.asset(
-                        AppImages.like,
-                        height: 25,
-                        color: post.likesCount > 0
-                            ? AppColors.appColor
-                            : AppColors.white,
+                      SizedBox(width: 10),
+                  
+                      // Likes Row
+                      buildStatItem(
+                        icon: Image.asset(
+                          AppImages.like,
+                          height: 25,
+                          color: post.likesCount > 0
+                              ? AppColors.appColor
+                              : AppColors.white,
+                        ),
+                        label: post.likesCount.toString(),
+                        textColor: AppColors.white,
                       ),
-                      label: post.likesCount.toString(),
-                      textColor: AppColors.white,
-                    ),
-                    SizedBox(width: 10),
-
-                    // Comments Row
-                    buildStatItem(
-                      icon: Image.asset(
-                        AppImages.comment,
-                        height: 25,
-                        color: AppColors.white,
+                      SizedBox(width: 10),
+                  
+                      // Comments Row
+                      buildStatItem(
+                        icon: Image.asset(
+                          AppImages.comment,
+                          height: 25,
+                          color: AppColors.white,
+                        ),
+                        label: post.commentsCount.toString(),
+                        textColor: AppColors.white,
                       ),
-                      label: post.commentsCount.toString(),
-                      textColor: AppColors.white,
-                    ),
-                    SizedBox(width: 10),
-                  ],
+                      SizedBox(width: 10),
+                    ],
+                  ),
                 ),
               ),
             ],
