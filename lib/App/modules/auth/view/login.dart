@@ -1,11 +1,12 @@
 import 'dart:developer';
+import 'package:auth_buttons/auth_buttons.dart';
 import 'package:civitante/App/shared/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_recaptcha_v2/flutter_easy_recaptcha_v2.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import '../../../shared/validators.dart';
 import '../../../utilse/widgets.dart';
-
+import 'dart:io';
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
   GlobalKey<FormState> loginGlobalKey = GlobalKey<FormState>();
@@ -174,6 +175,7 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ],
                       ),
+                      if (Platform.isAndroid)
                       Center(
                         child: AppButton(
                           useGradient: false,
@@ -193,6 +195,15 @@ class LoginScreen extends StatelessWidget {
                           },
                         ),
                       ),
+                      if (Platform.isIOS)
+                       AppleAuthButton(
+                         style: AuthButtonStyle(width: 300,height: 50,buttonColor: AppColors.appColor),
+                         text: "Apple Login",
+                         onPressed: (){
+                           controller.loginWithApple();
+                         },
+                       )
+
                     ],
                   )),
             ),

@@ -1,11 +1,14 @@
+import 'package:auth_buttons/auth_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import '../../../utilse/widgets.dart';
+import 'dart:io';
 
 class SignupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = LocateController.authController;
+
     return Obx(() => LoadingOverlay(
         isLoading: controller.loading.value,
         child: Material(
@@ -14,6 +17,7 @@ class SignupScreen extends StatelessWidget {
               height: Get.height,
               child: Padding(
                 padding: const EdgeInsets.only(right: 15, left: 15),
+
                 child: SingleChildScrollView(
                   padding: EdgeInsets.zero,
                   scrollDirection: Axis.vertical,
@@ -21,13 +25,17 @@ class SignupScreen extends StatelessWidget {
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       key: controller.signupGlobalKey,
                       child: Column(
+
                         spacing: 12,
+
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Image.asset(
                             AppImages.logo,
+
                             height: 170,
+
                             width: 300,
                             fit: BoxFit.contain,
                           ),
@@ -81,7 +89,7 @@ class SignupScreen extends StatelessWidget {
                           ),
                           customTextFormField(
                               validatore: (value) {
-                                return Validators.passwordValidator(value!);
+
                               },
                               borderRadius: 25,
                               icon: controller.obSecureText.value
@@ -103,7 +111,8 @@ class SignupScreen extends StatelessWidget {
                           ),
                           customTextFormField(
                               validatore: (value) {
-                                return Validators.confirmPasswordValidator(value!,
+                                return Validators.confirmPasswordValidator(
+                                    value!,
                                     controller.signupPasswordController.text);
                               },
                               borderRadius: 25,
@@ -169,7 +178,8 @@ class SignupScreen extends StatelessWidget {
                                   controller.fullNameController.clear();
                                   controller.signupLocationController.clear();
                                   controller.signupPasswordController.clear();
-                                  controller.SignupConfirmPasswordController.clear();
+                                  controller.SignupConfirmPasswordController
+                                      .clear();
                                 },
                                 child: AppText(
                                     text: AppStrings.login,
@@ -179,9 +189,9 @@ class SignupScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          // SizedBox(
-                          //   height: Get.height * 0.0001,
-                          // ),
+                          SizedBox(
+                            height: Get.height * 0.0001,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment
                                 .center, // Aligns the content properly
@@ -207,31 +217,38 @@ class SignupScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          Center(
-                            child: AppButton(
-                              useGradient: false,
-                              color: AppColors.white,
-                              hasBorder: true,
-                              image: AppImages.google,
-                              borderColor: AppColors.textFieldHintColor,
-                              textColor: AppColors.appColor,
-                              text: AppStrings.loginwithGoogle,
-                              height: 60.0,
-                              width: Get.width,
-                              // color: Colors.,
-                              radius: 30,
+                          if (Platform.isAndroid)
+                            Center(
+                              child: AppButton(
+                                useGradient: false,
+                                color: AppColors.white,
+                                hasBorder: true,
+                                image: AppImages.google,
+                                borderColor: AppColors.textFieldHintColor,
+                                textColor: AppColors.appColor,
+                                text: AppStrings.loginwithGoogle,
+                                height: 60.0,
+                                width: Get.width,
+                                // color: Colors.,
+                                radius: 30,
+                                onPressed: () {
+                                  controller.signUpWithGoogle();
+                                },
+                              ),
+                            ),
+                          if (Platform.isIOS)
+                            AppleAuthButton(
+                              style: AuthButtonStyle(width: 300, height: 60,buttonColor: AppColors.appColor),
+                              text: "Apple Login",
                               onPressed: () {
-                                controller.signUpWithGoogle();
+                                controller.signUpWithApple();
                               },
                             ),
-                          ),
-                          SizedBox(
-                            height: Get.height * 0.01,
-                          ),
                         ],
                       )),
                 ),
-              ),
-            ))));
+              )))),
+    );
+
   }
 }
