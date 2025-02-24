@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+
 import '../../../controller/controller_locate.dart';
 import '../../../utilse/widgets.dart';
 
@@ -17,22 +19,50 @@ class ImageListView extends StatelessWidget {
           itemCount: controller.images.length,
           shrinkWrap: true,
           itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(
-                    10), // Set border radius for each image
-                child: Image.network(
-                  controller.images[index], // Load local image
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
+            return Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      controller.images[index],
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              ),
+
+                // Cancel Button
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: () {
+                      controller.images.removeAt(index); // Remove the image
+                      controller.update(); // Update UI (if using GetX)
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.red.withOpacity(0.7), // Red background
+                      ),
+                      padding: EdgeInsets.all(4),
+                      child: Icon(
+                        Icons.close, // Close icon
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             );
           },
         ),
       );
+
     });
   }
 }

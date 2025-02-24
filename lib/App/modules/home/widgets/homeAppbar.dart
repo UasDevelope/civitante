@@ -48,23 +48,25 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
           ],
 
 
-          AppText(
-            text: (locationController.userLocation["city"] != null &&
-                    locationController.userLocation["city"]
-                        .toString()
-                        .trim()
-                        .isNotEmpty)
-                ? locationController.userLocation["city"]
-                : (locationController.userLocation["state"] != null &&
-                        locationController.userLocation["state"]
-                            .toString()
-                            .trim()
-                            .isNotEmpty)
-                    ? locationController.userLocation["state"]
-                    : locationController.userLocation["country"] ?? '',
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: AppColors.appColor,
+          Obx(
+            () =>  AppText(
+              text: (locationController.userLocation["city"] != null &&
+                      locationController.userLocation["city"]
+                          .toString()
+                          .trim()
+                          .isNotEmpty)
+                  ? locationController.userLocation["city"]
+                  : (locationController.userLocation["state"] != null &&
+                          locationController.userLocation["state"]
+                              .toString()
+                              .trim()
+                              .isNotEmpty)
+                      ? locationController.userLocation["state"]
+                      : locationController.userLocation["country"] ?? '',
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: AppColors.appColor,
+            ),
           )
 
         ],

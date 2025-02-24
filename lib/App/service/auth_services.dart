@@ -68,6 +68,36 @@ class AuthServices {
       print("Sign-Out Exception: $e");
     }
   }
+
+  Future<void> deleteAccount() async {
+    try {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      User? user = auth.currentUser;
+
+      if (user != null) {
+        GoogleSignIn googleSignIn = GoogleSignIn();
+        GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+        if (googleUser != null) {
+          GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+          AuthCredential credential = GoogleAuthProvider.credential(
+            idToken: googleAuth.idToken,
+            accessToken: googleAuth.accessToken,
+          );
+          await user.reauthenticateWithCredential(credential);
+          await user.delete();
+          print("User account deleted successfully.");
+          await googleSignIn.signOut();
+          await auth.signOut();
+        }
+      } else {
+        print("No user is signed in.");
+      }
+    } catch (e) {
+      print("Error deleting account: $e");
+    }
+  }
+
 }
 
 // Common Sign-Out

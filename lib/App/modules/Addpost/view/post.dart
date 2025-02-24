@@ -136,7 +136,8 @@ class _PostScreenState extends State<PostScreen> {
                           ),
                         ],
                       ),
-                      Container(
+                      SizedBox(height: 15,),
+                       SizedBox(
                         height: 85,
                         width: 400,
                         //  width: 78,

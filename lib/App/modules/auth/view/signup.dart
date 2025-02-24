@@ -8,14 +8,16 @@ class SignupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = LocateController.authController;
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Obx(() => LoadingOverlay(
-          isLoading: controller.loading.value,
-          child: Material(
-              color: AppColors.white,
+
+    return Obx(() => LoadingOverlay(
+        isLoading: controller.loading.value,
+        child: Material(
+            color: AppColors.white,
+            child: SizedBox(
+              height: Get.height,
               child: Padding(
-                padding: const EdgeInsets.only(right: 15, left: 15,top: 50),
+                padding: const EdgeInsets.only(right: 15, left: 15),
+
                 child: SingleChildScrollView(
                   padding: EdgeInsets.zero,
                   scrollDirection: Axis.vertical,
@@ -23,13 +25,17 @@ class SignupScreen extends StatelessWidget {
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       key: controller.signupGlobalKey,
                       child: Column(
-                        spacing: 10,
+
+                        spacing: 12,
+
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Image.asset(
                             AppImages.logo,
-                            height: 150,
+
+                            height: 170,
+
                             width: 300,
                             fit: BoxFit.contain,
                           ),
@@ -83,7 +89,7 @@ class SignupScreen extends StatelessWidget {
                           ),
                           customTextFormField(
                               validatore: (value) {
-                                return Validators.passwordValidator(value!);
+
                               },
                               borderRadius: 25,
                               icon: controller.obSecureText.value
@@ -243,5 +249,6 @@ class SignupScreen extends StatelessWidget {
                 ),
               )))),
     );
+
   }
 }

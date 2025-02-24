@@ -1,5 +1,4 @@
 import 'package:civitante/App/modules/notification/view/notification.dart';
-import 'package:civitante/App/modules/wallet/view/transaction_history.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:civitante/App/utilse/widgets.dart';
@@ -17,72 +16,53 @@ class AppColor {
 // ... other colors
 }
 
-class WalletScreen extends StatelessWidget {
-  WalletScreen({super.key});
+class TransactionHistoryScreen extends StatelessWidget {
+  TransactionHistoryScreen({super.key});
   final WalletController controller = Get.put(WalletController());
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: AppColors.white,
+      appBar: AppBar(
         backgroundColor: AppColors.white,
-        // appBar: HomeAppbar(
-        //   backButton: false,
-        //   title: AppStrings.Wallet,
-        //   rightIcon: AppImages.history,
-        //   onRightIconPressed1: () {
-        //     Get.to(TransactionHistoryScreen());
-        //   },
-        // ),
-        body: Obx(() {
-          if (controller.isLoading.value) {
-            return Center(child: CircularProgressIndicator());
-          }
-      
-          if (controller.errorMessage.isNotEmpty) {
-            return Center(child: Text(controller.errorMessage.value));
-          }
-      
-          return RefreshIndicator(
-            onRefresh: () async => await controller.loadPoints(),
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16,horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Points Balance Card
-      
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        AppText(text: "My Wallet",fontWeight: FontWeight.w500),
-                        GestureDetector(
-                            onTap: () {
-                              Get.to(TransactionHistoryScreen());
-                            },
-                            child: Image.asset(AppImages.history,height: 30,))
-                      ],
-                    ),
-                    SizedBox(height: 36,),
-                    _buildPointsCard(),
-                    const SizedBox(height: 23),
-      
-                    // Action Buttons
-                    _buildActionButtons(context),
-                    const SizedBox(height: 24),
-      
-                    // Transaction History
-                    // _buildHistorySection(),
-                  ],
-                ),
+        elevation: 0,
+        title: AppText(text: "Transaction History",fontWeight: FontWeight.w600),
+      ),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        if (controller.errorMessage.isNotEmpty) {
+          return Center(child: Text(controller.errorMessage.value));
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async => await controller.loadPoints(),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // // Points Balance Card
+                  // _buildPointsCard(),
+                  // const SizedBox(height: 16),
+                  //
+                  // // Action Buttons
+                  // _buildActionButtons(context),
+                  // const SizedBox(height: 24),
+
+                  // Transaction History
+                  _buildHistorySection(),
+                ],
               ),
             ),
-          );
-        }),
-      ),
+          ),
+        );
+      }),
     );
   }
 
@@ -113,13 +93,13 @@ class WalletScreen extends StatelessWidget {
           Row(
             children: [
               Obx(() => AppText(
-                    text: NumberFormat.decimalPattern().format(
-                      controller.pointsData.value?.availablePoints ?? 0,
-                    ),
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.appColor,
-                  )),
+                text: NumberFormat.decimalPattern().format(
+                  controller.pointsData.value?.availablePoints ?? 0,
+                ),
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+                color: AppColors.appColor,
+              )),
               SizedBox(width: 15),
               // Add percentage change UI if needed
             ],
@@ -130,27 +110,25 @@ class WalletScreen extends StatelessWidget {
   }
 
   Widget _buildActionButtons(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         AppButton(
           height: 50,
           textColor: AppColors.white,
           radius: 35,
-          width: Get.width,
+          width: Get.width / 2.4,
           color: AppColors.appColor,
           text: AppStrings.Buy_Points_with_USD,
           onPressed: () => _handleBuyPoints(context),
         ),
-        SizedBox(height: 18,),
         AppButton(
           height: 50,
           borderColor: AppColors.appColor,
           borderWidht: 1,
           textColor: AppColors.appColor,
           radius: 35,
-          // width: Get.width / 2.4,
-          width: Get.width,
+          width: Get.width / 2.4,
           color: AppColors.white,
           text: AppStrings.Withdraw,
           onPressed: () {},
@@ -161,20 +139,20 @@ class WalletScreen extends StatelessWidget {
 
   Widget _buildHistorySection() {
     return Obx(() => HistorySection(
-          title: 'Transaction History',
-          items: controller.pointsData.value?.transactionHistory
-                  .map((transaction) => HistoryItem(
-                        type: transaction.type,
-                        title: transaction.type,
-                        subtitle: transaction.reason ?? 'No description',
-                        points: '${transaction.points} PTS',
-                        date: DateFormat('MMM dd, yyyy – HH:mm')
-                            .format(transaction.createdAt),
-                      ))
-                  .toList() ??
-              [],
-          onSeeAll: controller.toggleHistory,
-        ));
+      title: 'Transaction History',
+      items: controller.pointsData.value?.transactionHistory
+          .map((transaction) => HistoryItem(
+        type: transaction.type,
+        title: transaction.type,
+        subtitle: transaction.reason ?? 'No description',
+        points: '${transaction.points} PTS',
+        date: DateFormat('MMM dd, yyyy – HH:mm')
+            .format(transaction.createdAt),
+      ))
+          .toList() ??
+          [],
+      onSeeAll: controller.toggleHistory,
+    ));
   }
 
   void _handleBuyPoints(BuildContext context) async {
@@ -207,19 +185,19 @@ class HistorySection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              AppText(
-                text: title,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ],
-          ),
-        ),
+        // Padding(
+        //   padding: EdgeInsets.symmetric(vertical: 8),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       AppText(
+        //         text: title,
+        //         fontSize: 18,
+        //         fontWeight: FontWeight.w600,
+        //       ),
+        //     ],
+        //   ),
+        // ),
         Column(
           children: items.map((item) => item).toList(),
         ),

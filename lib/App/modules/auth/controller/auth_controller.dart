@@ -480,7 +480,6 @@ class AuthController extends GetxController {
             backgroundColor: Colors.green,
           );
           String token = response['token'];
-
           PrefUtil.setString(PrefUtil.userId, token);
           AppConstant().userID = token;
           loading.value = false;

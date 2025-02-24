@@ -15,6 +15,8 @@ class HomeController extends GetxController {
   final TextEditingController commentController = TextEditingController();
   RxBool isPostLoading = false.obs;
   RxString selectCatagory = "General".obs;
+  RxString selectedCategory = "General".obs;
+  RxList<String> categoriesList = ["General","Tech","Lifestyle","Business","Health"].obs;
   RxList<String> categories =
       ['General', 'Tech', 'Lifestyle', 'Business', 'Health'].obs;
   RxString searchedValue = "".obs;

@@ -27,6 +27,7 @@ class ProfileController extends GetxController {
 
   // Dependencies
   final String userId = PrefUtil.getString(PrefUtil.userId);
+  HttpService httpService = HttpService();
 
   @override
   void onInit() {
@@ -34,11 +35,37 @@ class ProfileController extends GetxController {
     _loadInitialData();
   }
 
+
+  Future<void> editProfile() async {
+    int costPrice = int.tryParse(costController.text.trim()) ?? 0;
+    Map<String, dynamic> updatedData = {
+      "name": nameController.text.trim(),
+      "costPoints": costPrice,
+      "profileImage": imageUrl.value,
+    };
+    try {
+      isLoading.value = true;
+      final response = await HttpService.put("/editProfile/", updatedData);
+
+      if (response is Map && response.containsKey('error')) {
+        print("Error: ${response['error']}");
+        ToastUtil.showToast(message: "${response['error']}");
+      } else {
+        ToastUtil.showToast(message: "Profile updated successfully!");
+        Get.back();
+      }
+    } catch (e) {
+      print("Exception: $e");
+    } finally{
+      isLoading.value = false;
+    }
+  }
   Future<void> _loadInitialData() async {
     await Future.wait([
       fetchAndAssignPosts(),
     ]);
   }
+
 
   Future<void> fetchAndAssignPosts() async {
     try {
@@ -48,6 +75,8 @@ class ProfileController extends GetxController {
       print('here is response of profile ${response} ');
       final postsData = response['posts'] as List<dynamic>? ?? [];
       name.value = response['name']?.toString() ?? '';
+      imageUrl.value = response['profileImage']?.toString() ?? '';
+      log("There is profile image ${imageUrl.value}");
 
       totalPosts.value = response['totalPosts'] is int
           ? response['totalPosts']
@@ -81,34 +110,6 @@ class ProfileController extends GetxController {
       log('Post parsing error', error: e, stackTrace: stackTrace);
       throw const FormatException('Failed to parse posts');
     }
-  }
-
-  Future<void> editUserProfile() async {
-    try {
-      // final locationController = LocateController.locationController;
-      isLoading.value=true;
-    //  CustomLoadingDialog.showCustomLoadingDialog("Updating profile....");
-      final data = {
-        "name": nameController.text,
-        // "location": {
-        //   "long": locationController.longitude.value,
-        //   "lat": locationController.latitude.value
-        // },
-        "costPoints": costController.text,
-        "profileImage": imageUrl.value
-      };
-      print("The data I am giving is ${data}");
-
-      await await HttpService.put("/editProfile/$userId", data);
-      await Future.wait([fetchAndAssignPosts()]);
-      isLoading.value=false;
-    //  CustomLoadingDialog.closeLoadingDialog();
-
-      ToastUtil.showToast(message: 'Profile updated successfully');
-    } catch (e, stackTrace) {
-      isLoading.value=false;
-      _handleError('Profile update failed', e, stackTrace);
-    } finally {}
   }
 
   void _handleError(String message, dynamic error, StackTrace stackTrace) {

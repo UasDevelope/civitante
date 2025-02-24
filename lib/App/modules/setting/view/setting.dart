@@ -1,17 +1,21 @@
 import 'package:civitante/App/controller/controller_locate.dart';
 import 'package:civitante/App/modules/bucket/view/bucket.dart';
 import 'package:civitante/App/modules/profile/view/edit_profile.dart';
+import 'package:civitante/App/service/auth_services.dart';
 import 'package:civitante/App/shared/app_text.dart';
 import 'package:civitante/App/shared/color.dart';
 import 'package:civitante/App/shared/image.dart';
 import 'package:civitante/App/shared/strings.dart';
 import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
+import '../../../service/http_service.dart';
 import '../../../utilse/constant.dart';
+import '../../../utilse/toast_util.dart';
 import '../widget/devider.dart';
 import '../widget/rowsection.dart';
 
@@ -19,6 +23,7 @@ class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = LocateController.settingController;
+    final String userID = Get.arguments.toString();
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -109,11 +114,53 @@ class SettingScreen extends StatelessWidget {
                       AppConstant().userID = null;
                       PrefUtil.remove(PrefUtil.userId);
                       Get.offAllNamed('/login');
-                      Get.offAll(AppRoutes.login);
                     },
                   ),
                   buildDivider(),
-                  AppText(text: "Delete Account",fontWeight: FontWeight.w500,fontSize: 16,color: AppColors.red_color),
+                  InkWell(
+                    onTap: () async {
+                      FirebaseAuth auth = FirebaseAuth.instance;
+                      User? user = auth.currentUser;
+                      if (user != null && user.providerData.any((p) => p.providerId == 'google.com')) {
+                        await AuthServices().deleteAccount();
+                        final response = await HttpService.delete("/deleteAccount");
+                        if (response is Map && response.containsKey('error')) {
+                          ToastUtil.showToast(
+                            message: "Error: ${response['error']}",
+                            backgroundColor: Colors.red,
+                          );
+                        } else {
+                          ToastUtil.showToast(
+                            message: "Account deleted Successfully",
+                            backgroundColor: Colors.green,
+                          );
+                          Get.offAllNamed('/login');
+                          AppConstant().userID = '';
+                        }
+                      } else {
+                        final response = await HttpService.delete("/deleteAccount");
+                        if (response is Map && response.containsKey('error')) {
+                          ToastUtil.showToast(
+                            message: "Error: ${response['error']}",
+                            backgroundColor: Colors.red,
+                          );
+                        } else {
+                          ToastUtil.showToast(
+                            message: "Account deleted Successfully",
+                            backgroundColor: Colors.green,
+                          );
+                          Get.offAllNamed('/login');
+                          AppConstant().userID = '';
+                        }
+                      }
+                    },
+                    child: AppText(
+                      text: "Delete Account",
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                      color: AppColors.red_color,
+                    ),
+                  ),
 
                 ],
               ),
