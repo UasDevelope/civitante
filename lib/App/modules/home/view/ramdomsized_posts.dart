@@ -510,6 +510,7 @@ class _CustomCard2State extends State<CustomCard2> {
                   child: SliderWithLabels(
                     post: widget.post,
                   )),
+              SizedBox(height: 15,),
               widget.haveDescAndTags
                   ? Padding(
                       padding: EdgeInsets.only(top: 0, bottom: 10, left: 10),

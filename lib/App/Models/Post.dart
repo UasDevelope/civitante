@@ -16,6 +16,12 @@ class Post {
   RxBool isReported; // Using RxBool for isReported
   RxBool isViewed; // Using RxBool for isViewed
   RxList<Comment> comments; // Using RxList for comments
+  final RxList<String> reports; // New field for reports
+  final RxList<String> viewedBy; // New field for viewedBy
+  final RxList<String> block; // New field for blocked users
+  final RxList<String> ratings; // New field for ratings
+  RxBool isRated; // New field for isRated
+  RxInt? rate; // New field for rate
 
   Post({
     required this.id,
@@ -33,6 +39,12 @@ class Post {
     required this.isReported,
     required this.isViewed,
     required this.comments,
+    required this.reports,
+    required this.viewedBy,
+    required this.block,
+    required this.ratings,
+    required this.isRated,
+    this.rate,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -40,18 +52,10 @@ class Post {
       id: json['_id'] ?? '',
       title: json['title'] ?? 'Untitled',
       description: json['description'] ?? '',
-      tags: RxList<String>(
-          (json['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
-              []),
+      tags: RxList<String>((json['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
       category: json['category'] ?? '',
-      media: RxList<String>((json['media'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          []),
-      mediaUrls: RxList<String>((json['mediaUrls'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          []),
+      media: RxList<String>((json['media'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
+      mediaUrls: RxList<String>((json['mediaUrls'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
       createdBy: CreatedBy.fromJson(json['createdBy'] ?? {}),
       views: RxInt(json['views'] ?? 0),
       likesCount: RxInt(json['likesCount'] ?? 0),
@@ -59,10 +63,13 @@ class Post {
       isLikedByUser: RxBool(json['isLikedByUser'] ?? false),
       isReported: RxBool(json['isReported'] ?? false),
       isViewed: RxBool(json['isViewed'] ?? false),
-      comments: RxList<Comment>((json['comments'] as List<dynamic>?)
-              ?.map((x) => Comment.fromJson(x))
-              .toList() ??
-          []),
+      comments: RxList<Comment>((json['comments'] as List<dynamic>?)?.map((x) => Comment.fromJson(x)).toList() ?? []),
+      reports: RxList<String>((json['reports'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
+      viewedBy: RxList<String>((json['viewedBy'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
+      block: RxList<String>((json['block'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
+      ratings: RxList<String>((json['ratings'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
+      isRated: RxBool(json['isRated'] ?? false),
+      rate: json['rate'] != null ? RxInt(json['rate']) : null,
     );
   }
 }

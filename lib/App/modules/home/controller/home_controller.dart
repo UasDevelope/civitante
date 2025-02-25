@@ -10,6 +10,12 @@ import '../../../utilse/pref.dart';
 import '../../../utilse/toast_util.dart';
 
 class HomeController extends GetxController {
+  RxInt newRate = 0.obs;
+  RxMap<String, int> newRates = <String, int>{}.obs; // Store rating per post
+
+  void updateRating(String postId, int rate) {
+    newRates[postId] = rate; // Update the rating for a specific post
+  }
   RxList<Post> posts = <Post>[].obs; // Original list of posts
   RxList<Post> filteredPosts = <Post>[].obs; // New list for filtered posts
   final TextEditingController commentController = TextEditingController();

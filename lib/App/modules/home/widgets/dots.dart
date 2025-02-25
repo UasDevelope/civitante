@@ -3,14 +3,22 @@ import 'package:flutter/material.dart';
 import '../../../utilse/widgets.dart';
 
 class Dot extends StatelessWidget {
+
+  final VoidCallback onPress;
+  final Color color;
+
+  const Dot({super.key, required this.onPress, this.color = AppColors.Slate_gray});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 12,
-      width: 12,
-      decoration: BoxDecoration(
-        color:AppColors.Slate_gray,
-        shape: BoxShape.circle,
+    return GestureDetector(
+      onTap: onPress,
+      child: Container(
+        height: 18,
+        width: 18,
+        decoration: BoxDecoration(
+          color:color,
+          shape: BoxShape.circle,
+        ),
       ),
     );
   }
