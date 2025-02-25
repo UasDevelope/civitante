@@ -218,6 +218,7 @@ class HomeController extends GetxController {
         (post.comments
         as RxList)
             .refresh();
+        commentController.clear();
       }
 
     } catch (e) {
@@ -348,6 +349,25 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     fetchAndAssignPosts(followed: true,randomized: false,communityId: '');
+    fetchCurrentUser();
     super.onInit();
+  }
+  RxString name = ''.obs;
+  RxString imageUrl = ''.obs;
+
+  Future<void> fetchCurrentUser() async {
+    try {
+      var response = await HttpService.get('/getProfile');
+      print('here is response of profile ${response} ');
+      final postsData = response['posts'] as List<dynamic>? ?? [];
+      name.value = response['name']?.toString() ?? '';
+      imageUrl.value = response['profileImage']?.toString() ?? '';
+      log("There is profile image ${imageUrl.value}");
+
+      imageUrl.value = response['profileImage']?.toString() ?? '';
+    } catch (e, stackTrace) {
+    } finally {
+
+    }
   }
 }

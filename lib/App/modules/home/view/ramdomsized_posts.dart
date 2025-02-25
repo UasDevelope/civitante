@@ -36,10 +36,8 @@ class RandomSizedPostsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeController = Get.find<HomeController>();
-     homeController.fetchAndAssignPosts(
-        communityId: communityId,
-        randomized: randomized,
-        followed: followed);
+    homeController.fetchAndAssignPosts(
+        communityId: communityId, randomized: randomized, followed: followed);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -61,36 +59,46 @@ class RandomSizedPostsScreen extends StatelessWidget {
             if (explore == true)
               Column(
                 children: [
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Wrap(
                     spacing: 8.0,
                     runSpacing: 8.0,
                     children: homeController.categoriesList.map((category) {
                       return Obx(() => InkWell(
-                        onTap: () {
-                          homeController.selectedCategory.value = category; // Update selected category
-                          print("Selected Category: ${homeController.selectedCategory.value}");
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: homeController.selectedCategory.value == category
-                                ? AppColors.Slate_gray
-                                : AppColors.light_gray,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: AppText(
-                            text: category,
-                            fontSize: 14,
-                            color: homeController.selectedCategory.value == category
-                                ? Colors.white
-                                : Colors.black, // Change text color for better visibility
-                          ),
-                        ),
-                      ));
+                            onTap: () {
+                              homeController.selectedCategory.value =
+                                  category; // Update selected category
+                              print(
+                                  "Selected Category: ${homeController.selectedCategory.value}");
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: homeController.selectedCategory.value ==
+                                        category
+                                    ? AppColors.Slate_gray
+                                    : AppColors.light_gray,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: AppText(
+                                text: category,
+                                fontSize: 14,
+                                color: homeController.selectedCategory.value ==
+                                        category
+                                    ? Colors.white
+                                    : Colors
+                                        .black, // Change text color for better visibility
+                              ),
+                            ),
+                          ));
                     }).toList(),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                 ],
               ),
             if (explore == false)
@@ -138,60 +146,60 @@ class RandomSizedPostsScreen extends StatelessWidget {
                   ),
                 ],
               ),
-            if(explore == false)
-            Expanded(
-              child: RefreshIndicator(
-                color: AppColors.appColor,
-                onRefresh: () async {
-                  // Call your refresh method from the controller
-                  await homeController.fetchAndAssignPosts(
-                      communityId: communityId,
-                      randomized: randomized,
-                      followed: followed);
-                },
-                child: Obx(() {
-                  if (homeController.isPostLoading.value) {
-                    return RandomizedShimmerPost();
-                  }
-                  //For the empty post
-                  else if (homeController.filteredPosts.isEmpty) {
-                    return LottieAnimationWidget();
-                  } else {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      // physics: NeverScrollableScrollPhysics(),
-                      padding: EdgeInsets.zero,
-                      itemCount: homeController.filteredPosts.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final post = homeController.filteredPosts[index];
-                        return GestureDetector(
-                          onTap: () {
-                            var response =
-                                homeController.viewPostById(post.id, index);
-                            print('here is value ${response}');
+            if (explore == false)
+              Expanded(
+                child: RefreshIndicator(
+                  color: AppColors.appColor,
+                  onRefresh: () async {
+                    // Call your refresh method from the controller
+                    await homeController.fetchAndAssignPosts(
+                        communityId: communityId,
+                        randomized: randomized,
+                        followed: followed);
+                  },
+                  child: Obx(() {
+                    if (homeController.isPostLoading.value) {
+                      return RandomizedShimmerPost();
+                    }
+                    //For the empty post
+                    else if (homeController.filteredPosts.isEmpty) {
+                      return LottieAnimationWidget();
+                    } else {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        // physics: NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        itemCount: homeController.filteredPosts.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final post = homeController.filteredPosts[index];
+                          return GestureDetector(
+                            onTap: () {
+                              var response =
+                                  homeController.viewPostById(post.id, index);
+                              print('here is value ${response}');
 
-                            /// post.views.value = response['likesCount'];
+                              /// post.views.value = response['likesCount'];
 
-                            Get.toNamed(AppRoutes.postDetail, arguments: {
-                              "data": post,
-                              "currentUser": false
-                            });
-                            // Get.to(() => PostsDetailsScreen());
-                          },
-                          child: CustomCard2(
-                            haveDescAndTags: false,
-                            post: post,
-                            index: index,
-                          ),
-                          // child:  MediumNativeAd(), // Add the native ad here,
-                        );
-                      },
-                    );
-                  }
-                }),
+                              Get.toNamed(AppRoutes.postDetail, arguments: {
+                                "data": post,
+                                "currentUser": false
+                              });
+                              // Get.to(() => PostsDetailsScreen());
+                            },
+                            child: CustomCard2(
+                              haveDescAndTags: false,
+                              post: post,
+                              index: index,
+                            ),
+                            // child:  MediumNativeAd(), // Add the native ad here,
+                          );
+                        },
+                      );
+                    }
+                  }),
+                ),
               ),
-            ),
-            if(explore == true)
+            if (explore == true)
               Expanded(
                 child: RefreshIndicator(
                   color: AppColors.appColor,
@@ -211,22 +219,27 @@ class RandomSizedPostsScreen extends StatelessWidget {
                       return LottieAnimationWidget();
                     } else {
                       return Obx(
-                        () =>  ListView.builder(
+                        () => ListView.builder(
                           shrinkWrap: true,
                           padding: EdgeInsets.zero,
                           itemCount: homeController.filteredPosts
-                              .where((post) => post.category == homeController.selectedCategory.value)
+                              .where((post) =>
+                                  post.category ==
+                                  homeController.selectedCategory.value)
                               .length,
                           itemBuilder: (BuildContext context, int index) {
                             final filteredPosts = homeController.filteredPosts
-                                .where((post) => post.category == homeController.selectedCategory.value)
+                                .where((post) =>
+                                    post.category ==
+                                    homeController.selectedCategory.value)
                                 .toList();
 
                             final post = filteredPosts[index];
 
                             return GestureDetector(
                               onTap: () {
-                                var response = homeController.viewPostById(post.id, index);
+                                var response =
+                                    homeController.viewPostById(post.id, index);
                                 print('Here is value: $response');
 
                                 Get.toNamed(AppRoutes.postDetail, arguments: {
@@ -243,7 +256,6 @@ class RandomSizedPostsScreen extends StatelessWidget {
                           },
                         ),
                       );
-
                     }
                   }),
                 ),
@@ -299,13 +311,12 @@ class _CustomCard2State extends State<CustomCard2> {
                     ));
                   },
                   child: CircleAvatar(
-                    backgroundImage:
-                        widget.post.createdBy.profileImage.toString().isNotEmpty
-                            ? NetworkImage(
-                                widget.post.createdBy.profileImage.toString() ??
-                                    AppImages.person)
-                            : AssetImage(AppImages.person.toString() ??
-                                AppImages.person), // Replace with your image
+                    backgroundImage: homeController.imageUrl.isNotEmpty
+                        ? NetworkImage(
+                            widget.post.createdBy.profileImage.toString() ??
+                                AppImages.person)
+                        : AssetImage(AppImages.person.toString() ??
+                            AppImages.person), // Replace with your image
                   ),
                 ),
                 title: InkWell(
@@ -510,7 +521,9 @@ class _CustomCard2State extends State<CustomCard2> {
                   child: SliderWithLabels(
                     post: widget.post,
                   )),
-              SizedBox(height: 15,),
+              SizedBox(
+                height: 15,
+              ),
               widget.haveDescAndTags
                   ? Padding(
                       padding: EdgeInsets.only(top: 0, bottom: 10, left: 10),
@@ -568,22 +581,17 @@ class _CustomCard2State extends State<CustomCard2> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          CircleAvatar(
-                                            radius: 26,
-                                            backgroundImage: widget
-                                                    .post
-                                                    .comments[index]
-                                                    .user
-                                                    .profileImage
-                                                    .toString()
-                                                    .isNotEmpty
-                                                ? NetworkImage(widget.post
-                                                        .createdBy.profileImage
-                                                        .toString() ??
-                                                    AppImages.person)
-                                                : AssetImage(AppImages.person
-                                                        .toString() ??
-                                                    AppImages.person),
+                                          Obx(
+                                            () => CircleAvatar(
+                                              radius: 26,
+                                              backgroundImage: homeController
+                                                      .imageUrl.isNotEmpty
+                                                  ? NetworkImage(homeController
+                                                      .imageUrl.value)
+                                                  : AssetImage(AppImages.person
+                                                          .toString() ??
+                                                      AppImages.person),
+                                            ),
                                           ),
                                           SizedBox(
                                             width: 8,
@@ -599,15 +607,18 @@ class _CustomCard2State extends State<CustomCard2> {
                                               ),
                                               Row(
                                                 children: [
-                                                  Text(
-                                                    widget.post.comments[index]
-                                                        .user.name,
-                                                    style: GoogleFonts.poppins(
-                                                        fontSize: 16,
-                                                        color:
-                                                            AppColors.appColor,
-                                                        fontWeight:
-                                                            FontWeight.w600),
+                                                  Obx(
+                                                    () => Text(
+                                                      homeController.name.value,
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                              fontSize: 16,
+                                                              color: AppColors
+                                                                  .appColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600),
+                                                    ),
                                                   ),
                                                   SizedBox(
                                                     width: 4,
@@ -852,14 +863,13 @@ class _CustomCard2State extends State<CustomCard2> {
                                                   : CupertinoColors.systemGrey4,
                                               onPressed: value.text.isNotEmpty
                                                   ? () async {
-
-
                                                       // Post to backend
                                                       if (widget.currentUser ==
                                                           false) {
                                                         await homeController
                                                             .addComments(
-                                                                widget.post.id,widget.post);
+                                                                widget.post.id,
+                                                                widget.post);
                                                       }
                                                     }
                                                   : null,
