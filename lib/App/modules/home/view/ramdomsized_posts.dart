@@ -311,7 +311,7 @@ class _CustomCard2State extends State<CustomCard2> {
                     ));
                   },
                   child: CircleAvatar(
-                    backgroundImage: homeController.imageUrl.isNotEmpty
+                    backgroundImage: widget.post.createdBy.profileImage.isNotEmpty
                         ? NetworkImage(
                             widget.post.createdBy.profileImage.toString() ??
                                 AppImages.person)
