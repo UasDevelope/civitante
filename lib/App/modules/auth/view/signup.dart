@@ -1,4 +1,3 @@
-import 'package:auth_buttons/auth_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import '../../../utilse/widgets.dart';
@@ -236,14 +235,14 @@ class SignupScreen extends StatelessWidget {
                                 },
                               ),
                             ),
-                          if (Platform.isIOS)
-                            AppleAuthButton(
-                              style: AuthButtonStyle(width: 300, height: 60,buttonColor: AppColors.appColor),
-                              text: "Apple Login",
-                              onPressed: () {
-                                controller.signUpWithApple();
-                              },
-                            ),
+                          // if (Platform.isIOS)
+                          //   AppleAuthButton(
+                          //     style: AuthButtonStyle(width: 300, height: 60,buttonColor: AppColors.appColor),
+                          //     text: "Apple Login",
+                          //     onPressed: () {
+                          //       controller.signUpWithApple();
+                          //     },
+                          //   ),
                         ],
                       )),
                 ),

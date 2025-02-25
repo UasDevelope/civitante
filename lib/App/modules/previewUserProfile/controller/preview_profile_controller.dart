@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/pref.dart';
@@ -6,6 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../Models/Post.dart';
 import '../../../controller/controller_locate.dart';
+import '../../../shared/app_button.dart';
+import '../../../shared/app_text.dart';
+import '../../../shared/color.dart';
+import '../../wallet/view/wallet.dart';
 
 class PreviewProfileController extends GetxController {
   final String id;
@@ -80,6 +85,7 @@ class PreviewProfileController extends GetxController {
       var response = await HttpService.post('/followUnfollow/$id', {});
 
       if (response != null && response['error'] == null) {
+
         isFollow.value = response['isFollow'];
 
         followers.value = response['followersCount'];
@@ -89,17 +95,44 @@ class PreviewProfileController extends GetxController {
           backgroundColor: Colors.green,
         );
       } else {
-        String errorMsg = response['details'] ?? "Unknown error occurred";
-        ToastUtil.showToast(
-          message: "Error: $errorMsg",
-          backgroundColor: Colors.red,
-        );
+        final errorMessage = _parseErrorMessage(response);
+        print("Response of Pints is :$errorMessage");
+        if(errorMessage == "Not enough points to follow this user")
+          Get.dialog(
+            AlertDialog(
+              backgroundColor: AppColors.light_gray,
+              title: AppText(text: "Dear User",fontWeight: FontWeight.w600),
+              content: AppText(text: errorMessage,fontSize: 14),
+              actions: [
+                AppButton(
+                  textColor: AppColors.light_gray,
+                  text: "Buy Now!", onPressed: () {
+                  Get.to(WalletScreen());
+                },)
+              ],
+            ),
+          );
+        // ToastUtil.showToast(
+        //   message: "Error: $errorMessage",
+        //   backgroundColor: Colors.red,
+        // );
       }
     } catch (e) {
       ToastUtil.showToast(
         message: "Failed to process request: ${e.toString()}",
         backgroundColor: Colors.red,
       );
+    }
+  }
+  String _parseErrorMessage(dynamic response) {
+    try {
+      if (response == null) return "Unknown error occurred";
+      if (response['details'] != null) {
+        return jsonDecode(response['details'])['message'] ?? "Operation failed";
+      }
+      return response['message'] ?? "Something went wrong";
+    } catch (e) {
+      return "Failed to process error message";
     }
   }
 

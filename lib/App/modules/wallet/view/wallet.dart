@@ -19,6 +19,7 @@ class AppColor {
 
 class WalletScreen extends StatelessWidget {
   WalletScreen({super.key});
+
   final WalletController controller = Get.put(WalletController());
 
   @override
@@ -26,54 +27,53 @@ class WalletScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.white,
-        // appBar: HomeAppbar(
-        //   backButton: false,
-        //   title: AppStrings.Wallet,
-        //   rightIcon: AppImages.history,
-        //   onRightIconPressed1: () {
-        //     Get.to(TransactionHistoryScreen());
-        //   },
-        // ),
+        appBar: AppBar(
+          automaticallyImplyLeading: true,
+          backgroundColor: AppColors.white,
+          title: AppText(text: "My Wallet", fontWeight: FontWeight.w500),
+          actions: [
+            GestureDetector(
+                onTap: () {
+                  Get.to(TransactionHistoryScreen());
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  child: Image.asset(
+                    AppImages.history,
+                    height: 30,
+                  ),
+                ))
+          ],
+        ),
         body: Obx(() {
           if (controller.isLoading.value) {
             return Center(child: CircularProgressIndicator());
           }
-      
+
           if (controller.errorMessage.isNotEmpty) {
             return Center(child: Text(controller.errorMessage.value));
           }
-      
+
           return RefreshIndicator(
             onRefresh: () async => await controller.loadPoints(),
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16,horizontal: 24),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Points Balance Card
-      
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        AppText(text: "My Wallet",fontWeight: FontWeight.w500),
-                        GestureDetector(
-                            onTap: () {
-                              Get.to(TransactionHistoryScreen());
-                            },
-                            child: Image.asset(AppImages.history,height: 30,))
-                      ],
+                    SizedBox(
+                      height: 36,
                     ),
-                    SizedBox(height: 36,),
                     _buildPointsCard(),
                     const SizedBox(height: 23),
-      
+
                     // Action Buttons
                     _buildActionButtons(context),
                     const SizedBox(height: 24),
-      
+
                     // Transaction History
                     // _buildHistorySection(),
                   ],
@@ -142,7 +142,9 @@ class WalletScreen extends StatelessWidget {
           text: AppStrings.Buy_Points_with_USD,
           onPressed: () => _handleBuyPoints(context),
         ),
-        SizedBox(height: 18,),
+        SizedBox(
+          height: 18,
+        ),
         AppButton(
           height: 50,
           borderColor: AppColors.appColor,

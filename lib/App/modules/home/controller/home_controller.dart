@@ -176,17 +176,50 @@ class HomeController extends GetxController {
     }
   }
 
-
-  Future<void> addComments(String postId) async {
+  Future<void> addComments(String postId, Post post) async {
     String userId = PrefUtil.getString(PrefUtil.userId);
     try {
       var data = {"userId": userId, "text": commentController.text};
       log('Requested data is $data');
-      final response =
-          await HttpService.post("/addCommentToPost/$postId", data);
+      final response = await HttpService.post("/addCommentToPost/$postId", data);
 
       log("Response is $response");
-      commentController.clear();
+
+      final errorMessage = _parseErrorMessage(response);
+      print("Response of Pints is :$errorMessage");
+      if(errorMessage == "Not enough points to comment"){
+        Get.dialog(
+          AlertDialog(
+            backgroundColor: AppColors.light_gray,
+            title: AppText(text: "Dear User",fontWeight: FontWeight.w600),
+            content: AppText(text: errorMessage,fontSize: 14),
+            actions: [
+              AppButton(
+                textColor: AppColors.light_gray,
+                text: "Buy Now!", onPressed: () {
+                Get.to(WalletScreen());
+              },)
+            ],
+          ),
+        );
+        commentController.clear();
+      }else{
+        final newComment = Comment(id: UniqueKey().toString(),
+          user: User(id: post.createdBy.id,
+              name: post.createdBy.name),
+          text: commentController.text,
+          createdAt: DateTime.now(),
+        );
+
+        // Add comment to observable list
+        post.comments.add(newComment);
+
+        // Optionally refresh UI immediately
+        (post.comments
+        as RxList)
+            .refresh();
+      }
+
     } catch (e) {
       ToastUtil.showToast(message: "$e", backgroundColor: Colors.red);
     } finally {}
@@ -207,12 +240,28 @@ class HomeController extends GetxController {
         print("Post liked successfully: $response");
         return response['likesCount'] ?? 0; // Like added successfully
       } else {
-        String errorMsg = response['details'] ?? "Unknown error occurred";
-        print("Error adding like: $errorMsg");
-        ToastUtil.showToast(
-          message: "Error: $errorMsg",
-          backgroundColor: Colors.red,
-        );
+
+        final errorMessage = _parseErrorMessage(response);
+        print("Response of Pints is :$errorMessage");
+        if(errorMessage == "Not enough points to like this post")
+          Get.dialog(
+            AlertDialog(
+              backgroundColor: AppColors.light_gray,
+              title: AppText(text: "Dear User",fontWeight: FontWeight.w600),
+              content: AppText(text: errorMessage,fontSize: 14),
+              actions: [
+                AppButton(
+                  textColor: AppColors.light_gray,
+                  text: "Buy Now!", onPressed: () {
+                  Get.to(WalletScreen());
+                },)
+              ],
+            ),
+          );
+        // ToastUtil.showToast(
+        //   message: "Error: $errorMsg",
+        //   backgroundColor: Colors.red,
+        // );
 
         return 0;
       }
@@ -223,6 +272,17 @@ class HomeController extends GetxController {
         backgroundColor: Colors.red,
       );
       return 0;
+    }
+  }
+  String _parseErrorMessage(dynamic response) {
+    try {
+      if (response == null) return "Unknown error occurred";
+      if (response['details'] != null) {
+        return jsonDecode(response['details'])['message'] ?? "Operation failed";
+      }
+      return response['message'] ?? "Something went wrong";
+    } catch (e) {
+      return "Failed to process error message";
     }
   }
 

@@ -852,39 +852,14 @@ class _CustomCard2State extends State<CustomCard2> {
                                                   : CupertinoColors.systemGrey4,
                                               onPressed: value.text.isNotEmpty
                                                   ? () async {
-                                                      final newComment =
-                                                          Comment(
-                                                        id: UniqueKey()
-                                                            .toString(),
-                                                        user: User(
-                                                            id: widget.post
-                                                                .createdBy.id,
-                                                            name: widget
-                                                                .post
-                                                                .createdBy
-                                                                .name),
-                                                        text: homeController
-                                                            .commentController
-                                                            .text,
-                                                        createdAt:
-                                                            DateTime.now(),
-                                                      );
 
-                                                      // Add comment to observable list
-                                                      widget.post.comments
-                                                          .add(newComment);
-
-                                                      // Optionally refresh UI immediately
-                                                      (widget.post.comments
-                                                              as RxList)
-                                                          .refresh();
 
                                                       // Post to backend
                                                       if (widget.currentUser ==
                                                           false) {
                                                         await homeController
                                                             .addComments(
-                                                                widget.post.id);
+                                                                widget.post.id,widget.post);
                                                       }
                                                     }
                                                   : null,

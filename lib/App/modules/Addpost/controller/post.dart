@@ -192,10 +192,27 @@ class PostController extends GetxController {
         isloading.value = false;
         log("Response is $response");
         final errorMessage = _parseErrorMessage(response);
-        ToastUtil.showToast(
-          message: errorMessage,
-          backgroundColor: Colors.red,
+        print("Response of Pints is :$errorMessage");
+        if(errorMessage == "Not enough points to create a post")
+        Get.dialog(
+          AlertDialog(
+            backgroundColor: AppColors.light_gray,
+            title: AppText(text: "Dear User",fontWeight: FontWeight.w600),
+            content: AppText(text: errorMessage,fontSize: 14),
+            actions: [
+              AppButton(
+                textColor: AppColors.light_gray,
+                text: "Buy Now!", onPressed: () {
+                Get.to(WalletScreen());
+              },)
+            ],
+          ),
         );
+
+        // ToastUtil.showToast(
+        //   message: errorMessage,
+        //   backgroundColor: Colors.red,
+        // );
 
       //  CustomLoadingDialog.closeLoadingDialog();
       }
