@@ -114,10 +114,10 @@ class HomeController extends GetxController {
       }
     } catch (e) {
       log("Error: $e");
-      ToastUtil.showToast(
-        message: "Failed to load posts: ${e.toString()}",
-        backgroundColor: Colors.red,
-      );
+      // ToastUtil.showToast(
+      //   message: "Failed to load posts: ${e.toString()}",
+      //   backgroundColor: Colors.red,
+      // );
     } finally {
       isPostLoading.value = false;
     }
