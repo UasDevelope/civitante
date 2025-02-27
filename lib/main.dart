@@ -1,3 +1,4 @@
+import 'package:civitante/App/modules/auth/view/face_id_screen.dart';
 import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -39,6 +40,7 @@ class _CivitanteAppState extends State<CivitanteApp> {
           AppRoutes.splash, // Ensure AppRoutes.splash is defined correctly.
       initialBinding:
           InitialBinding(), // Ensure InitialBinding() is correctly set up.
+      // home: FaceIDScreen(),
       defaultTransition:
           Transition.fadeIn, // Optional: for smoother page transitions.
     );

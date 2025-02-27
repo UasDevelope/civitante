@@ -1,5 +1,6 @@
 import 'package:civitante/App/modules/AllCommunities/controller/all_community.dart';
 import 'package:civitante/App/modules/auth/controller/auth_controller.dart';
+import 'package:civitante/App/modules/auth/controller/face_id_controller.dart';
 import 'package:civitante/App/modules/bottom/controller/bottom_nave_controller.dart';
 import 'package:civitante/App/modules/communities/controller/controllerCommunity.dart';
 import 'package:civitante/App/modules/contactadmin/controller/contact_admin.dart';
@@ -34,6 +35,7 @@ class InitialBinding extends Bindings {
     Get.lazyPut(() => SettingController());
     Get.lazyPut(() => HomeController());
     Get.lazyPut(() => PostController());
+    Get.lazyPut(() => FaceIDController());
     Get.lazyPut(() => WalletController());
     Get.lazyPut(() => SettingController());
     Get.lazyPut(() => AddCommunityController());

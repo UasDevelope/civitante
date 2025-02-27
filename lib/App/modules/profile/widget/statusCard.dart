@@ -37,36 +37,40 @@ class StatsContainer extends StatelessWidget {
                     fontWeight: FontWeight.w800,
                     color: AppColors.Slate_gray,
                     fontSize: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    AppText(
-                        text: value,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.Slate_gray,
-                        fontSize: 12),
-                    Spacer(),
-                    // Up Arrow Icon
-                    Image.asset(
-                      AppImages.arrowup,
-                      height: 20,
-                      width: 20,
-                      color: AppColors.moreblue, // GreenAccent for positive change
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      AppText(
+                          text: value,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.Slate_gray,
+                          fontSize: 12),
+                      // Spacer(),
+                      SizedBox(width: 2,),
+                      // Up Arrow Icon
+                      Image.asset(
+                        AppImages.arrowup,
+                        height: 17,
+                        width: 17,
+                        color: AppColors.moreblue, // GreenAccent for positive change
 
-                      fit: BoxFit.contain,
-                    ),
-                    // Percentage Change
-                    Padding(
-                      padding: const EdgeInsets.only(top: 3),
-                      child: AppText(
-                        text: "10.2%",
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
-                        color:
-                        AppColors.moreblue, // GreenAccent for positive change
+                        fit: BoxFit.contain,
                       ),
-                    ),
-                  ],
+                      // Percentage Change
+                      Padding(
+                        padding: const EdgeInsets.only(top: 3),
+                        child: AppText(
+                          text: "10.2%",
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w500,
+                          color:
+                          AppColors.moreblue, // GreenAccent for positive change
+                        ),
+                      ),
+                    ],
+                  ),
                 )
               ],
             ),

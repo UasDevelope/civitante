@@ -183,10 +183,11 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
             )),
-        Divider(),
-
-        SizedBox(height: 16),
-        // StatsRow(),
+        // Divider(),
+        //
+        // SizedBox(height: 16),
+        StatsRow(),
+        SizedBox(height: 16,),
 
         Obx(() {
           if (controller.isLoading.value) {

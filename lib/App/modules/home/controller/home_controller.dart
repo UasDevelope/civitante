@@ -10,6 +10,29 @@ import '../../../utilse/pref.dart';
 import '../../../utilse/toast_util.dart';
 
 class HomeController extends GetxController {
+
+  RxString selectedCommentId = ''.obs;
+  var commentReplyList = <Map<String, String>>[].obs;
+  void storeComment(String commentId, String commentText, String userId,String userImage) {
+    Map<String, String> commentData = {
+      "commentId": commentId,
+      "commentText": commentText,
+      "userId": userId,
+      "userImage":userImage,
+    };
+    commentReplyList.add(commentData);
+    log("Updated Comment List: $commentReplyList");
+  }
+
+
+  void toggleReplyBox(String commentId) {
+    if (selectedCommentId.value == commentId) {
+      selectedCommentId.value = '';
+    } else {
+      selectedCommentId.value = commentId;
+    }
+  }
+
   RxInt newRate = 0.obs;
   RxMap<String, int> newRates = <String, int>{}.obs; // Store rating per post
 
@@ -19,6 +42,7 @@ class HomeController extends GetxController {
   RxList<Post> posts = <Post>[].obs; // Original list of posts
   RxList<Post> filteredPosts = <Post>[].obs; // New list for filtered posts
   final TextEditingController commentController = TextEditingController();
+  final TextEditingController commentReplyController = TextEditingController();
   RxBool isPostLoading = false.obs;
   RxString selectCatagory = "General".obs;
   RxString selectedCategory = "General".obs;
@@ -225,6 +249,7 @@ class HomeController extends GetxController {
       ToastUtil.showToast(message: "$e", backgroundColor: Colors.red);
     } finally {}
   }
+
 
   Future<int> addLikeToPost(String postId, int index) async {
     try {

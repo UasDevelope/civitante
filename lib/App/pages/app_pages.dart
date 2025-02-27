@@ -1,3 +1,4 @@
+import 'package:civitante/App/modules/auth/view/face_id_screen.dart';
 import 'package:civitante/App/modules/auth/view/login.dart';
 import 'package:civitante/App/modules/auth/view/pro_account.dart';
 import 'package:civitante/App/modules/auth/view/signup.dart';
@@ -57,6 +58,11 @@ class AppPages {
     GetPage(
         name: AppRoutes.bottomNav,
         page: () => BottomNavScreen(),
+        transition: Transition.zoom,
+        binding: InitialBinding()),
+    GetPage(
+        name: AppRoutes.faceIDScreen,
+        page: () => FaceIDScreen(),
         transition: Transition.zoom,
         binding: InitialBinding()),
     GetPage(

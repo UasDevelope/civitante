@@ -176,10 +176,11 @@ class PreviewProfileScreen extends StatelessWidget {
               ),
             )),
 
-        SizedBox(height: 6),
-        Divider(),
-        SizedBox(height: 16),
-        // StatsRow(),
+        // SizedBox(height: 6),
+        // Divider(),
+        // SizedBox(height: 16),
+        StatsRow(),
+        SizedBox(height: 16,),
 
         Obx(() => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),

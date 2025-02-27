@@ -16,6 +16,7 @@ class AppRoutes {
   static get newPassword => "/newPassword";
 
   static get bottomNav => '/bottomNav';
+  static get faceIDScreen => '/faceIDScreen';
 
   static get myCommunity => "/myCommunity";
 
