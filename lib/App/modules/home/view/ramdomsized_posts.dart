@@ -10,6 +10,7 @@ import 'package:civitante/App/shared/color.dart';
 import 'package:civitante/App/shared/image.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../Models/Post.dart';
@@ -149,55 +150,117 @@ class RandomSizedPostsScreen extends StatelessWidget {
             if (explore == false)
               Expanded(
                 child: RefreshIndicator(
-                  color: AppColors.appColor,
-                  onRefresh: () async {
-                    // Call your refresh method from the controller
-                    await homeController.fetchAndAssignPosts(
-                        communityId: communityId,
-                        randomized: randomized,
-                        followed: followed);
-                  },
-                  child: Obx(() {
-                    if (homeController.isPostLoading.value) {
-                      return RandomizedShimmerPost();
-                    }
-                    //For the empty post
-                    else if (homeController.filteredPosts.isEmpty) {
-                      return LottieAnimationWidget();
-                    } else {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        // physics: NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.zero,
-                        itemCount: homeController.filteredPosts.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final post = homeController.filteredPosts[index];
-                          return GestureDetector(
-                            onTap: () {
-                              var response =
-                                  homeController.viewPostById(post.id, index);
-                              print('here is value ${response}');
-
-                              /// post.views.value = response['likesCount'];
-
-                              Get.toNamed(AppRoutes.postDetail, arguments: {
-                                "data": post,
-                                "currentUser": false
-                              });
-                              // Get.to(() => PostsDetailsScreen());
-                            },
-                            child: CustomCard2(
-                              haveDescAndTags: false,
-                              post: post,
-                              index: index,
-                            ),
-                            // child:  MediumNativeAd(), // Add the native ad here,
-                          );
-                        },
-                      );
-                    }
-                  }),
-                ),
+                    color: AppColors.appColor,
+                    onRefresh: () async {
+                      await homeController.fetchAndAssignPosts(
+                          communityId: communityId,
+                          randomized: randomized,
+                          followed: followed);
+                    },
+                    child: Obx(() {
+                      if (homeController.isPostLoading.value) {
+                        return RandomizedShimmerPost(
+                          count: 1,
+                        );
+                      } else if (homeController.filteredPosts.isEmpty) {
+                        return LottieAnimationWidget();
+                      } else {
+                        return CardSwiper(
+                          padding: EdgeInsets.only(bottom: 14),
+                          cardsCount: homeController.filteredPosts.length,
+                          numberOfCardsDisplayed: 2,
+                          threshold: 5,
+                          duration: const Duration(microseconds: 300),
+                          isLoop: true,
+                          onSwipe: (previousIndex, currentIndex, direction) {
+                            if (currentIndex! >=
+                                    homeController.filteredPosts.length ||
+                                currentIndex < 0) {
+                              return false;
+                            }
+                            final post =
+                                homeController.filteredPosts[currentIndex];
+                            homeController.viewPostById(post.id, currentIndex);
+                            print(
+                                'Swiped to Post: ${post.id} in direction: $direction');
+                            if (direction == CardSwiperDirection.left) {
+                              print('Swiped backward to previous post');
+                            } else if (direction == CardSwiperDirection.right) {
+                              print('Swiped forward to next post');
+                            }
+                            return true;
+                          },
+                          cardBuilder: (context, index, percentThresholdX,
+                              percentThresholdY) {
+                            if (index >= homeController.filteredPosts.length ||
+                                index < 0) {
+                              return const SizedBox.shrink();
+                            }
+                            final post = homeController.filteredPosts[index];
+                            return GestureDetector(
+                              onTap: () {
+                                Get.toNamed(AppRoutes.postDetail, arguments: {
+                                  "data": post,
+                                  "currentUser": false,
+                                });
+                              },
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 300),
+                                child: CustomCard2(
+                                  haveDescAndTags: false,
+                                  post: post,
+                                  index: index,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    })
+                    // child: Obx(() {
+                    //   if (homeController.isPostLoading.value) {
+                    //     return RandomizedShimmerPost(); // Show shimmer loading effect
+                    //   }
+                    //   // For empty posts
+                    //   else if (homeController.filteredPosts.isEmpty) {
+                    //     return LottieAnimationWidget(); // Show empty state animation
+                    //   } else {
+                    //     return PageView.builder(
+                    //       scrollDirection: Axis.vertical,
+                    //       itemCount: homeController.filteredPosts.length,
+                    //       controller: PageController(viewportFraction: 1), // Adjust viewport fraction as needed
+                    //       onPageChanged: (index) {
+                    //         // Handle page change (e.g., update the current post)
+                    //         if (index >= homeController.filteredPosts.length) {
+                    //           return; // Prevent out-of-bounds access
+                    //         }
+                    //         final post = homeController.filteredPosts[index];
+                    //         homeController.viewPostById(post.id, index);
+                    //         print('Swiped to Post: ${post.id} at index: $index');
+                    //       },
+                    //       itemBuilder: (context, index) {
+                    //         if (index >= homeController.filteredPosts.length) {
+                    //           return const SizedBox.shrink(); // Return an empty widget if the index is out of bounds
+                    //         }
+                    //         final post = homeController.filteredPosts[index];
+                    //         return GestureDetector(
+                    //           onTap: () {
+                    //             Get.toNamed(AppRoutes.postDetail, arguments: {
+                    //               "data": post,
+                    //               "currentUser": false,
+                    //             });
+                    //           },
+                    //           child: CustomCard2(
+                    //             haveDescAndTags: false,
+                    //             post: post,
+                    //             index: index,
+                    //           ),
+                    //         );
+                    //       },
+                    //     );
+                    //   }
+                    // }),
+                    ),
               ),
             if (explore == true)
               Expanded(
@@ -212,7 +275,9 @@ class RandomSizedPostsScreen extends StatelessWidget {
                   },
                   child: Obx(() {
                     if (homeController.isPostLoading.value) {
-                      return RandomizedShimmerPost();
+                      return RandomizedShimmerPost(
+                        count: 3,
+                      );
                     }
                     //For the empty post
                     else if (homeController.filteredPosts.isEmpty) {
@@ -311,12 +376,13 @@ class _CustomCard2State extends State<CustomCard2> {
                     ));
                   },
                   child: CircleAvatar(
-                    backgroundImage: widget.post.createdBy.profileImage.isNotEmpty
-                        ? NetworkImage(
-                            widget.post.createdBy.profileImage.toString() ??
-                                AppImages.person)
-                        : AssetImage(AppImages.person.toString() ??
-                            AppImages.person), // Replace with your image
+                    backgroundImage:
+                        widget.post.createdBy.profileImage.isNotEmpty
+                            ? NetworkImage(
+                                widget.post.createdBy.profileImage.toString() ??
+                                    AppImages.person)
+                            : AssetImage(AppImages.person.toString() ??
+                                AppImages.person), // Replace with your image
                   ),
                 ),
                 title: InkWell(
@@ -387,6 +453,7 @@ class _CustomCard2State extends State<CustomCard2> {
                   children: [
                     widget.topTitle
                         ? AppText(
+                            OneLine: true,
                             text: widget.post.title,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -397,7 +464,7 @@ class _CustomCard2State extends State<CustomCard2> {
                 ),
               ),
               SizedBox(
-                height: widget.topTitle ? 200 : 600,
+                height: widget.topTitle ? Get.height * 0.388 : 600,
                 child: Stack(
                   children: [
                     widget.haveDescAndTags
@@ -519,6 +586,7 @@ class _CustomCard2State extends State<CustomCard2> {
               SizedBox(
                   height: Get.height * 0.05,
                   child: SliderWithLabels(
+                    index: widget.index,
                     post: widget.post,
                   )),
               SizedBox(
@@ -563,211 +631,272 @@ class _CustomCard2State extends State<CustomCard2> {
                   ? Column(
                       children: [
                         Obx(() => ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: widget.post.comments.length,
-                          itemBuilder: (context, index) {
-                            var comment = widget.post.comments[index]; // Get current comment
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: widget.post.comments.length,
+                              itemBuilder: (context, index) {
+                                var comment = widget.post
+                                    .comments[index]; // Get current comment
 
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      CircleAvatar(
-                                        radius: 26,
-                                        backgroundImage: homeController.imageUrl.isNotEmpty
-                                            ? NetworkImage(homeController.imageUrl.value)
-                                            : AssetImage(AppImages.person),
-                                      ),
-                                      SizedBox(width: 8),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Obx(() => Text(
-                                            homeController.name.value,
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 16,
-                                                color: AppColors.appColor,
-                                                fontWeight: FontWeight.w600),
-                                          )),
-                                          SizedBox(height: 4),
-                                          Row(
+                                          CircleAvatar(
+                                            radius: 26,
+                                            backgroundImage: homeController
+                                                    .imageUrl.isNotEmpty
+                                                ? NetworkImage(homeController
+                                                    .imageUrl.value)
+                                                : AssetImage(AppImages.person),
+                                          ),
+                                          SizedBox(width: 8),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              SizedBox(
-                                                width: Get.width * 0.4,
-                                                child: Text(
-                                                  maxLines: 3,
-                                                  textAlign: TextAlign.start,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  "${comment.text}",
-                                                  style: GoogleFonts.poppins(
-                                                      fontSize: 15,
-                                                      color: AppColors.appColor,
-                                                      fontWeight: FontWeight.w400),
-                                                ),
+                                              Obx(() => Text(
+                                                    homeController.name.value,
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 16,
+                                                        color:
+                                                            AppColors.appColor,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  )),
+                                              SizedBox(height: 4),
+                                              Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: Get.width * 0.4,
+                                                    child: Text(
+                                                      maxLines: 3,
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      "${comment.text}",
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                              fontSize: 15,
+                                                              color: AppColors
+                                                                  .appColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400),
+                                                    ),
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      homeController
+                                                          .toggleReplyBox(
+                                                              comment.id);
+                                                    },
+                                                    child: AppText(
+                                                      text: "Reply",
+                                                      color: AppColors.green,
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 8),
+                                                  GestureDetector(
+                                                      onTap: () async {
+                                                        await homeController
+                                                            .addLikeToComment(
+                                                                widget.post.id,
+                                                                comment.id,
+                                                                widget.index,
+                                                                index);
+                                                      },
+                                                      child: Obx(
+                                                        () => Icon(
+                                                          comment.isCommentLikedByUser!.value ? Icons
+                                                                  .thumb_up_alt
+                                                              : Icons
+                                                                  .thumb_up_alt_outlined,
+                                                          size: 20,
+                                                          color: comment
+                                                                      .isCommentLikedByUser!.value ? AppColors.green
+                                                              : AppColor.black,
+                                                        ),
+                                                      ))
+                                                ],
                                               ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  homeController.toggleReplyBox(comment.id);
-                                                },
-                                                child: AppText(
-                                                  text: "Reply",
-                                                  color: AppColors.green,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                              SizedBox(width: 8),
-                                              GestureDetector(
-                                                  onTap: () {
-                                                    HttpService.post(
-                                                        "/addLikeToComment/${widget.post.id}/${widget.post.comments[index].id}",
-                                                        {});
-                                                  },
-                                                  child: Icon(
-                                                    comment
-                                                        .isCommentLikedByUser ==
-                                                        true
-                                                        ? Icons.thumb_up_alt
-                                                        : Icons
-                                                        .thumb_up_alt_outlined,
-                                                    size: 20,
-                                                    color: comment
-                                                        .isCommentLikedByUser ==
-                                                        true
-                                                        ? AppColors.green
-                                                        : AppColor.black,
-                                                  ))
                                             ],
                                           ),
                                         ],
                                       ),
+
+                                      // Show the TextField only when selectedCommentId matches the current comment
+                                      Obx(() => homeController
+                                                  .selectedCommentId.value ==
+                                              comment.id
+                                          ? Padding(
+                                              padding: EdgeInsets.only(
+                                                  top: 3,
+                                                  left: Get.width * 0.2),
+                                              child: TextField(
+                                                autofocus: true,
+                                                cursorColor: AppColors.green,
+                                                controller: homeController
+                                                    .commentReplyController,
+                                                decoration: InputDecoration(
+                                                  hintText: "Write a reply...",
+                                                  hintStyle: TextStyle(
+                                                      color:
+                                                          AppColors.Slate_gray),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: AppColors.green,
+                                                        width: 2),
+                                                  ),
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: AppColors.green,
+                                                        width: 1.5),
+                                                  ),
+                                                  suffixIcon: IconButton(
+                                                    icon: Icon(Icons.send,
+                                                        color: AppColors.green),
+                                                    onPressed: () {
+                                                     homeController.addReplyToComment(widget.post.id,comment.id,widget.post,homeController.commentReplyController.text);
+                                                      homeController
+                                                          .commentReplyController
+                                                          .clear();
+                                                      homeController
+                                                          .selectedCommentId
+                                                          .value = '';
+                                                      print(
+                                                          "Replying to ${widget.post.comments[index].id}");
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : SizedBox.shrink()),
+                                      Obx(
+                                        () {
+
+                                          return
+                                               Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top: 8,
+                                                      left: Get.width * 0.22),
+                                                  child: ListView.builder(
+                                                    physics:
+                                                        NeverScrollableScrollPhysics(),
+                                                    shrinkWrap: true,
+                                                    itemCount:comment.replies!.length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      var commentReply = comment.replies![index].text;
+                                                      return Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              CircleAvatar(
+                                                                radius: 16,
+                                                                backgroundImage: homeController
+                                                                        .imageUrl
+                                                                        .isNotEmpty
+                                                                    ? NetworkImage(
+                                                                        homeController
+                                                                            .imageUrl
+                                                                            .value)
+                                                                    : AssetImage(
+                                                                            AppImages.person)
+                                                                        as ImageProvider,
+                                                              ),
+                                                              SizedBox(
+                                                                  width: 8),
+                                                              Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Obx(
+                                                                      () =>
+                                                                          Text(
+                                                                            homeController.name.value,
+                                                                            style: GoogleFonts.poppins(
+                                                                                fontSize: 13,
+                                                                                color: AppColors.appColor,
+                                                                                fontWeight: FontWeight.w600),
+                                                                          )),
+                                                                  SizedBox(
+                                                                      height:
+                                                                          1),
+                                                                  Row(
+                                                                    children: [
+                                                                      SizedBox(
+                                                                        width: Get.width *
+                                                                            0.4,
+                                                                        child:
+                                                                            Text(
+                                                                          maxLines:
+                                                                              3,
+                                                                          textAlign:
+                                                                              TextAlign.start,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis,
+                                                                              commentReply,
+                                                                          style: GoogleFonts.poppins(
+                                                                              fontSize: 12,
+                                                                              color: AppColors.appColor,
+                                                                              fontWeight: FontWeight.w400),
+                                                                        ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                          width:
+                                                                              8),
+                                                                      GestureDetector(
+                                                                        onTap:
+                                                                            () {},
+                                                                        child:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .thumb_up_alt_outlined,
+                                                                          size:
+                                                                              16,
+                                                                          color:
+                                                                              Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(height: 12),
+                                                        ],
+                                                      );
+                                                    },
+                                                  ),
+                                                ); // Hide if no replies
+                                        },
+                                      ),
+                                      SizedBox(height: 12),
                                     ],
                                   ),
-
-                                  // Show the TextField only when selectedCommentId matches the current comment
-                                  Obx(() => homeController.selectedCommentId.value == comment.id
-                                      ? Padding(
-                                    padding:  EdgeInsets.only(top: 3,left: Get.width* 0.2),
-                                    child: TextField(
-                                      cursorColor: AppColors.green,
-                                      controller: homeController.commentReplyController,
-                                      decoration: InputDecoration(
-                                        hintText: "Write a reply...",
-                                        hintStyle: TextStyle(color: AppColors.Slate_gray),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(color: AppColors.green, width: 2),
-                                        ),
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(color: AppColors.green, width: 1.5),
-                                        ),
-                                        suffixIcon: IconButton(
-                                          icon: Icon(Icons.send, color: AppColors.green),
-                                          onPressed: () {
-                                            homeController.storeComment(
-                                                widget.post.comments[index].id, // Parent Comment ID
-                                                homeController.commentReplyController.text.trim(),
-                                                homeController.name.value,
-                                                homeController.imageUrl.value
-                                            );
-                                            homeController.commentReplyController.clear();
-                                            homeController.selectedCommentId.value = '';
-                                            print("Replying to ${widget.post.comments[index].id}");
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                      : SizedBox.shrink()),
-                                  Obx(
-                                        () {
-                                      // Filter replies for the specific comment
-                                      var filteredReplies = homeController.commentReplyList
-                                          .where((reply) => reply["commentId"] == comment.id)
-                                          .toList();
-
-                                      return filteredReplies.isNotEmpty
-                                          ? Padding(
-                                        padding: EdgeInsets.only(top: 8, left: Get.width * 0.22),
-                                        child: ListView.builder(
-                                          physics: NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          itemCount: filteredReplies.length,
-                                          itemBuilder: (context, index) {
-                                            var commentReply = filteredReplies[index];
-
-                                            return Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    CircleAvatar(
-                                                      radius: 16,
-                                                      backgroundImage: homeController.imageUrl.isNotEmpty
-                                                          ? NetworkImage(homeController.imageUrl.value)
-                                                          : AssetImage(AppImages.person) as ImageProvider,
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Obx(() => Text(
-                                                          homeController.name.value,
-                                                          style: GoogleFonts.poppins(
-                                                              fontSize: 13,
-                                                              color: AppColors.appColor,
-                                                              fontWeight: FontWeight.w600),
-                                                        )),
-                                                        SizedBox(height: 1),
-                                                        Row(
-                                                          children: [
-                                                            SizedBox(
-                                                              width: Get.width * 0.4,
-                                                              child: Text(
-                                                                maxLines: 3,
-                                                                textAlign: TextAlign.start,
-                                                                overflow: TextOverflow.ellipsis,
-                                                                commentReply["commentText"] ?? "",
-                                                                style: GoogleFonts.poppins(
-                                                                    fontSize: 12,
-                                                                    color: AppColors.appColor,
-                                                                    fontWeight: FontWeight.w400),
-                                                              ),
-                                                            ),
-                                                            SizedBox(width: 8),
-                                                            GestureDetector(
-                                                              onTap: () {},
-                                                              child: Icon(
-                                                                Icons.thumb_up_alt_outlined,
-                                                                size: 16,
-                                                                color: Colors.black,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(height: 12),
-                                              ],
-                                            );
-                                          },
-                                        ),
-                                      )
-                                          : SizedBox.shrink(); // Hide if no replies
-                                    },
-                                  ),
-                                  SizedBox(height: 12),
-                                ],
-                              ),
-                            );
-                          },
-                        )),
+                                );
+                              },
+                            )),
                         widget.currentUser == false
                             ? Container(
                                 padding: const EdgeInsets.symmetric(
@@ -907,4 +1036,3 @@ class _CustomCard2State extends State<CustomCard2> {
         ));
   }
 }
-

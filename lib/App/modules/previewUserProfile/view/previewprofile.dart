@@ -130,7 +130,17 @@ class PreviewProfileScreen extends StatelessWidget {
                                     fontSize: 14,
                                     color: AppColors.Slate_gray),
                               ),
-                            ))
+                            )),
+                        if(controller.isFollow == true)
+                          AppButton(
+                            textColor: AppColors.white,
+                            height: 30,
+                            hasBorder: true,
+                            radius: 32,
+                            width: Get.width * 0.52,
+                            text: "Gift CPTs to followers", onPressed: () {
+
+                          },),
                       ],
                     ),
                   ),

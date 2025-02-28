@@ -1,14 +1,16 @@
+import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class RandomizedShimmerPost extends StatelessWidget {
-  const RandomizedShimmerPost({super.key});
+  const RandomizedShimmerPost({super.key, required this.count});
+  final int count;
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: 10,
+      itemCount: count,
       padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
@@ -33,7 +35,7 @@ class RandomizedShimmerPost extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 10),
-                  Container(height: 200, color: Colors.grey[400]!),
+                  Container(height: Get.height * 0.42, color: Colors.grey[400]!),
                   SizedBox(height: 10),
                   Container(
                       height: 16,

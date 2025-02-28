@@ -112,32 +112,37 @@ class ProfileScreen extends StatelessWidget {
                             //   height: 25,
                             //   width: 25,
                             // )
+
                           ],
                         ),
                         SizedBox(height: 4),
                         SizedBox(height: 8),
                         currentUser == false
-                            ? ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  shadowColor: Colors.transparent,
-                                  side: BorderSide(
-                                      color: AppColors.textFieldHintColor,
-                                      width: 0.4),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
+                            ? Column(
+                              children: [
+                                ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.transparent,
+                                      shadowColor: Colors.transparent,
+                                      side: BorderSide(
+                                          color: AppColors.textFieldHintColor,
+                                          width: 0.4),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                    ),
+                                    onPressed: () {},
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: AppText(
+                                          text: '+ Follow',
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                          color: AppColors.Slate_gray),
+                                    ),
                                   ),
-                                ),
-                                onPressed: () {},
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: AppText(
-                                      text: '+ Follow',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                      color: AppColors.Slate_gray),
-                                ),
-                              )
+                              ],
+                            )
                             : SizedBox(),
                       ],
                     ),

@@ -54,8 +54,8 @@ Widget AppButton({
           children: [
             if (image != null) ...[
               Image.asset(
-                image, // Image if provided
-                height: height * 0.5, // Image height relative to button height
+                image,
+                height: height * 0.5,
                 width: height * 0.5, // Image width relative to button height
               ),
               SizedBox(width: 10), // Space between image and text

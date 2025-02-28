@@ -13,7 +13,8 @@ import 'dots.dart';
 
 class SliderWithLabels extends StatelessWidget {
   final Post post;
-  const SliderWithLabels({super.key, required this.post});
+  final int index;
+  const SliderWithLabels({super.key, required this.post, required this.index});
 
 
   @override
@@ -30,49 +31,44 @@ class SliderWithLabels extends StatelessWidget {
           Row(
             children: [
               SizedBox(width: 5,),
-              Dot(
-                color: post.rate.toString() == '1'||post.rate.toString() == '2'||post.rate.toString() == '3'?Colors.yellowAccent:AppColors.Slate_gray,
-                onPress: () async{
-                  var body={
-                    "rate":1
-                  };
-                  var response = await HttpService.post('/ratePost/${post.id}',body );
-                  homeController.newRate.value = response["rate"] ?? 0;
-                  ToastUtil.showToast(message: "Rated successfully with rate: Wow");
-                },),
+              Obx(
+                    () =>  Dot(
+                  color: post.rate?.value == 1||post.rate?.value == 2||post.rate?.value == 3?Colors.yellowAccent:AppColors.Slate_gray,
+                  onPress: () async{
+                    await homeController.addPostRating(post.id,1,index);
+                  },),
+              ),
               Expanded(
-                child: Divider(
-                  thickness: 1,
-                  color: post.rate.toString() == '2'||post.rate.toString() == '3'?Colors.yellowAccent:AppColors.Slate_gray,
+                child: Obx(
+                      () =>  Divider(
+                    thickness: 1,
+                    color: post.rate?.value == 2||post.rate?.value == 3?Colors.yellowAccent:AppColors.Slate_gray,
+                  ),
                 ),
               ),
-              Dot(
-                color: post.rate.toString() == '2'||post.rate.toString() == '3'?Colors.yellowAccent:AppColors.Slate_gray,
+              Obx(
+                    () =>  Dot(
+                  color: post.rate?.value == 2||post.rate?.value == 3?Colors.yellowAccent:AppColors.Slate_gray,
 
-                onPress: () async{
-                  var body={
-                    "rate":2
-                  };
-                  var response = await HttpService.post('/ratePost/${post.id}',body );
-                  homeController.newRate.value = response["rate"] ?? 0;
-                  ToastUtil.showToast(message: "Rated successfully with rate: Up");
-                },),
+                  onPress: () async{
+                    await homeController.addPostRating(post.id,2,index);
+                  },),
+              ),
               Expanded(
-                child: Divider(
-                  thickness: 1,
-                  color: post.rate.toString() == '3'?Colors.yellowAccent:AppColors.Slate_gray,
+                child: Obx(
+                      () =>  Divider(
+                    thickness: 1,
+                    color: post.rate?.value == 3?Colors.yellowAccent:AppColors.Slate_gray,
+                  ),
                 ),
               ),
-              Dot(
-                color: post.rate.toString() == '3'?Colors.yellowAccent:AppColors.Slate_gray,
-                onPress: () async{
-                  var body={
-                    "rate":3,
-                  };
-                  var response = await HttpService.post('/ratePost/${post.id}',body );
-                  homeController.newRate.value = response["rate"] ?? 0;
-                  ToastUtil.showToast(message: "Rated successfully with rate: Awesome");
-                },),
+              Obx(
+                    () =>  Dot(
+                  color: post.rate?.value == 3?Colors.yellowAccent:AppColors.Slate_gray,
+                  onPress: () async{
+                    await homeController.addPostRating(post.id,3,index);
+                  },),
+              ),
               SizedBox(width: 25,),
               // Expanded(
               //   child: Divider(

@@ -4,24 +4,29 @@ class Post {
   final String id;
   final String title;
   final String description;
-  final RxList<String> tags; // Using RxList for tags
+  final RxList<String> tags;
   final String category;
-  final RxList<String> media; // Using RxList for media
-  final RxList<String> mediaUrls; // Using RxList for mediaUrls
+  final RxList<String> media;
+  final RxList<String> mediaUrls;
   final CreatedBy createdBy;
-  final RxInt views; // Reactive views count
-  RxInt likesCount; // Using RxInt for likesCount
-  final RxInt commentsCount; // Using RxInt for commentsCount
-  RxBool isLikedByUser; // Using RxBool for isLikedByUser
-  RxBool isReported; // Using RxBool for isReported
-  RxBool isViewed; // Using RxBool for isViewed
-  RxList<Comment> comments; // Using RxList for comments
-  final RxList<String> reports; // New field for reports
-  final RxList<String> viewedBy; // New field for viewedBy
-  final RxList<String> block; // New field for blocked users
-  final RxList<String> ratings; // New field for ratings
-  RxBool isRated; // New field for isRated
-  RxInt? rate; // New field for rate
+  final RxInt views;
+  RxInt likesCount;
+  final RxInt commentsCount;
+  RxBool isLikedByUser;
+  RxBool isReported;
+  RxBool isViewed;
+  RxList<Comment> comments;
+  final RxList<String> reports;
+  final RxList<String> viewedBy;
+  final RxList<String> block;
+  final RxList<String> ratings;
+  RxBool isRated;
+  RxInt rate = 0.obs;
+
+  // New Fields
+  final RxList<String> savedBy; // Users who saved the post
+  final RxList<String> sharedBy; // Users who shared the post
+  RxBool isShared; // Whether the post has been shared by the user
 
   Post({
     required this.id,
@@ -44,7 +49,11 @@ class Post {
     required this.block,
     required this.ratings,
     required this.isRated,
-    this.rate,
+    required this.rate,
+    // New Fields
+    required this.savedBy,
+    required this.sharedBy,
+    required this.isShared,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -69,7 +78,11 @@ class Post {
       block: RxList<String>((json['block'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
       ratings: RxList<String>((json['ratings'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
       isRated: RxBool(json['isRated'] ?? false),
-      rate: json['rate'] != null ? RxInt(json['rate']) : null,
+      rate: RxInt(json['rate'] ?? 0),
+      // New Fields
+      savedBy: RxList<String>((json['savedBy'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
+      sharedBy: RxList<String>((json['sharedBy'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
+      isShared: RxBool(json['isShared'] ?? false),
     );
   }
 }
@@ -80,11 +93,17 @@ class CreatedBy {
   final String email;
   final String profileImage;
 
+  // New Fields
+  final String bio; // Short bio of the user
+  final String phone; // Contact number
+
   CreatedBy({
     required this.id,
     required this.name,
     required this.email,
     required this.profileImage,
+    required this.bio,
+    required this.phone,
   });
 
   factory CreatedBy.fromJson(Map<String, dynamic> json) {
@@ -93,6 +112,8 @@ class CreatedBy {
       name: json['name'] ?? 'Unknown',
       email: json['email'] ?? '',
       profileImage: json['profileImage'] ?? '',
+      bio: json['bio'] ?? '',
+      phone: json['phone'] ?? '',
     );
   }
 }
@@ -102,18 +123,24 @@ class Comment {
   final User user;
   final String text;
   final DateTime createdAt;
-  RxList<String>? likes;  // Made optional
-  RxList<Comment>? replies; // Made optional
-  RxBool? isCommentLikedByUser;
+  RxList<String>? likes;
+  RxList<Comment>? replies;
+  RxBool isCommentLikedByUser;
+
+  // New Fields
+  final RxInt repliesCount; // Number of replies
+  RxBool isEdited; // Whether the comment has been edited
 
   Comment({
     required this.id,
     required this.user,
     required this.text,
     required this.createdAt,
-    this.likes, // Optional
-    this.replies, // Optional
-    this.isCommentLikedByUser,
+    this.likes,
+    this.replies,
+    required this.isCommentLikedByUser,
+    required this.repliesCount,
+    required this.isEdited,
   });
 
   factory Comment.fromJson(Map<String, dynamic> json) {
@@ -129,6 +156,8 @@ class Comment {
           ? RxList<Comment>((json['replies'] as List<dynamic>).map((x) => Comment.fromJson(x)).toList())
           : null,
       isCommentLikedByUser: RxBool(json['isCommentLikedByUser'] ?? false),
+      repliesCount: RxInt(json['repliesCount'] ?? 0),
+      isEdited: RxBool(json['isEdited'] ?? false),
     );
   }
 }
@@ -139,11 +168,17 @@ class User {
   final String? email;
   final String? profileImage;
 
+  // New Fields
+  final String? status; // User's status message
+  final DateTime? lastSeen; // Last seen timestamp
+
   User({
     required this.id,
     required this.name,
     this.email,
     this.profileImage,
+    this.status,
+    this.lastSeen,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -152,6 +187,8 @@ class User {
       name: json['name'] ?? '',
       email: json['email'],
       profileImage: json['profileImage'],
+      status: json['status'] ?? '',
+      lastSeen: json['lastSeen'] != null ? DateTime.tryParse(json['lastSeen']) : null,
     );
   }
 }

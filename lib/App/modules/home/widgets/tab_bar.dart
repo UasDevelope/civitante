@@ -17,6 +17,7 @@ class HomeTabBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TabBar(
+            physics: NeverScrollableScrollPhysics(),
             isScrollable: false,
             dividerColor: AppColors.white,
             indicator: BoxDecoration(
@@ -26,7 +27,6 @@ class HomeTabBar extends StatelessWidget {
             unselectedLabelColor: Colors.black,
             labelColor: Colors.white,
             onTap: (index) {
-              // Ensure the correct API call when a tab is selected
               if (index == 0) {
                 homeController.fetchAndAssignPosts(followed: true);
               } else {

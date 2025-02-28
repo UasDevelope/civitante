@@ -3,6 +3,8 @@ class AppRoutes {
 
   static get started => '/started';
 
+  static get otpScreen => '/otpScreen';
+
   static get login => '/login';
 
   static get signup => '/signup';
