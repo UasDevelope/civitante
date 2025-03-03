@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: HomeAppbar(
-        backButton: false,
+        backButton: true,
         title: "Bangalore",
         imagePath: AppImages.location, // Optional, can be null
         rightIcon: AppImages.notification,
@@ -27,7 +27,7 @@ class HomeScreen extends StatelessWidget {
           Get.to(NotificationsScreen());
         },
       ),
-      // drawer: CustomDrawer(),
+      drawer: CustomDrawer(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,

@@ -16,27 +16,29 @@ class AllCommunitiesTabBar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TabBar(
-            physics: NeverScrollableScrollPhysics(),
-            controller: controller.tabController,
-            isScrollable: true,
-            tabAlignment: TabAlignment.start,
-            dividerColor: AppColors.white,
-            indicator: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(20), // Rounded corners
+          Center(
+            child: TabBar(
+              physics: NeverScrollableScrollPhysics(),
+              controller: controller.tabController,
+              isScrollable: false,
+              tabAlignment: TabAlignment.center,
+              dividerColor: AppColors.white,
+              indicator: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(20), // Rounded corners
+              ),
+              unselectedLabelColor: Colors.black,
+              labelColor: Colors.white, // Text color for the active tab
+              indicatorPadding: EdgeInsets.zero,
+              labelPadding: EdgeInsets.zero, // Remove additional padding
+              tabs: [
+                _buildTab("New", 0),
+                _buildTab("Top communities", 1),
+                _buildTab("Joined", 2),
+                // _buildTab("Trending", 3),
+                // _buildTab("Dev Recommendations", 4),
+              ],
             ),
-            unselectedLabelColor: Colors.black,
-            labelColor: Colors.white, // Text color for the active tab
-            indicatorPadding: EdgeInsets.zero,
-            labelPadding: EdgeInsets.zero, // Remove additional padding
-            tabs: [
-              _buildTab("New", 0),
-              _buildTab("Top communities", 1),
-              _buildTab("Joined", 2),
-              // _buildTab("Trending", 3),
-              // _buildTab("Dev Recommendations", 4),
-            ],
           ),
           Expanded(
             child: TabBarView(
@@ -61,9 +63,9 @@ class AllCommunitiesTabBar extends StatelessWidget {
         return Obx(() {
           bool isSelected = controller.selectedTabIndex.value == index;
           return Container(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             margin:
-                EdgeInsets.symmetric(horizontal: 16), // Spacing between tabs
+                EdgeInsets.symmetric(horizontal: 8), // Spacing between tabs
             decoration: BoxDecoration(
               border: Border.all(
                 color: Colors.black,

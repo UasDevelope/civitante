@@ -372,7 +372,7 @@ class HomeController extends GetxController{
         var comment = filteredPosts[index].comments[commentIndex];
 
         if (comment.isCommentLikedByUser != null) {
-          comment.isCommentLikedByUser!.value = isLiked;
+          comment.isCommentLikedByUser.value = isLiked;
         } else {
           print("Warning: isCommentLikedByUser is null for comment ID: $commentId");
         }

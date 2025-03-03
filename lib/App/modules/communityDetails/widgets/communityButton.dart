@@ -6,8 +6,8 @@ import '../../../utilse/widgets.dart';
 
 Widget buildActionCommunityButton(String assetPath, VoidCallback onTap) {
   return SizedBox(
-    height: 40,
-    width: 40,
+    height: 30,
+    width: 30,
     child: GestureDetector(
       onTap: onTap,
       child: Image.asset(

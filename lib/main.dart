@@ -1,5 +1,3 @@
-import 'package:civitante/App/modules/auth/view/face_id_screen.dart';
-import 'package:civitante/App/modules/auth/view/otp_screen.dart';
 import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:firebase_core/firebase_core.dart';

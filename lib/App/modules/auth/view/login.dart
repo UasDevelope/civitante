@@ -57,9 +57,9 @@ class LoginScreen extends StatelessWidget {
                               borderColor: AppColors.textFieldHintColor,
                               controller: controller.loginEmailController),
                           customTextFormField(
-                              validatore: (value) {
-                                return Validators.passwordValidator(value!);
-                              },
+                              // validatore: (value) {
+                              //   return Validators.passwordValidator(value!);
+                              // },
                               borderRadius: 25,
                               obscureText: controller.obSecureText.value,
                               obsecureonTap: () {

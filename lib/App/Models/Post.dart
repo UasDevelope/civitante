@@ -124,7 +124,7 @@ class Comment {
   final String text;
   final DateTime createdAt;
   RxList<String>? likes;
-  RxList<Comment>? replies;
+  RxList<Comment> replies; // Always initialized
   RxBool isCommentLikedByUser;
 
   // New Fields
@@ -137,11 +137,11 @@ class Comment {
     required this.text,
     required this.createdAt,
     this.likes,
-    this.replies,
+    RxList<Comment>? replies, // Now optional
     required this.isCommentLikedByUser,
     required this.repliesCount,
     required this.isEdited,
-  });
+  }) : replies = replies ?? RxList<Comment>(); // Ensuring replies is never null
 
   factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
@@ -152,15 +152,14 @@ class Comment {
       likes: json['likes'] != null
           ? RxList<String>((json['likes'] as List<dynamic>).map((e) => e.toString()).toList())
           : null,
-      replies: json['replies'] != null
-          ? RxList<Comment>((json['replies'] as List<dynamic>).map((x) => Comment.fromJson(x)).toList())
-          : null,
+      replies: RxList<Comment>((json['replies'] as List<dynamic>? ?? []).map((x) => Comment.fromJson(x)).toList()), // Ensuring replies is never null
       isCommentLikedByUser: RxBool(json['isCommentLikedByUser'] ?? false),
       repliesCount: RxInt(json['repliesCount'] ?? 0),
       isEdited: RxBool(json['isEdited'] ?? false),
     );
   }
 }
+
 
 class User {
   final String id;

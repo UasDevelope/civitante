@@ -108,6 +108,7 @@ class PostsDetailsScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 6),
               child: Obx(
                 () =>  CustomCard2(
+                  isCommunityDetails: false,
                   haveDescAndTags: true,
                   topTitle: false,
                   post: post.value,

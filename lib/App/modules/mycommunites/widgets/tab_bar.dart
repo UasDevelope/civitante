@@ -17,25 +17,28 @@ class MyCommunitiesTabBar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TabBar(
-            physics: NeverScrollableScrollPhysics(),
-            controller: controller.tabController,
-            isScrollable: true,
-            tabAlignment: TabAlignment.start,
-            dividerColor: AppColors.white,
-            indicator: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(20), // Rounded corners
+          Center(
+            child: TabBar(
+              physics: NeverScrollableScrollPhysics(),
+              controller: controller.tabController,
+              isScrollable: false,
+              tabAlignment: TabAlignment.center,
+              dividerColor: AppColors.white,
+              indicator: BoxDecoration(
+                color: Colors.black,
+
+                borderRadius: BorderRadius.circular(20),
+              ),
+              unselectedLabelColor: Colors.black,
+              labelColor: Colors.white,
+              indicatorPadding: EdgeInsets.zero,
+              labelPadding: EdgeInsets.zero, // Remove additional padding
+              tabs: [
+                _buildTab("Accepted", 0),
+                _buildTab("Pending", 1),
+                _buildTab("Rejected", 2),
+              ],
             ),
-            unselectedLabelColor: Colors.black,
-            labelColor: Colors.white, // Text color for the active tab
-            indicatorPadding: EdgeInsets.zero,
-            labelPadding: EdgeInsets.zero, // Remove additional padding
-            tabs: [
-              _buildTab("Accepted", 0),
-              _buildTab("Pending", 1),
-              _buildTab("Rejected", 2),
-            ],
           ),
           Expanded(
             child: TabBarView(
@@ -63,9 +66,9 @@ class MyCommunitiesTabBar extends StatelessWidget {
               final bool isSelected =
                   controller.selectedStatus.value == text.toLowerCase();
               return Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 margin: EdgeInsets.symmetric(
-                    horizontal: 16), // Spacing between tabs
+                    horizontal: 4), // Spacing between tabs
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: Colors.black,

@@ -12,7 +12,7 @@ class HomeTabBar extends StatelessWidget {
     final homeController = Get.find<HomeController>();
 
     return DefaultTabController(
-      length: 2, // Correct number of tabs
+      length: 2,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

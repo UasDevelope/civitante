@@ -6,6 +6,7 @@ import 'package:civitante/App/utilse/widgets.dart';
 import 'package:intl/intl.dart';
 import '../../../service/payment_service.dart';
 import '../../../shared/strings.dart';
+import '../../previewUserProfile/widget/status_row.dart';
 import '../controller/wallet_controller.dart';
 import 'BuyPointsScreen.dart';
 
@@ -64,8 +65,9 @@ class WalletScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    StatsRow(),
                     SizedBox(
-                      height: 36,
+                      height: 26,
                     ),
                     _buildPointsCard(),
                     const SizedBox(height: 23),

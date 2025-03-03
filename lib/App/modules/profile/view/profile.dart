@@ -1,4 +1,6 @@
+import 'package:civitante/App/modules/followlist/view/followlist_screen.dart';
 import 'package:civitante/App/modules/home/widgets/homeAppbar.dart';
+import 'package:civitante/App/modules/kpi/view/kpis_screen.dart';
 import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/shared/app_button.dart';
 import 'package:civitante/App/shared/app_text.dart';
@@ -96,24 +98,25 @@ class ProfileScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: AppText(
-                                  text: controller.name.value,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  color: AppColors.appColor),
-                            ),
-                            // Image.asset(
-                            //   AppImages.share,
-                            //   height: 25,
-                            //   width: 25,
-                            // )
-
-                          ],
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //
+                        //     // Image.asset(
+                        //     //   AppImages.share,
+                        //     //   height: 25,
+                        //     //   width: 25,
+                        //     // )
+                        //
+                        //   ],
+                        // ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: AppText(
+                              text: controller.name.value,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              color: AppColors.appColor),
                         ),
                         SizedBox(height: 4),
                         SizedBox(height: 8),
@@ -147,6 +150,14 @@ class ProfileScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+                  Expanded(
+                    child: AppButton(
+                      height: 30,
+                      textColor: AppColors.white,
+                      text: "KPIs & Stats", onPressed: () {
+                      Get.to(KpisScreen(),transition: Transition.zoom,duration: Duration(microseconds: 300));
+                    },),
+                  )
                 ],
               ),
             )),
@@ -166,7 +177,9 @@ class ProfileScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  StatItem(title: 'Posts', value: controller.posts.length),
+                  StatItem(
+
+                      title: 'Posts', value: controller.posts.length),
                   VerticalDivider(
                     color: Colors.grey,
                     thickness: 1,
@@ -175,7 +188,10 @@ class ProfileScreen extends StatelessWidget {
                     endIndent: 10,
                   ),
                   StatItem(
-                      title: 'Followers', value: controller.followers.value),
+                    onPress: () {
+                      Get.to(FollowListScreen(isFollowing: false,userID: controller.userId,isCurrentUser: true,));
+                    },
+                      title: 'Followers', value: controller.followers.value,),
                   VerticalDivider(
                     color: Colors.grey,
                     thickness: 1,
@@ -184,6 +200,9 @@ class ProfileScreen extends StatelessWidget {
                     endIndent: 10,
                   ),
                   StatItem(
+                    onPress: () {
+                      Get.to(FollowListScreen(isFollowing: true,userID: controller.userId,isCurrentUser: true,));
+                    },
                       title: 'Following', value: controller.following.value),
                 ],
               ),
@@ -191,9 +210,10 @@ class ProfileScreen extends StatelessWidget {
         // Divider(),
         //
         // SizedBox(height: 16),
-        StatsRow(),
-        SizedBox(height: 16,),
+        // StatsRow(),
 
+        Divider(),
+        SizedBox(height: 8,),
         Obx(() {
           if (controller.isLoading.value) {
             return ProfileGridViewShimmer();
@@ -231,25 +251,29 @@ class ProfileScreen extends StatelessWidget {
 class StatItem extends StatelessWidget {
   final String title;
   final int value;
+  final VoidCallback? onPress;
 
-  const StatItem({required this.title, required this.value});
+  const StatItem({required this.title, required this.value,this.onPress});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        AppText(
-            text: value.toString(),
-            fontWeight: FontWeight.w600,
-            fontSize: 18,
-            color: AppColors.appColor),
-        SizedBox(height: 4),
-        AppText(
-            text: title,
-            fontWeight: FontWeight.w500,
-            fontSize: 14,
-            color: AppColors.Slate_gray),
-      ],
+    return GestureDetector(
+      onTap: onPress,
+      child: Column(
+        children: [
+          AppText(
+              text: value.toString(),
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+              color: AppColors.appColor),
+          SizedBox(height: 4),
+          AppText(
+              text: title,
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+              color: AppColors.Slate_gray),
+        ],
+      ),
     );
   }
 }
