@@ -156,7 +156,8 @@ class TransactionHistoryScreen extends StatelessWidget {
   }
 
   void _handleBuyPoints(BuildContext context) async {
-    if (controller.pointsData.value?.paymentId != true) {
+    print('value here is ${controller.pointsData.value?.paymentId }');
+    if (controller.pointsData.value?.paymentId ==false) {
       Get.to(() => BuyPointsScreen());
     } else {
       final success = await PaymentService().makePayment(context);

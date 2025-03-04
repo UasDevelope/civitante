@@ -64,7 +64,8 @@ class WalletController extends GetxController {
       } else {
         print(response);
         pointsData.value = PointsResponse.fromJson(response);
-
+        pointsData.value?.paymentId = response['paymentId'] ?? false;
+        print('Here Payment ID:${pointsData.value?.paymentId} ');
       }
     } catch (e) {
       errorMessage.value = 'Failed to load points: ${e.toString()}';
@@ -87,7 +88,9 @@ class WalletController extends GetxController {
 
         if (response != null && response['error'] == null) {
           isloading.value = false;
+          loadPoints();
           print("Points purchased successfully: ${response}");
+          Get.back();
           return response; // Successful response
         } else {
           isloading.value = false;
@@ -117,7 +120,6 @@ class WalletController extends GetxController {
       var response = await HttpService.get('/getPoints');
 
       if (response != null && response['error'] == null) {
-
         return response; // Successful response
       } else {
         String errorMsg = response['details'] ?? "Unknown error occurred";

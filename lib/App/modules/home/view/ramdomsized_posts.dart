@@ -311,12 +311,13 @@ class _CustomCard2State extends State<CustomCard2> {
                     ));
                   },
                   child: CircleAvatar(
-                    backgroundImage: widget.post.createdBy.profileImage.isNotEmpty
-                        ? NetworkImage(
-                            widget.post.createdBy.profileImage.toString() ??
-                                AppImages.person)
-                        : AssetImage(AppImages.person.toString() ??
-                            AppImages.person), // Replace with your image
+                    backgroundImage:
+                        widget.post.createdBy.profileImage.isNotEmpty
+                            ? NetworkImage(
+                                widget.post.createdBy.profileImage.toString() ??
+                                    AppImages.person)
+                            : AssetImage(AppImages.person.toString() ??
+                                AppImages.person), // Replace with your image
                   ),
                 ),
                 title: InkWell(
@@ -681,32 +682,29 @@ class _CustomCard2State extends State<CustomCard2> {
                                                                       .w400),
                                                     ),
                                                   ),
-                                                  GestureDetector(
-                                                      onTap: () {
-                                                        HttpService.post(
-                                                            "/addLikeToComment/${widget.post.id}/${widget.post.comments[index].id}",
-                                                            {});
+                                                  Obx(
+                                                        () => GestureDetector(
+                                                      onTap: () async {
+                                                        var response = await HttpService.post(
+                                                          "/addLikeToComment/${widget.post.id}/${widget.post.comments[index].id}",
+                                                          {},
+                                                        );
+
+                                                        // Update the value inside RxBool
+                                                        widget.post.comments[index].isCommentLikedByUser.value = response['isLike'];
                                                       },
                                                       child: Icon(
-                                                        widget
-                                                                    .post
-                                                                    .comments[
-                                                                        index]
-                                                                    .isCommentLikedByUser ==
-                                                                true
+                                                        widget.post.comments[index].isCommentLikedByUser.value
                                                             ? Icons.thumb_up_alt
-                                                            : Icons
-                                                                .thumb_up_alt_outlined,
+                                                            : Icons.thumb_up_alt_outlined,
                                                         size: 20,
-                                                        color: widget
-                                                                    .post
-                                                                    .comments[
-                                                                        index]
-                                                                    .isCommentLikedByUser ==
-                                                                true
+                                                        color: widget.post.comments[index].isCommentLikedByUser.value
                                                             ? AppColors.green
-                                                            : AppColor.black,
-                                                      ))
+                                                            : AppColors.appColor,
+                                                      ),
+                                                    ),
+                                                  ),
+
                                                 ],
                                               ),
                                               // Padding(

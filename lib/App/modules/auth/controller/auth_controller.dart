@@ -512,119 +512,119 @@ class AuthController extends GetxController {
     }
   }
 
-  // Future<void> signUpWithApple() async {
-  //   try {
-  //     loading.value = true;
-  //     user.value = await authService.appleSignInMethod();
-  //
-  //     if (user.value != null) {
-  //       User? firebaseUser = user.value?.user;
-  //       String? fullName = firebaseUser?.displayName;
-  //       String? email = firebaseUser?.email;
-  //       String? accessToken = await firebaseUser?.getIdToken();
-  //       var data = {
-  //         "email": email,
-  //         "name": fullName ?? 'Demo',
-  //         "location": {
-  //           "long": locationController.longitude.value,
-  //           "lat": locationController.latitude.value
-  //         },
-  //         "password": accessToken,
-  //         "costPoints": 10
-  //       };
-  //       print('Daata here : $data');
-  //       var response = await HttpService.post('/register', data);
-  //       print(response);
-  //       if (response != null && response['error'] == null) {
-  //         ToastUtil.showToast(
-  //           message: response['message'] ?? "Signup successful!",
-  //           backgroundColor: Colors.green,
-  //         );
-  //         String token = response['user']['token'];
-  //
-  //         PrefUtil.setString(PrefUtil.userId, token);
-  //         AppConstant().userID = token;
-  //         loading.value = false;
-  //         goToNext(AppRoutes.bottomNav);
-  //       } else {
-  //         loading.value = false;
-  //         String errorMsg = response['details'] != null
-  //             ? jsonDecode(response['details'])['message']
-  //             : "Unknown error occurred";
-  //
-  //         ToastUtil.showToast(
-  //           message: "Error: $errorMsg",
-  //           backgroundColor: Colors.red,
-  //         );
-  //         loading.value = false;
-  //       }
-  //
-  //       // Log the data
-  //       log("User Info: Full Name: $fullName, Email: $email, Token: $accessToken");
-  //     } else {
-  //       ToastUtil.showToast(
-  //         message: "Apple Sign-Up Failed",
-  //         backgroundColor: Colors.red,
-  //       );
-  //     }
-  //   } catch (e) {
-  //     print("Exception: $e");
-  //   } finally {
-  //     loading.value = false;
-  //   }
-  // }
-  //
-  // Future<void> loginWithApple() async {
-  //   try {
-  //     loading.value = true;
-  //     user.value = await authService.appleSignInMethod();
-  //
-  //     if (user.value != null) {
-  //       User? firebaseUser = user.value?.user;
-  //       String? email = firebaseUser?.email;
-  //       String? accessToken = await firebaseUser?.getIdToken();
-  //       var data = {
-  //         "email": email,
-  //         "password": accessToken,
-  //       };
-  //
-  //       var response = await HttpService.post('/login', data);
-  //       print(response);
-  //       if (response != null && response['error'] == null) {
-  //         ToastUtil.showToast(
-  //           message: response['message'] ?? "Login successful!",
-  //           backgroundColor: Colors.green,
-  //         );
-  //         String token = response['token'];
-  //
-  //         PrefUtil.setString(PrefUtil.userId, token);
-  //         AppConstant().userID = token;
-  //
-  //         loading.value = false;
-  //         goToNext(AppRoutes.bottomNav);
-  //       } else {
-  //         loading.value = false;
-  //         String errorMsg = response['details'] != null
-  //             ? jsonDecode(response['details'])['message']
-  //             : "Unknown error occurred";
-  //
-  //         ToastUtil.showToast(
-  //           message: "Error: $errorMsg",
-  //           backgroundColor: Colors.red,
-  //         );
-  //         loading.value = false;
-  //       }
-  //       log("User Info: Email: $email, Token: $accessToken");
-  //     } else {
-  //       ToastUtil.showToast(
-  //         message: "Google Sign-In Failed",
-  //         backgroundColor: Colors.red,
-  //       );
-  //     }
-  //   } catch (e) {
-  //     print("Exception: $e");
-  //   } finally {
-  //     loading.value = false;
-  //   }
-  // }
+  Future<void> signUpWithApple() async {
+    try {
+      loading.value = true;
+      user.value = await authService.appleSignInMethod();
+
+      if (user.value != null) {
+        User? firebaseUser = user.value?.user;
+        String? fullName = firebaseUser?.displayName;
+        String? email = firebaseUser?.email;
+        String? accessToken = await firebaseUser?.getIdToken();
+        var data = {
+          "email": email,
+          "name": fullName ?? 'Demo',
+          "location": {
+            "long": locationController.longitude.value,
+            "lat": locationController.latitude.value
+          },
+          "password": accessToken,
+          "costPoints": 10
+        };
+        print('Daata here : $data');
+        var response = await HttpService.post('/register', data);
+        print(response);
+        if (response != null && response['error'] == null) {
+          ToastUtil.showToast(
+            message: response['message'] ?? "Signup successful!",
+            backgroundColor: Colors.green,
+          );
+          String token = response['user']['token'];
+
+          PrefUtil.setString(PrefUtil.userId, token);
+          AppConstant().userID = token;
+          loading.value = false;
+          goToNext(AppRoutes.bottomNav);
+        } else {
+          loading.value = false;
+          String errorMsg = response['details'] != null
+              ? jsonDecode(response['details'])['message']
+              : "Unknown error occurred";
+
+          ToastUtil.showToast(
+            message: "Error: $errorMsg",
+            backgroundColor: Colors.red,
+          );
+          loading.value = false;
+        }
+
+        // Log the data
+        log("User Info: Full Name: $fullName, Email: $email, Token: $accessToken");
+      } else {
+        ToastUtil.showToast(
+          message: "Apple Sign-Up Failed",
+          backgroundColor: Colors.red,
+        );
+      }
+    } catch (e) {
+      print("Exception: $e");
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  Future<void> loginWithApple() async {
+    try {
+      loading.value = true;
+      user.value = await authService.appleSignInMethod();
+
+      if (user.value != null) {
+        User? firebaseUser = user.value?.user;
+        String? email = firebaseUser?.email;
+        String? accessToken = await firebaseUser?.getIdToken();
+        var data = {
+          "email": email,
+          "password": accessToken,
+        };
+
+        var response = await HttpService.post('/login', data);
+        print(response);
+        if (response != null && response['error'] == null) {
+          ToastUtil.showToast(
+            message: response['message'] ?? "Login successful!",
+            backgroundColor: Colors.green,
+          );
+          String token = response['token'];
+
+          PrefUtil.setString(PrefUtil.userId, token);
+          AppConstant().userID = token;
+
+          loading.value = false;
+          goToNext(AppRoutes.bottomNav);
+        } else {
+          loading.value = false;
+          String errorMsg = response['details'] != null
+              ? jsonDecode(response['details'])['message']
+              : "Unknown error occurred";
+
+          ToastUtil.showToast(
+            message: "Error: $errorMsg",
+            backgroundColor: Colors.red,
+          );
+          loading.value = false;
+        }
+        log("User Info: Email: $email, Token: $accessToken");
+      } else {
+        ToastUtil.showToast(
+          message: "Google Sign-In Failed",
+          backgroundColor: Colors.red,
+        );
+      }
+    } catch (e) {
+      print("Exception: $e");
+    } finally {
+      loading.value = false;
+    }
+  }
 }

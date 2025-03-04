@@ -21,7 +21,7 @@ class Post {
   final RxList<String> block; // New field for blocked users
   final RxList<String> ratings; // New field for ratings
   RxBool isRated; // New field for isRated
-  RxInt? rate; // New field for rate
+  RxInt rate; // New field for rate
 
   Post({
     required this.id,
@@ -44,7 +44,7 @@ class Post {
     required this.block,
     required this.ratings,
     required this.isRated,
-    this.rate,
+    required this.rate,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -52,10 +52,18 @@ class Post {
       id: json['_id'] ?? '',
       title: json['title'] ?? 'Untitled',
       description: json['description'] ?? '',
-      tags: RxList<String>((json['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
+      tags: RxList<String>(
+          (json['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
+              []),
       category: json['category'] ?? '',
-      media: RxList<String>((json['media'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
-      mediaUrls: RxList<String>((json['mediaUrls'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
+      media: RxList<String>((json['media'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          []),
+      mediaUrls: RxList<String>((json['mediaUrls'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          []),
       createdBy: CreatedBy.fromJson(json['createdBy'] ?? {}),
       views: RxInt(json['views'] ?? 0),
       likesCount: RxInt(json['likesCount'] ?? 0),
@@ -63,13 +71,28 @@ class Post {
       isLikedByUser: RxBool(json['isLikedByUser'] ?? false),
       isReported: RxBool(json['isReported'] ?? false),
       isViewed: RxBool(json['isViewed'] ?? false),
-      comments: RxList<Comment>((json['comments'] as List<dynamic>?)?.map((x) => Comment.fromJson(x)).toList() ?? []),
-      reports: RxList<String>((json['reports'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
-      viewedBy: RxList<String>((json['viewedBy'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
-      block: RxList<String>((json['block'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
-      ratings: RxList<String>((json['ratings'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
+      comments: RxList<Comment>((json['comments'] as List<dynamic>?)
+              ?.map((x) => Comment.fromJson(x))
+              .toList() ??
+          []),
+      reports: RxList<String>((json['reports'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          []),
+      viewedBy: RxList<String>((json['viewedBy'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          []),
+      block: RxList<String>((json['block'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          []),
+      ratings: RxList<String>((json['ratings'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          []),
       isRated: RxBool(json['isRated'] ?? false),
-      rate: json['rate'] != null ? RxInt(json['rate']) : null,
+      rate: RxInt(json['rate'] ?? 0),
     );
   }
 }
@@ -102,9 +125,9 @@ class Comment {
   final User user;
   final String text;
   final DateTime createdAt;
-  RxList<String>? likes;  // Made optional
+  RxList<String>? likes; // Made optional
   RxList<Comment>? replies; // Made optional
-  RxBool? isCommentLikedByUser;
+  final RxBool isCommentLikedByUser;
 
   Comment({
     required this.id,
@@ -113,7 +136,7 @@ class Comment {
     required this.createdAt,
     this.likes, // Optional
     this.replies, // Optional
-    this.isCommentLikedByUser,
+    required this.isCommentLikedByUser,
   });
 
   factory Comment.fromJson(Map<String, dynamic> json) {
@@ -121,12 +144,17 @@ class Comment {
       id: json['_id'] ?? '',
       user: User.fromJson(json['user'] ?? {}),
       text: json['text'] ?? '',
-      createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
+      createdAt:
+          DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
       likes: json['likes'] != null
-          ? RxList<String>((json['likes'] as List<dynamic>).map((e) => e.toString()).toList())
+          ? RxList<String>((json['likes'] as List<dynamic>)
+              .map((e) => e.toString())
+              .toList())
           : null,
       replies: json['replies'] != null
-          ? RxList<Comment>((json['replies'] as List<dynamic>).map((x) => Comment.fromJson(x)).toList())
+          ? RxList<Comment>((json['replies'] as List<dynamic>)
+              .map((x) => Comment.fromJson(x))
+              .toList())
           : null,
       isCommentLikedByUser: RxBool(json['isCommentLikedByUser'] ?? false),
     );

@@ -180,7 +180,8 @@ class WalletScreen extends StatelessWidget {
   }
 
   void _handleBuyPoints(BuildContext context) async {
-    if (controller.pointsData.value?.paymentId != true) {
+
+    if (controller.pointsData.value?.paymentId == true) {
       Get.to(() => BuyPointsScreen());
     } else {
       final success = await PaymentService().makePayment(context);
