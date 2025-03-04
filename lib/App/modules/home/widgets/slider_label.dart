@@ -16,10 +16,10 @@ class SliderWithLabels extends StatelessWidget {
   final int index;
   const SliderWithLabels({super.key, required this.post, required this.index});
 
-
   @override
   Widget build(BuildContext context) {
     final homeController = Get.find<HomeController>();
+
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: Column(
@@ -122,39 +122,105 @@ class SliderWithLabels extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                     fontSize: 8),
 
-                // SizedBox(
-                //   width: 6,
-                // ),
-                AppText(
-                  text: '     Up',
-                  fontWeight: FontWeight.w400,
-                  fontSize: 8,
-                  color: AppColors.Slate_gray,
+
+    return Obx(
+          () => Padding(
+        padding: const EdgeInsets.only(left: 8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(height: 10),
+            // Slider Row with dots
+            Row(
+              children: [
+                const SizedBox(width: 5),
+                Dot(
+                  color: homeController.newRate.value >= 1
+                      ? Colors.yellowAccent
+                      : AppColors.Slate_gray,
+                  onPress: () async {
+                    var response = await HttpService.post(
+                        '/ratePost/${post.id}', {"rate": 1});
+                    homeController.newRate.value = response["rate"] ?? 0;
+                    ToastUtil.showToast(
+                        message: "Rated successfully with rate: Wow");
+                  },
                 ),
-                // SizedBox(
-                //   width: 40,
-                // ),
-                // AppText(
-                //     text: AppStrings.l_ll_buy_that,
-                //     fontWeight: FontWeight.w400,
-                //     color: AppColors.Slate_gray,
-                //     fontSize: 8),
-                // SizedBox(
-                //   width: 1,
-                // ),
-                AppText(
-                  text: 'Awesome',
-                  fontWeight: FontWeight.w400,
-                  fontSize: 8,
-                  color: AppColors.Slate_gray,
+                Expanded(
+                  child: Divider(
+                    thickness: 1,
+                    color: homeController.newRate.value >= 2
+                        ? Colors.yellowAccent
+                        : AppColors.Slate_gray,
+                  ),
                 ),
-                // SizedBox(),
+                Dot(
+                  color: homeController.newRate.value >= 2
+                      ? Colors.yellowAccent
+                      : AppColors.Slate_gray,
+                  onPress: () async {
+                    var response = await HttpService.post(
+                        '/ratePost/${post.id}', {"rate": 2});
+                    homeController.newRate.value = response["rate"] ?? 0;
+                    ToastUtil.showToast(
+                        message: "Rated successfully with rate: Up");
+                  },
+                ),
+                Expanded(
+                  child: Divider(
+                    thickness: 1,
+                    color: homeController.newRate.value == 3
+                        ? Colors.yellowAccent
+                        : AppColors.Slate_gray,
+                  ),
+                ),
+                Dot(
+                  color: homeController.newRate.value == 3
+                      ? Colors.yellowAccent
+                      : AppColors.Slate_gray,
+                  onPress: () async {
+                    var response = await HttpService.post(
+                        '/ratePost/${post.id}', {"rate": 3});
+                    homeController.newRate.value = response["rate"] ?? 0;
+                    ToastUtil.showToast(
+                        message: "Rated successfully with rate: Awesome");
+                  },
+                ),
+                const SizedBox(width: 25),
               ],
             ),
-          ),
-          // Lock Icon
-        ],
+            // Labels Row
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  AppText(
+                    text: "Wow",
+                    color: AppColors.Slate_gray,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 8,
+                  ),
+                  AppText(
+                    text: 'Up',
+                    fontWeight: FontWeight.w400,
+                    fontSize: 8,
+                    color: AppColors.Slate_gray,
+                  ),
+                  AppText(
+                    text: 'Awesome',
+                    fontWeight: FontWeight.w400,
+                    fontSize: 8,
+                    color: AppColors.Slate_gray,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
+

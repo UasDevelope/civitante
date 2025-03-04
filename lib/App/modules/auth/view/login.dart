@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:auth_buttons/auth_buttons.dart';
 import 'package:civitante/App/shared/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_recaptcha_v2/flutter_easy_recaptcha_v2.dart';
@@ -276,6 +277,7 @@ class CustomTooltip extends StatelessWidget {
                         ),
                         child: AppText(text: "Skip",fontSize: 14,color: AppColors.white),
                       ),
+
                     ),
                     SizedBox(width: 10,),
                     GestureDetector(
@@ -285,6 +287,7 @@ class CustomTooltip extends StatelessWidget {
                         decoration:BoxDecoration(
                             color: AppColors.blue,
                             borderRadius: BorderRadius.only(topRight: Radius.circular(8),bottomLeft: Radius.circular(8),bottomRight: Radius.circular(8))
+
 
                         ),
                         child: AppText(text: "Next",fontSize: 14,color: AppColors.white),

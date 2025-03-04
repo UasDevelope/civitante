@@ -234,7 +234,9 @@ class HomeController extends GetxController{
           user: User(id: post.createdBy.id,
               name: post.createdBy.name),
           text: commentController.text,
+
           createdAt: DateTime.now(), isCommentLikedByUser: false.obs, repliesCount: 0.obs, isEdited: false.obs,
+
         );
 
         // Add comment to observable list

@@ -748,6 +748,8 @@ class _CustomCard2State extends State<CustomCard2> {
                                                         ),
                                                       ),
                                                     ),
+
+
                                                   ],
                                                 ),
                                               ],
@@ -918,6 +920,7 @@ class _CustomCard2State extends State<CustomCard2> {
                                                 );
                                               },
                                             ),
+
                                           ),
                                         ),
 

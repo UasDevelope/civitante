@@ -104,6 +104,7 @@ class BuyPointsScreen extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {
                       controller.buyPoints();
+
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: controller.selectedAmount.value > 0

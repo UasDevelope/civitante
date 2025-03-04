@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
@@ -37,28 +38,28 @@ class AuthServices {
     }
   }
 
-  // Apple Sign-In
-  // Future<UserCredential?> appleSignInMethod() async {
-  //   try {
-  //     var credential = await SignInWithApple.getAppleIDCredential(
-  //       scopes: [
-  //         AppleIDAuthorizationScopes.email,
-  //         AppleIDAuthorizationScopes.fullName,
-  //       ],
-  //     );
-  //
-  //     final oAuthProvider = OAuthProvider("apple.com");
-  //     final AuthCredential authCredential = oAuthProvider.credential(
-  //       idToken: credential.identityToken,
-  //       accessToken: credential.authorizationCode,
-  //     );
-  //
-  //     return await auth.signInWithCredential(authCredential);
-  //   } catch (e) {
-  //     print("Apple Sign-In Exception: $e");
-  //     return null;
-  //   }
-  // }
+ // Apple Sign-In
+  Future<UserCredential?> appleSignInMethod() async {
+    try {
+      var credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      final oAuthProvider = OAuthProvider("apple.com");
+      final AuthCredential authCredential = oAuthProvider.credential(
+        idToken: credential.identityToken,
+        accessToken: credential.authorizationCode,
+      );
+
+      return await auth.signInWithCredential(authCredential);
+    } catch (e) {
+      print("Apple Sign-In Exception: $e");
+      return null;
+    }
+  }
 
   Future<void> signOut() async {
     try {
