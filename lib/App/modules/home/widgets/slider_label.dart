@@ -1,14 +1,8 @@
-import 'dart:developer';
-import 'dart:io';
-
-import 'package:civitante/App/service/http_service.dart';
-import 'package:civitante/App/utilse/toast_util.dart';
 import 'package:flutter/material.dart';
 
 import '../../../Models/Post.dart';
 import '../../../utilse/widgets.dart';
 import '../controller/home_controller.dart';
-import 'comment.dart';
 import 'dots.dart';
 
 class SliderWithLabels extends StatelessWidget {
@@ -19,57 +13,76 @@ class SliderWithLabels extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeController = Get.find<HomeController>();
-
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           // Slider Row with dots
           Row(
             children: [
-              SizedBox(width: 5,),
+              SizedBox(
+                width: 5,
+              ),
               Obx(
-                    () =>  Dot(
-                  color: post.rate?.value == 1||post.rate?.value == 2||post.rate?.value == 3?Colors.yellowAccent:AppColors.Slate_gray,
-                  onPress: () async{
-                    await homeController.addPostRating(post.id,1,index);
-                  },),
+                () => Dot(
+                  color: post.rate?.value == 1 ||
+                          post.rate?.value == 2 ||
+                          post.rate?.value == 3
+                      ? Colors.yellowAccent
+                      : AppColors.Slate_gray,
+                  onPress: () async {
+                    await homeController.addPostRating(post.id, 1, index);
+                  },
+                ),
               ),
               Expanded(
                 child: Obx(
-                      () =>  Divider(
+                  () => Divider(
                     thickness: 1,
-                    color: post.rate?.value == 2||post.rate?.value == 3?Colors.yellowAccent:AppColors.Slate_gray,
+                    color: post.rate?.value == 2 || post.rate?.value == 3
+                        ? Colors.yellowAccent
+                        : AppColors.Slate_gray,
                   ),
                 ),
               ),
               Obx(
-                    () =>  Dot(
-                  color: post.rate?.value == 2||post.rate?.value == 3?Colors.yellowAccent:AppColors.Slate_gray,
-
-                  onPress: () async{
-                    await homeController.addPostRating(post.id,2,index);
-                  },),
+                () => Dot(
+                  color: post.rate?.value == 2 || post.rate?.value == 3
+                      ? Colors.yellowAccent
+                      : AppColors.Slate_gray,
+                  onPress: () async {
+                    await homeController.addPostRating(post.id, 2, index);
+                  },
+                ),
               ),
               Expanded(
                 child: Obx(
-                      () =>  Divider(
+                  () => Divider(
                     thickness: 1,
-                    color: post.rate?.value == 3?Colors.yellowAccent:AppColors.Slate_gray,
+                    color: post.rate?.value == 3
+                        ? Colors.yellowAccent
+                        : AppColors.Slate_gray,
                   ),
                 ),
               ),
               Obx(
-                    () =>  Dot(
-                  color: post.rate?.value == 3?Colors.yellowAccent:AppColors.Slate_gray,
-                  onPress: () async{
-                    await homeController.addPostRating(post.id,3,index);
-                  },),
+                () => Dot(
+                  color: post.rate?.value == 3
+                      ? Colors.yellowAccent
+                      : AppColors.Slate_gray,
+                  onPress: () async {
+                    await homeController.addPostRating(post.id, 3, index);
+                  },
+                ),
               ),
-              SizedBox(width: 25,),
+              SizedBox(
+                width: 25,
+              ),
               // Expanded(
               //   child: Divider(
               //     thickness: 1,
@@ -122,105 +135,39 @@ class SliderWithLabels extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                     fontSize: 8),
 
-
-    return Obx(
-          () => Padding(
-        padding: const EdgeInsets.only(left: 8.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 10),
-            // Slider Row with dots
-            Row(
-              children: [
-                const SizedBox(width: 5),
-                Dot(
-                  color: homeController.newRate.value >= 1
-                      ? Colors.yellowAccent
-                      : AppColors.Slate_gray,
-                  onPress: () async {
-                    var response = await HttpService.post(
-                        '/ratePost/${post.id}', {"rate": 1});
-                    homeController.newRate.value = response["rate"] ?? 0;
-                    ToastUtil.showToast(
-                        message: "Rated successfully with rate: Wow");
-                  },
+                // SizedBox(
+                //   width: 6,
+                // ),
+                AppText(
+                  text: '     Up',
+                  fontWeight: FontWeight.w400,
+                  fontSize: 8,
+                  color: AppColors.Slate_gray,
                 ),
-                Expanded(
-                  child: Divider(
-                    thickness: 1,
-                    color: homeController.newRate.value >= 2
-                        ? Colors.yellowAccent
-                        : AppColors.Slate_gray,
-                  ),
+                // SizedBox(
+                //   width: 40,
+                // ),
+                // AppText(
+                //     text: AppStrings.l_ll_buy_that,
+                //     fontWeight: FontWeight.w400,
+                //     color: AppColors.Slate_gray,
+                //     fontSize: 8),
+                // SizedBox(
+                //   width: 1,
+                // ),
+                AppText(
+                  text: 'Awesome',
+                  fontWeight: FontWeight.w400,
+                  fontSize: 8,
+                  color: AppColors.Slate_gray,
                 ),
-                Dot(
-                  color: homeController.newRate.value >= 2
-                      ? Colors.yellowAccent
-                      : AppColors.Slate_gray,
-                  onPress: () async {
-                    var response = await HttpService.post(
-                        '/ratePost/${post.id}', {"rate": 2});
-                    homeController.newRate.value = response["rate"] ?? 0;
-                    ToastUtil.showToast(
-                        message: "Rated successfully with rate: Up");
-                  },
-                ),
-                Expanded(
-                  child: Divider(
-                    thickness: 1,
-                    color: homeController.newRate.value == 3
-                        ? Colors.yellowAccent
-                        : AppColors.Slate_gray,
-                  ),
-                ),
-                Dot(
-                  color: homeController.newRate.value == 3
-                      ? Colors.yellowAccent
-                      : AppColors.Slate_gray,
-                  onPress: () async {
-                    var response = await HttpService.post(
-                        '/ratePost/${post.id}', {"rate": 3});
-                    homeController.newRate.value = response["rate"] ?? 0;
-                    ToastUtil.showToast(
-                        message: "Rated successfully with rate: Awesome");
-                  },
-                ),
-                const SizedBox(width: 25),
+                // SizedBox(),
               ],
             ),
-            // Labels Row
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AppText(
-                    text: "Wow",
-                    color: AppColors.Slate_gray,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 8,
-                  ),
-                  AppText(
-                    text: 'Up',
-                    fontWeight: FontWeight.w400,
-                    fontSize: 8,
-                    color: AppColors.Slate_gray,
-                  ),
-                  AppText(
-                    text: 'Awesome',
-                    fontWeight: FontWeight.w400,
-                    fontSize: 8,
-                    color: AppColors.Slate_gray,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+          // Lock Icon
+        ],
       ),
     );
   }
 }
-
