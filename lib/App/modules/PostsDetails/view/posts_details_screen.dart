@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:civitante/App/Models/Post.dart';
 import 'package:civitante/App/modules/PostsDetails/controller/posts_details_controller.dart';
 import 'package:civitante/App/utilse/widgets.dart';
@@ -13,9 +12,9 @@ class PostsDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final arguments = Get.arguments as Map<String, dynamic>;
-    final post = arguments["data"] as Post;
+    final Rx<Post> post = (arguments["data"] as Post).obs;
     final currentUser = arguments["currentUser"] as bool;
-    log("Posts title is ${post.title}$currentUser");
+    log("Posts title is ${post.value.title}$currentUser");
     return Scaffold(
       backgroundColor: Colors.white, // Change the background color
       appBar: HomeAppbar(
@@ -107,12 +106,15 @@ class PostsDetailsScreen extends StatelessWidget {
             // ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 6),
-              child: CustomCard2(
-                haveDescAndTags: true,
-                topTitle: false,
-                post: post,
-                currentUser: currentUser,
-                haveComments: true,
+              child: Obx(
+                () =>  CustomCard2(
+                  isCommunityDetails: false,
+                  haveDescAndTags: true,
+                  topTitle: false,
+                  post: post.value,
+                  currentUser: currentUser,
+                  haveComments: true,
+                ),
               ),
             ),
             SizedBox(

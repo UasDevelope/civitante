@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:math';
 import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
 import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/constant.dart';
@@ -15,6 +16,30 @@ import '../../../utilse/toast_util.dart';
 import '../../../utilse/uploadImage.dart';
 
 class AuthController extends GetxController {
+  RxInt currentTooltipIndex = 0.obs;
+
+  final List<String> tooltipMessages = [
+    "Welcome to the login screen!",
+    "Enter your email or username",
+    "Enter your password",
+    "Check this box to stay logged in",
+    "Click here if you forgot your password",
+    "Press this button to log in",
+    "Sign up if you don’t have an account"
+  ];
+
+  void nextTooltip() {
+    if (currentTooltipIndex.value < tooltipMessages.length - 1) {
+      currentTooltipIndex.value++;
+    } else {
+      currentTooltipIndex.value = -1; // Hide tooltips
+    }
+  }
+
+  void skipTooltips() {
+    currentTooltipIndex.value = -1;
+  }
+
   RxBool obSecureText = RxBool(false);
   Rx<Position?> positioned = Rx<Position?>(null);
   RxBool isLocationFetched = RxBool(false);
@@ -75,7 +100,7 @@ class AuthController extends GetxController {
 
     // Timer(Duration(seconds: 2), () {
     Get.toNamed(route);
-    log('==============Redirecting to $route================>Routes-------->${route}');
+    print('==============Redirecting to $route================>Routes-------->${route}');
 
     loading.value = false;
     // });
@@ -118,7 +143,7 @@ class AuthController extends GetxController {
       signupPasswordController.clear();
       SignupConfirmPasswordController.clear();
       // CustomLoadingDialog.closeLoadingDialog();
-      goToNext(AppRoutes.bottomNav);
+      goToNext(AppRoutes.faceIDScreen);
     } else {
       //CustomLoadingDialog.closeLoadingDialog();
       loading.value = false;
@@ -165,7 +190,7 @@ class AuthController extends GetxController {
         //   CustomLoadingDialog.closeLoadingDialog();
         // PrefUtil.setString(PrefUtil.userId, response["user"]["id"]);
         AppConstant().userID = response["user"]["id"];
-        log("Response is $response");
+        print("Response is $response");
         // Show success message
         ToastUtil.showToast(
           message: response['message'] ?? "Registration successful!",
@@ -438,7 +463,7 @@ class AuthController extends GetxController {
           );
           loading.value = false;
         }
-        log("User Info: Email: $email, Token: $accessToken");
+        print("User Info: Email: $email, Token: $accessToken");
       } else {
         ToastUtil.showToast(
           message: "Google Sign-In Failed",
@@ -483,7 +508,7 @@ class AuthController extends GetxController {
           PrefUtil.setString(PrefUtil.userId, token);
           AppConstant().userID = token;
           loading.value = false;
-          goToNext(AppRoutes.bottomNav);
+          goToNext(AppRoutes.faceIDScreen);
         } else {
           loading.value = false;
           String errorMsg = response['details'] != null
@@ -498,7 +523,7 @@ class AuthController extends GetxController {
         }
 
         // Log the data
-        log("User Info: Full Name: $fullName, Email: $email, Token: $accessToken");
+        print("User Info: Full Name: $fullName, Email: $email, Token: $accessToken");
       } else {
         ToastUtil.showToast(
           message: "Google Sign-Up Failed",

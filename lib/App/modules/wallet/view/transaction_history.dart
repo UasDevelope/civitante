@@ -5,6 +5,7 @@ import 'package:civitante/App/utilse/widgets.dart';
 import 'package:intl/intl.dart';
 import '../../../service/payment_service.dart';
 import '../../../shared/strings.dart';
+import '../../previewUserProfile/widget/status_row.dart';
 import '../controller/wallet_controller.dart';
 import 'BuyPointsScreen.dart';
 
@@ -56,6 +57,8 @@ class TransactionHistoryScreen extends StatelessWidget {
                   // const SizedBox(height: 24),
 
                   // Transaction History
+                  StatsRow(),
+                  SizedBox(height: 16,),
                   _buildHistorySection(),
                 ],
               ),

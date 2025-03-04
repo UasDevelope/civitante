@@ -1,4 +1,5 @@
 import 'package:civitante/App/modules/drawer/view/drawer.dart';
+import 'package:civitante/App/modules/followlist/view/followlist_screen.dart';
 import 'package:civitante/App/modules/home/widgets/homeAppbar.dart';
 import 'package:civitante/App/shared/app_button.dart';
 import 'package:civitante/App/shared/app_text.dart';
@@ -75,7 +76,7 @@ class PreviewProfileScreen extends StatelessWidget {
         Obx(() => Padding(
               padding: EdgeInsets.only(left: 16.0, right: 16, top: 16),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CircleAvatar(
                     radius: 40,
@@ -130,7 +131,17 @@ class PreviewProfileScreen extends StatelessWidget {
                                     fontSize: 14,
                                     color: AppColors.Slate_gray),
                               ),
-                            ))
+                            )),
+                        if(controller.isFollow == true)
+                          AppButton(
+                            textColor: AppColors.white,
+                            height: 20,
+                            hasBorder: true,
+                            radius: 32,
+                            width: Get.width * 0.50,
+                            text: "Gift CPTs to followers", onPressed: () {
+
+                          },),
                       ],
                     ),
                   ),
@@ -161,8 +172,14 @@ class PreviewProfileScreen extends StatelessWidget {
                     indent: 10,
                     endIndent: 10,
                   ),
-                  StatItem(
-                      title: 'Followers', value: controller.followers.value),
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(FollowListScreen(isFollowing: false,userID:controller.id));
+                    },
+                    child: StatItem(
+
+                        title: 'Followers', value: controller.followers.value),
+                  ),
                   VerticalDivider(
                     color: Colors.grey,
                     thickness: 1,
@@ -170,16 +187,22 @@ class PreviewProfileScreen extends StatelessWidget {
                     indent: 10,
                     endIndent: 10,
                   ),
-                  StatItem(
-                      title: 'Following', value: controller.following.value),
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(FollowListScreen(isFollowing: true,userID: controller.id,));
+                    },
+                    child: StatItem(
+                        title: 'Following', value: controller.following.value),
+                  ),
                 ],
               ),
             )),
 
-        SizedBox(height: 6),
-        Divider(),
-        SizedBox(height: 16),
-        // StatsRow(),
+        // SizedBox(height: 6),
+        // Divider(),
+        // SizedBox(height: 16),
+        StatsRow(),
+        SizedBox(height: 16,),
 
         Obx(() => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),

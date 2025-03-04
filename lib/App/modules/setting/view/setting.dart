@@ -1,5 +1,4 @@
 import 'package:civitante/App/controller/controller_locate.dart';
-import 'package:civitante/App/modules/bucket/view/bucket.dart';
 import 'package:civitante/App/modules/profile/view/edit_profile.dart';
 import 'package:civitante/App/service/auth_services.dart';
 import 'package:civitante/App/shared/app_text.dart';
@@ -11,8 +10,6 @@ import 'package:civitante/App/utilse/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-
 import '../../../service/http_service.dart';
 import '../../../utilse/constant.dart';
 import '../../../utilse/toast_util.dart';
@@ -87,6 +84,12 @@ class SettingScreen extends StatelessWidget {
                         Get.to(EditProfileScreen());
                       },
                       title: AppStrings.Edit_Profile),
+                  buildDivider(),
+                  buildSectionRow(
+                      onTap: () {
+                      },
+                      title: "Manage My Communities"),
+
                   // buildDivider(),
                   // buildSectionRow(
                   //     onTap: () {

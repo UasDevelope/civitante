@@ -91,6 +91,7 @@ class HomeAppbar extends StatelessWidget implements PreferredSizeWidget {
             onPressed: onRightIconPressed1,
           ),
       ],
+
     );
   }
 

@@ -39,6 +39,7 @@ class _CivitanteAppState extends State<CivitanteApp> {
           AppRoutes.splash, // Ensure AppRoutes.splash is defined correctly.
       initialBinding:
           InitialBinding(), // Ensure InitialBinding() is correctly set up.
+      // home: OtpScreen(),
       defaultTransition:
           Transition.fadeIn, // Optional: for smoother page transitions.
     );

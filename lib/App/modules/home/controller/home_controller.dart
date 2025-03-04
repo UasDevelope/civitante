@@ -9,7 +9,32 @@ import '../../../service/http_service.dart';
 import '../../../utilse/pref.dart';
 import '../../../utilse/toast_util.dart';
 
-class HomeController extends GetxController {
+class HomeController extends GetxController{
+
+  RxString selectedCommentId = ''.obs;
+  late TabController tabController;
+  var selectedTabIndex = 0.obs;
+  var commentReplyList = <Map<String, String>>[].obs;
+  void storeComment(String commentId, String commentText, String userId,String userImage) {
+    Map<String, String> commentData = {
+      "commentId": commentId,
+      "commentText": commentText,
+      "userId": userId,
+      "userImage":userImage,
+    };
+    commentReplyList.add(commentData);
+    log("Updated Comment List: $commentReplyList");
+  }
+
+
+  void toggleReplyBox(String commentId) {
+    if (selectedCommentId.value == commentId) {
+      selectedCommentId.value = '';
+    } else {
+      selectedCommentId.value = commentId;
+    }
+  }
+
   RxInt newRate = 0.obs;
   RxMap<String, int> newRates = <String, int>{}.obs; // Store rating per post
 
@@ -19,6 +44,7 @@ class HomeController extends GetxController {
   RxList<Post> posts = <Post>[].obs; // Original list of posts
   RxList<Post> filteredPosts = <Post>[].obs; // New list for filtered posts
   final TextEditingController commentController = TextEditingController();
+  final TextEditingController commentReplyController = TextEditingController();
   RxBool isPostLoading = false.obs;
   RxString selectCatagory = "General".obs;
   RxString selectedCategory = "General".obs;
@@ -208,8 +234,9 @@ class HomeController extends GetxController {
           user: User(id: post.createdBy.id,
               name: post.createdBy.name),
           text: commentController.text,
-          createdAt: DateTime.now(),
-          isCommentLikedByUser: false.obs
+
+          createdAt: DateTime.now(), isCommentLikedByUser: false.obs, repliesCount: 0.obs, isEdited: false.obs,
+
         );
 
         // Add comment to observable list
@@ -226,6 +253,66 @@ class HomeController extends GetxController {
       ToastUtil.showToast(message: "$e", backgroundColor: Colors.red);
     } finally {}
   }
+  Future<void> addReplyToComment(String postId, String commentId, Post post,String text) async {
+    String userId = PrefUtil.getString(PrefUtil.userId);
+    try {
+      var data = {"userId": userId, "text": text};
+      log('Reply requested data is $data');
+
+      final response = await HttpService.post("/addReplyToComment/$postId/$commentId", data);
+      log("Reply response is $response");
+
+      final errorMessage = _parseErrorMessage(response);
+      print("Response of Points is: $errorMessage");
+
+      if (errorMessage == "Not enough points to reply") {
+        Get.dialog(
+          AlertDialog(
+            backgroundColor: AppColors.light_gray,
+            title: AppText(text: "Dear User", fontWeight: FontWeight.w600),
+            content: AppText(text: errorMessage, fontSize: 14),
+            actions: [
+              AppButton(
+                textColor: AppColors.light_gray,
+                text: "Buy Now!",
+                onPressed: () {
+                  Get.to(WalletScreen());
+                },
+              )
+            ],
+          ),
+        );
+        commentReplyController.clear();
+      } else {
+        // Create new reply object
+        final newReply = Comment(
+          id: UniqueKey().toString(),
+          user: User(id: userId, name: "Current User"),
+          text: text,
+          createdAt: DateTime.now(),
+          isCommentLikedByUser: false.obs,
+          repliesCount: 0.obs,
+          isEdited: false.obs,
+        );
+
+        // Find the parent comment and add the reply
+        for (var comment in post.comments) {
+          if (comment.id == commentId) {
+            comment.replies ??= RxList<Comment>(); // Ensure replies list exists
+            comment.replies!.add(newReply);
+            comment.replies!.refresh(); // Refresh UI
+            comment.repliesCount.value++;
+            break;
+          }
+        }
+        commentController.clear();
+      }
+    } catch (e) {
+      ToastUtil.showToast(message: "$e", backgroundColor: Colors.red);
+    }
+  }
+
+
 
   Future<int> addLikeToPost(String postId, int index) async {
     try {
@@ -276,6 +363,103 @@ class HomeController extends GetxController {
       return 0;
     }
   }
+  Future<void> addLikeToComment(String postId, String commentId, int index, int commentIndex) async {
+    try {
+      var response = await HttpService.post("/addLikeToComment/$postId/$commentId", {});
+
+      print("API Response: $response");
+
+      if (response != null && response['error'] == null) {
+        bool isLiked = response["isLike"] ?? false;
+        var comment = filteredPosts[index].comments[commentIndex];
+
+        if (comment.isCommentLikedByUser != null) {
+          comment.isCommentLikedByUser.value = isLiked;
+        } else {
+          print("Warning: isCommentLikedByUser is null for comment ID: $commentId");
+        }
+      } else {
+        final errorMessage = _parseErrorMessage(response);
+        print("Response Error: $errorMessage");
+
+        if (errorMessage == "Not enough points to like this comment") {
+          Get.dialog(
+            AlertDialog(
+              backgroundColor: AppColors.light_gray,
+              title: AppText(text: "Dear User", fontWeight: FontWeight.w600),
+              content: AppText(text: errorMessage, fontSize: 14),
+              actions: [
+                AppButton(
+                  textColor: AppColors.light_gray,
+                  text: "Buy Now!",
+                  onPressed: () {
+                    Get.to(WalletScreen());
+                  },
+                )
+              ],
+            ),
+          );
+        }
+      }
+    } catch (e, stackTrace) {
+      print("Exception: ${e.toString()}");
+      print("Stack Trace: $stackTrace");
+
+      ToastUtil.showToast(
+        message: "Failed to like comment: ${e.toString()}",
+        backgroundColor: Colors.red,
+      );
+    }
+  }
+  Future<void> addPostRating(String postId, int rating, int index) async {
+    print("Rating Submitted: $rating for Post ID: $postId");
+
+    try {
+      var body = {
+        "rate": rating,
+      };
+      var response = await HttpService.post(
+        "/ratePost/$postId",
+        body,
+      );
+
+      print("API Response: $response");
+
+      if (response != null && response['error'] == null) {
+        int newRating = response["rate"] ?? rating;
+        print("New Rating here: $newRating");
+
+        // Ensure rate is reactive (RxInt)
+        if (filteredPosts[index].rate == null) {
+          filteredPosts[index].rate = RxInt(newRating); // Initialize as RxInt
+        } else {
+          filteredPosts[index].rate.value = newRating;
+        }
+
+        print("Updated Rating: ${filteredPosts[index].rate.value} for Post Index: $index");
+
+        ToastUtil.showToast(
+          message: "Rated successfully with: $newRating ⭐",
+        );
+      } else {
+        final errorMessage = _parseErrorMessage(response);
+        print("Response Error: $errorMessage");
+        ToastUtil.showToast(
+          message: "Failed to rate post: $errorMessage",
+          backgroundColor: Colors.red,
+        );
+      }
+    } catch (e) {
+      print("Exception: ${e.toString()}");
+      ToastUtil.showToast(
+        message: "Failed to rate post: ${e.toString()}",
+        backgroundColor: Colors.red,
+      );
+    }
+  }
+
+
+
   String _parseErrorMessage(dynamic response) {
     try {
       if (response == null) return "Unknown error occurred";

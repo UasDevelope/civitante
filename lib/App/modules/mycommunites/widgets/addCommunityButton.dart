@@ -1,3 +1,4 @@
+import 'package:civitante/App/shared/app_text.dart';
 import 'package:flutter/material.dart';
 
 class AddCommunityButton extends StatelessWidget {
@@ -10,13 +11,11 @@ class AddCommunityButton extends StatelessWidget {
     return ElevatedButton.icon(
       onPressed: onPressed,
       icon: const Icon(Icons.add, color: Colors.black, size: 16),
-      label: const Text(
-        "Add Community",
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-        ),
+      label:  AppText(
+        text: "Create a community",
+        fontSize: 13,
+        fontWeight: FontWeight.w500,
+
       ),
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.white,

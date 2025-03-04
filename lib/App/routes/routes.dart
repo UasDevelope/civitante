@@ -3,6 +3,8 @@ class AppRoutes {
 
   static get started => '/started';
 
+  static get otpScreen => '/otpScreen';
+
   static get login => '/login';
 
   static get signup => '/signup';
@@ -16,6 +18,7 @@ class AppRoutes {
   static get newPassword => "/newPassword";
 
   static get bottomNav => '/bottomNav';
+  static get faceIDScreen => '/faceIDScreen';
 
   static get myCommunity => "/myCommunity";
 
