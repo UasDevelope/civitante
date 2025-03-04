@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-import 'dart:math';
-import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
+
 import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/constant.dart';
 import 'package:civitante/App/utilse/pref.dart';
@@ -13,7 +11,6 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
 import '../../../service/auth_services.dart';
 import '../../../utilse/toast_util.dart';
-import '../../../utilse/uploadImage.dart';
 
 class AuthController extends GetxController {
   RxInt currentTooltipIndex = 0.obs;
@@ -585,7 +582,7 @@ class AuthController extends GetxController {
         }
 
         // Log the data
-        log("User Info: Full Name: $fullName, Email: $email, Token: $accessToken");
+       // log("User Info: Full Name: $fullName, Email: $email, Token: $accessToken");
       } else {
         ToastUtil.showToast(
           message: "Apple Sign-Up Failed",
