@@ -110,49 +110,57 @@ class AuthController extends GetxController {
 
 // Register Normal User
   void registerNormalUser() async {
-    loading.value = true;
-    //  CustomLoadingDialog.showCustomLoadingDialog("Registering user...");
-    var data = {
-      "email": signupEmailController.text,
-      "name": fullNameController.text,
-      "location": {
-        "long": locationController.longitude.value,
-        "lat": locationController.latitude.value
-      },
-      "password": signupPasswordController.text,
-      "costPoints": 10
-    };
+   try {
+     loading.value = true;
+     //  CustomLoadingDialog.showCustomLoadingDialog("Registering user...");
+     var data = {
+       "email": signupEmailController.text,
+       "name": fullNameController.text,
+       "location": {
+         "long": locationController.longitude.value,
+         "lat": locationController.latitude.value
+       },
+       "password": signupPasswordController.text,
+       "costPoints": 10
+     };
 
-    var response = await HttpService.post('/register', data);
+     var response = await HttpService.post('/register', data);
 
-    if (response != null && response['error'] == null) {
-      ToastUtil.showToast(
-        message: response['message'] ?? "Registration successful!",
-        backgroundColor: Colors.green,
-      );
-      String token = response['token'];
-      PrefUtil.setString(PrefUtil.userId, token);
-      AppConstant().userID = token;
-      loading.value = false;
-      signupEmailController.clear();
-      fullNameController.clear();
-      signupLocationController.clear();
-      signupPasswordController.clear();
-      SignupConfirmPasswordController.clear();
-      // CustomLoadingDialog.closeLoadingDialog();
-      goToNext(AppRoutes.faceIDScreen);
-    } else {
-      //CustomLoadingDialog.closeLoadingDialog();
-      loading.value = false;
-      String errorMsg = response['details'] != null
-          ? jsonDecode(response['details'])['message']
-          : "Unknown error occurred";
+     if (response != null && response['error'] == null) {
+       ToastUtil.showToast(
+         message: response['message'] ?? "Registration successful!",
+         backgroundColor: Colors.green,
+       );
 
-      ToastUtil.showToast(
-        message: "Error: $errorMsg",
-        backgroundColor: Colors.red,
-      );
-    }
+       String token = response["user"]['token'];
+       log("Response token is $token");
+       PrefUtil.setString(PrefUtil.userId, token);
+       AppConstant().userID = token;
+       signupEmailController.clear();
+       fullNameController.clear();
+       signupLocationController.clear();
+       signupPasswordController.clear();
+       SignupConfirmPasswordController.clear();
+       // CustomLoadingDialog.closeLoadingDialog();
+       goToNext(AppRoutes.faceIDScreen);
+     } else {
+       //CustomLoadingDialog.closeLoadingDialog();
+       String errorMsg = response['details'] != null
+           ? jsonDecode(response['details'])['message']
+           : "Unknown error occurred";
+
+       ToastUtil.showToast(
+         message: "Error: $errorMsg",
+         backgroundColor: Colors.red,
+       );
+     }
+   }
+   catch(e){
+     log("The error is $e");
+   }
+   finally{
+     loading.value=false;
+   }
   }
 
 // Register Pro User

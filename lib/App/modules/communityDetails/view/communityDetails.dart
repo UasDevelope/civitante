@@ -23,6 +23,7 @@ class MyCommunityDetail extends StatefulWidget {
 }
 
 class _MyCommunityDetailState extends State<MyCommunityDetail> {
+
   final CommunityDetailController controller =
       Get.put(CommunityDetailController());
 
@@ -139,40 +140,48 @@ class _MyCommunityDetailState extends State<MyCommunityDetail> {
                                 Get.toNamed(AppRoutes.editMycommunity,
                                     arguments: {"data": widget.community!});
                               }),
-                              buildActionCommunityButton(AppImages.video, () {
-                                Get.to(NewMeetingView());
+                              // buildActionCommunityButton(AppImages.video, () {
+                              //   Get.to(NewMeetingView());
+                              // }),
+                              buildActionCommunityButton(AppImages.chat, () {
+                                Get.to(CommunityChat(
+                                  communityId: widget.community!.id,
+                                ));
                               }),
-                              Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors
-                                      .light_gray, // Adjust color as needed
-                                ),
-                                child: IconButton(
-                                  onPressed: () {
-                                    Get.to(CommunityChat(
-                                      communityId: widget.community!.id,
-                                    ));
-                                    // Add your chat functionality here
-                                  },
-                                  icon: Icon(
-                                    Icons.chat_outlined,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
+                              // Container(
+                              //   decoration: BoxDecoration(
+                              //     shape: BoxShape.circle,
+                              //     color: AppColors
+                              //         .light_gray, // Adjust color as needed
+                              //   ),
+                              //   child: IconButton(
+                              //     onPressed: () {
+                              //       Get.to(CommunityChat(
+                              //         communityId: widget.community!.id,
+                              //       ));
+                              //       // Add your chat functionality here
+                              //     },
+                              //     icon: Icon(
+                              //       Icons.chat_outlined,
+                              //       color: Colors.white,
+                              //       size: 20,
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                         if (widget.isAllCommunity)
                           Column(
+                            spacing: 10,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               buildActionCommunityButton(AppImages.addCircle, () {
                                 Get.toNamed(AppRoutes.post, arguments: {
                                   "communityId": widget.community!.id
                                 });
                               }),
-                              buildActionCommunityButton(AppImages.comment, () {
+                              buildActionCommunityButton(AppImages.chat, () {
                                 Get.to(CommunityChat(
                                   communityId: widget.community!.id,
                                 ));
@@ -187,7 +196,7 @@ class _MyCommunityDetailState extends State<MyCommunityDetail> {
                     const SizedBox(height: 16),
                     // Description
                     AppText(
-                        text: '${widget.community!.description}',
+                        text: widget.community!.description,
                         fontWeight: FontWeight.w500,
                         fontSize: 14,
                         color: AppColors.Slate_gray),

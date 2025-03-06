@@ -6,97 +6,114 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 
 class ImageUtils {
   /// Compress the image before uploading
   static Future<XFile?> compressImage(XFile originalImage) async {
-    final directory = path.dirname(originalImage.path);
-    final fileName = 'compressed_${path.basename(originalImage.path)}.jpg';
-    final compressedPath = path.join(directory, fileName);
+    try {
+      final directory = await getTemporaryDirectory();
+      final fileName = 'compressed_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final compressedPath = path.join(directory.path, fileName);
 
-    final compressedImage = await FlutterImageCompress.compressAndGetFile(
-      originalImage.path,
-      compressedPath,
-      minWidth: 1920,
-      minHeight: 1080,
-      quality: 90,
-    );
+      // Get original image dimensions (you may need an image package like 'image')
+      // For simplicity, we'll assume avoiding upscaling for now
+      final compressedImage = await FlutterImageCompress.compressAndGetFile(
+        originalImage.path,
+        compressedPath,
+        quality: 85, // Adjust quality as needed
+        // Remove minWidth and minHeight to avoid upscaling, or set dynamically
+      );
 
-    if (compressedImage != null) {
-      final originalSize = await File(originalImage.path).length();
-      final compressedSize = await File(compressedImage.path).length();
+      if (compressedImage != null) {
+        final originalSize = await File(originalImage.path).length();
+        final compressedSize = await File(compressedImage.path).length();
 
-      print('Original Image Size: ${originalSize ~/ 1024} KB');
-      print('Compressed Image Size: ${compressedSize ~/ 1024} KB');
+        log('📷 Original Image Size: ${originalSize ~/ 1024} KB');
+        log('📦 Compressed Image Size: ${compressedSize ~/ 1024} KB');
 
-      return XFile(compressedImage.path);
-    } else {
-      // Compression failed, handle the error
+        if (compressedSize > 5 * 1024 * 1024) {
+          log("⚠️ Compressed image is still too large! Reducing quality...");
+          return await FlutterImageCompress.compressAndGetFile(
+            originalImage.path,
+            compressedPath,
+            quality: 50, // Lower quality further if needed
+          ).then((file) => file != null ? XFile(file.path) : null);
+        }
+
+        return XFile(compressedImage.path);
+      } else {
+        log("❌ Image compression failed.");
+        return null;
+      }
+    } catch (e) {
+      log("🚨 Compression Error: $e");
       return null;
     }
   }
-
-  /// Pick and update image path
+  /// Pick and upload image
   static Future<void> pickAndUpdateImage(RxString pathToUpdate) async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
-      final XFile? compressImage = await ImageUtils.compressImage(image);
-      CustomLoadingDialog.showCustomLoadingDialog("Uploading image....");
-      String imageUrl =
-          await uploadImageToFirebase(File(compressImage?.path ?? image.path));
+      CustomLoadingDialog.showCustomLoadingDialog("Uploading image...");
+      log("Image path is ${image.path}");
+      final XFile? compressedImage = await compressImage(image);
+      final File fileToUpload = File(compressedImage?.path ?? image.path);
+
+      final String imageUrl = await uploadImageToFirebase(fileToUpload);
+
       pathToUpdate.value = imageUrl;
       CustomLoadingDialog.closeLoadingDialog();
     } else {
-      // Show an error message if no image was selected
-      print("Please pick an image");
+      log("⚠️ No image selected.");
     }
   }
 
-  /// Upload the image to Firebase Storage and return the URL
+  /// Upload image to Firebase Storage
   static Future<String> uploadImageToFirebase(File image) async {
     try {
-      // Get the Firebase Storage instance
       final storageRef = FirebaseStorage.instance.ref();
-
-      // Generate a unique file name
-      final fileName = 'public_images/${path.basename(image.path)}';
-
-      // Create a reference to the file's location in Firebase Storage
+      final fileName = 'public_images/${DateTime.now().millisecondsSinceEpoch}_${path.basename(image.path)}';
+      log("file name is $fileName");
       final imageRef = storageRef.child(fileName);
 
-      // Upload the file to Firebase Storage
-      final uploadTask = imageRef.putFile(image);
-      await uploadTask.whenComplete(() => log("Upload task completed"));
+      final metadata = SettableMetadata(contentType: "image/jpeg");
+      log("Uploading with metadata: $metadata");
 
-      // Wait for the upload to complete
+      final uploadTask = imageRef.putFile(image, metadata);
+      await uploadTask.whenComplete(() => log("✅ Upload task completed"));
+
+      // Check upload status explicitly
       final taskSnapshot = await uploadTask;
+      log("Upload state: ${taskSnapshot.state}"); // Should be TaskState.success
+      log("Bytes transferred: ${taskSnapshot.bytesTransferred}/${taskSnapshot.totalBytes}");
 
-      // Get the download URL
+      // Attempt to get the download URL
       final downloadUrl = await taskSnapshot.ref.getDownloadURL();
-      log("Image uploaded successfully! URL: $downloadUrl");
+      log("🚀 Image uploaded successfully! URL: $downloadUrl");
       return downloadUrl;
     } catch (e) {
-      log("Error uploading image: $e");
+      log("❌ Error uploading image: $e");
+      log("Error type: ${e.runtimeType}");
+      if (e is FirebaseException) {
+        log("Code: ${e.code}, Message: ${e.message}");
+      }
       return "";
     }
-  }
-
-  /// Compress and Upload the image to Firebase Storage
+  }  /// Compress and Upload Image
   static Future<String> compressAndUploadImage(String imagePath) async {
     try {
       final compressedImageFile = await compressImage(XFile(imagePath));
       if (compressedImageFile != null) {
-        final imageUrl =
-            await uploadImageToFirebase(File(compressedImageFile.path));
-        return imageUrl; // Return the uploaded image URL
+        return await uploadImageToFirebase(File(compressedImageFile.path));
       } else {
-        log("Image compression failed.");
+        log("❌ Image compression failed.");
         return "";
       }
     } catch (e) {
-      log("Error during compression and upload: $e");
+      log("🚨 Compression & Upload Error: $e");
       return "";
     }
   }

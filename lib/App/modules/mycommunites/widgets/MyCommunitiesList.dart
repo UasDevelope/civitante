@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import '../../AddCommunity/view/addCommunity.dart';
 import '../../loading/empty_data.dart';
 
 class MyCommunitiesList extends StatelessWidget {
@@ -17,6 +18,7 @@ class MyCommunitiesList extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = LocateController.myCommunities;
     return Scaffold(
+
       backgroundColor: AppColors.white,
       body: Obx(() {
         if (controller.communityLoading.value) {
@@ -31,6 +33,7 @@ class MyCommunitiesList extends StatelessWidget {
             itemBuilder: (context, index) {
               final data = controller.filteredCommunities[index];
               return MyCommunitiesCard(
+                isAllCommunity: controller.selectedStatus.value!="accepted",
                 imageUrl: data.image,
                 groupName: data.name,
                 memberCount: data.totalMembers.toString(),
@@ -40,6 +43,40 @@ class MyCommunitiesList extends StatelessWidget {
           );
         }
       }),
+      floatingActionButton: InkWell(
+        onTap: (){
+          Get.to(AddCommunityScreen());
+        },
+        splashColor: Colors.transparent,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppColors.Slate_gray.withOpacity(0.9),
+                AppColors.Slate_gray.withOpacity(1.0),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.Slate_gray.withOpacity(0.4),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.all(16), // Padding for image
+          child: Image.asset(
+            AppImages.add,
+            width: 24, // Adjust size as needed
+            height: 24,
+            color: AppColors.white, // Tint with white for contrast
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -49,12 +86,14 @@ class MyCommunitiesCard extends StatelessWidget {
   final String groupName;
   final String memberCount;
   final MyCommunityModel data;
+  final bool isAllCommunity;
   const MyCommunitiesCard({
     Key? key,
     required this.imageUrl,
     required this.groupName,
     required this.memberCount,
     required this.data,
+    this.isAllCommunity=false,
   }) : super(key: key);
 
   @override
@@ -62,6 +101,7 @@ class MyCommunitiesCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Get.to(MyCommunityDetail(
+          isAllCommunity: isAllCommunity,
           community: data,
         ));
       },

@@ -17,7 +17,7 @@ class FaceIDController extends GetxController {
 
   Future<void> _initializeCamera() async {
     cameras = await availableCameras();
-    cameraController = CameraController(cameras![1], ResolutionPreset.medium);
+    cameraController = CameraController(cameras![0], ResolutionPreset.medium);
     await cameraController!.initialize();
     isCameraInitialized.value = true;
     Future.delayed(Duration(seconds: 7), () {

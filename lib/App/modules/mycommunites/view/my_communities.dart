@@ -45,18 +45,18 @@ class MyCommunitiesScreen extends StatelessWidget {
                     SizedBox(
                       height: Get.height * 0.02,
                     ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Container(
-                        margin: EdgeInsets.only(bottom: 10),
-                        child: AddCommunityButton(
-                          onPressed: () {
-                            Get.to(AddCommunityScreen());
-                            print("Add Community");
-                          },
-                        ),
-                      ),
-                    ),
+                    // Align(
+                    //   alignment: Alignment.topRight,
+                    //   child: Container(
+                    //     margin: EdgeInsets.only(bottom: 10),
+                    //     child: AddCommunityButton(
+                    //       onPressed: () {
+                    //         Get.to(AddCommunityScreen());
+                    //         print("Add Community");
+                    //       },
+                    //     ),
+                    //   ),
+                    // ),
                     Container(
                         height: Get.height / 1.7, child: MyCommunitiesTabBar()),
                   ],

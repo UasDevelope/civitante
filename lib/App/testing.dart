@@ -177,7 +177,6 @@ class ChatScreen extends StatelessWidget {
                     final text = messageController.text.trim();
                     controller.sendMessage(text, true);
                     messageController.clear();
-
                     // Simulate a response and mark the previous message as read
                     Future.delayed(const Duration(seconds: 1), () {
                       controller.sendMessage(
