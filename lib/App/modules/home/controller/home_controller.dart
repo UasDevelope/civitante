@@ -9,11 +9,13 @@ import '../../../service/http_service.dart';
 import '../../../utilse/pref.dart';
 import '../../../utilse/toast_util.dart';
 
-class HomeController extends GetxController{
+class HomeController extends GetxController
+    with GetSingleTickerProviderStateMixin{
 
   RxString selectedCommentId = ''.obs;
   late TabController tabController;
   var selectedTabIndex = 0.obs;
+  var selectedTabValue = "Following".obs;
   var commentReplyList = <Map<String, String>>[].obs;
   void storeComment(String commentId, String commentText, String userId,String userImage) {
     Map<String, String> commentData = {
@@ -535,6 +537,18 @@ class HomeController extends GetxController{
 
   @override
   void onInit() {
+    tabController = TabController(length: 2, vsync: this);
+    tabController.addListener(() {
+      if (!tabController.indexIsChanging) {
+        if (tabController.index == 0) {
+          selectedTabValue.value="Following";
+          fetchAndAssignPosts(followed: true);
+        } else {
+          selectedTabValue.value="Random";
+          fetchAndAssignPosts(randomized: true);
+        }
+        selectedTabIndex.value==tabController.index;
+      }});
     fetchAndAssignPosts(followed: true,randomized: false,communityId: '');
     fetchCurrentUser();
     super.onInit();

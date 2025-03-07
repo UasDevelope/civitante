@@ -18,9 +18,7 @@ class AllCommunitiesTabBar extends StatelessWidget {
         children: [
           Center(
             child: TabBar(
-              physics: NeverScrollableScrollPhysics(),
               controller: controller.tabController,
-              isScrollable: false,
               tabAlignment: TabAlignment.center,
               dividerColor: AppColors.white,
               indicator: BoxDecoration(
@@ -33,7 +31,7 @@ class AllCommunitiesTabBar extends StatelessWidget {
               labelPadding: EdgeInsets.zero, // Remove additional padding
               tabs: [
                 _buildTab("New", 0),
-                _buildTab("Top communities", 1),
+                _buildTab("Top Parties", 1),
                 _buildTab("Joined", 2),
                 // _buildTab("Trending", 3),
                 // _buildTab("Dev Recommendations", 4),
@@ -42,6 +40,7 @@ class AllCommunitiesTabBar extends StatelessWidget {
           ),
           Expanded(
             child: TabBarView(
+              controller: controller.tabController,
               children: [
                 MyCommunitiesList(),
                 MyCommunitiesList(),

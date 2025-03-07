@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart'; // Ensure GetX is imported
+import '../../../utilse/location_controller.dart';
 import '../../../utilse/widgets.dart';
 import '../../bottom/view/bottom_nav.dart';
 import '../widget/menue.dart';
@@ -9,6 +10,8 @@ class CustomDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = LocateController.drawerController;
     final profileController = LocateController.profileController;
+    final LocationController locationController = Get.find<LocationController>();
+
     profileController.fetchAndAssignPosts();
     return Drawer(
       backgroundColor: Colors.white,
@@ -44,10 +47,11 @@ class CustomDrawer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     // Profile Image
+                    
                     CircleAvatar(
                       radius: 25,
                       backgroundImage:
-                          NetworkImage(profileController.imageUrl.value),
+                         profileController.imageUrl.value.isNotEmpty? NetworkImage(profileController.imageUrl.value):AssetImage(AppImages.person),
                     ),
                     SizedBox(width: 12), // Space between image and text
 
@@ -56,7 +60,19 @@ class CustomDrawer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AppText(
-                            text: "Bonjour",
+                            text: (locationController.userLocation["city"] != null &&
+                                locationController.userLocation["city"]
+                                    .toString()
+                                    .trim()
+                                    .isNotEmpty)
+                                ? locationController.userLocation["city"]
+                                : (locationController.userLocation["state"] != null &&
+                                locationController.userLocation["state"]
+                                    .toString()
+                                    .trim()
+                                    .isNotEmpty)
+                                ? locationController.userLocation["state"]
+                                : locationController.userLocation["country"] ?? '',
                             fontSize: 11,
                             fontWeight: FontWeight.w500,
                             color: AppColors.textFieldHintColor),
@@ -90,12 +106,12 @@ class CustomDrawer extends StatelessWidget {
             title: AppStrings.communities,
             routeName: AppRoutes.Allcommunities,
           ),
-          MenuItem(
-            imageColor: AppColors.appColor,
-            imagePath: AppImages.contactAdmin,
-            title: AppStrings.contact_admin,
-            routeName: AppRoutes.contactAdmin,
-          ),
+          // MenuItem(
+          //   imageColor: AppColors.appColor,
+          //   imagePath: AppImages.contactAdmin,
+          //   title: AppStrings.contact_admin,
+          //   routeName: AppRoutes.contactAdmin,
+          // ),
           MenuItem(
             imageColor: AppColors.appColor,
             imagePath: AppImages.setting,

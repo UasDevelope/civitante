@@ -62,9 +62,12 @@ class AllCommunityController extends GetxController
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    fetchAllCommunities();
+
     tabController = TabController(length: 3, vsync: this);
     tabController.addListener(() {
       if (!tabController.indexIsChanging) {
+        print("Index is ${tabController.index}");
         switch (tabController.index) {
           case 0:
             selectedTab.value = "new";

@@ -640,6 +640,137 @@ class _CustomCard2State extends State<CustomCard2> {
               widget.haveComments
                   ? Column(
                       children: [
+                        widget.currentUser == false
+                            ? Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color:
+                            Theme.of(context).scaffoldBackgroundColor,
+                            border: Border(
+                              top: BorderSide(
+                                color: Colors.grey.withOpacity(0.2),
+                                width: 0.5,
+                              ),
+                            ),
+                          ),
+                          child: SafeArea(
+                            top: false,
+                            child: Row(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: CupertinoTextField(
+                                    controller:
+                                    homeController.commentController,
+                                    placeholder: "Write a comment...",
+                                    placeholderStyle: TextStyle(
+                                      color: CupertinoColors
+                                          .placeholderText
+                                          .resolveFrom(context),
+                                      fontSize: 16,
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 10,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: CupertinoColors
+                                          .secondarySystemBackground
+                                          .resolveFrom(context),
+                                      borderRadius:
+                                      BorderRadius.circular(25),
+                                      border: Border.all(
+                                        color: CupertinoColors.systemGrey5
+                                            .resolveFrom(context),
+                                        width: 1,
+                                      ),
+                                    ),
+                                    suffix: ValueListenableBuilder<
+                                        TextEditingValue>(
+                                      valueListenable: homeController
+                                          .commentController,
+                                      builder: (context, value, _) {
+                                        return AnimatedOpacity(
+                                          opacity: value.text.isNotEmpty
+                                              ? 1
+                                              : 0,
+                                          duration: const Duration(
+                                              milliseconds: 200),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              homeController
+                                                  .commentController
+                                                  .clear();
+                                            },
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.only(
+                                                  right: 8),
+                                              child: Icon(
+                                                CupertinoIcons
+                                                    .xmark_circle_fill,
+                                                color: CupertinoColors
+                                                    .systemGrey
+                                                    .resolveFrom(context),
+                                                size: 18,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                ValueListenableBuilder<TextEditingValue>(
+                                  valueListenable:
+                                  homeController.commentController,
+                                  builder: (context, value, _) {
+                                    return AnimatedScale(
+                                      scale: value.text.isNotEmpty
+                                          ? 1
+                                          : 0.85,
+                                      duration: const Duration(
+                                          milliseconds: 200),
+                                      child: CupertinoButton(
+                                        padding: const EdgeInsets.all(12),
+                                        borderRadius:
+                                        BorderRadius.circular(25),
+                                        minSize: 0,
+                                        color: value.text.isNotEmpty
+                                            ? CupertinoColors.systemBlue
+                                            : CupertinoColors.systemGrey4,
+                                        onPressed: value.text.isNotEmpty
+                                            ? () async {
+                                          // Post to backend
+                                          if (widget.currentUser ==
+                                              false) {
+                                            await homeController
+                                                .addComments(
+                                                widget.post.id,
+                                                widget.post);
+                                          }
+                                        }
+                                            : null,
+                                        child: Icon(
+                                          CupertinoIcons
+                                              .arrow_up_circle_fill,
+                                          color: CupertinoColors.white,
+                                          size: 28,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                            : SizedBox(),
                         Obx(() => widget.post.comments.isNotEmpty
                             ? ListView.builder(
                                 shrinkWrap: true,
@@ -932,137 +1063,7 @@ class _CustomCard2State extends State<CustomCard2> {
                                 },
                               )
                             : SizedBox.shrink()),
-                        widget.currentUser == false
-                            ? Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color:
-                                      Theme.of(context).scaffoldBackgroundColor,
-                                  border: Border(
-                                    top: BorderSide(
-                                      color: Colors.grey.withOpacity(0.2),
-                                      width: 0.5,
-                                    ),
-                                  ),
-                                ),
-                                child: SafeArea(
-                                  top: false,
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                        child: CupertinoTextField(
-                                          controller:
-                                              homeController.commentController,
-                                          placeholder: "Write a comment...",
-                                          placeholderStyle: TextStyle(
-                                            color: CupertinoColors
-                                                .placeholderText
-                                                .resolveFrom(context),
-                                            fontSize: 16,
-                                          ),
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 16,
-                                            vertical: 10,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: CupertinoColors
-                                                .secondarySystemBackground
-                                                .resolveFrom(context),
-                                            borderRadius:
-                                                BorderRadius.circular(25),
-                                            border: Border.all(
-                                              color: CupertinoColors.systemGrey5
-                                                  .resolveFrom(context),
-                                              width: 1,
-                                            ),
-                                          ),
-                                          suffix: ValueListenableBuilder<
-                                              TextEditingValue>(
-                                            valueListenable: homeController
-                                                .commentController,
-                                            builder: (context, value, _) {
-                                              return AnimatedOpacity(
-                                                opacity: value.text.isNotEmpty
-                                                    ? 1
-                                                    : 0,
-                                                duration: const Duration(
-                                                    milliseconds: 200),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    homeController
-                                                        .commentController
-                                                        .clear();
-                                                  },
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 8),
-                                                    child: Icon(
-                                                      CupertinoIcons
-                                                          .xmark_circle_fill,
-                                                      color: CupertinoColors
-                                                          .systemGrey
-                                                          .resolveFrom(context),
-                                                      size: 18,
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      ValueListenableBuilder<TextEditingValue>(
-                                        valueListenable:
-                                            homeController.commentController,
-                                        builder: (context, value, _) {
-                                          return AnimatedScale(
-                                            scale: value.text.isNotEmpty
-                                                ? 1
-                                                : 0.85,
-                                            duration: const Duration(
-                                                milliseconds: 200),
-                                            child: CupertinoButton(
-                                              padding: const EdgeInsets.all(12),
-                                              borderRadius:
-                                                  BorderRadius.circular(25),
-                                              minSize: 0,
-                                              color: value.text.isNotEmpty
-                                                  ? CupertinoColors.systemBlue
-                                                  : CupertinoColors.systemGrey4,
-                                              onPressed: value.text.isNotEmpty
-                                                  ? () async {
-                                                      // Post to backend
-                                                      if (widget.currentUser ==
-                                                          false) {
-                                                        await homeController
-                                                            .addComments(
-                                                                widget.post.id,
-                                                                widget.post);
-                                                      }
-                                                    }
-                                                  : null,
-                                              child: Icon(
-                                                CupertinoIcons
-                                                    .arrow_up_circle_fill,
-                                                color: CupertinoColors.white,
-                                                size: 28,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            : SizedBox(),
+
                       ],
                     )
                   : SizedBox.shrink(),

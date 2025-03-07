@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:civitante/App/shared/app_text.dart';
 import 'package:civitante/App/shared/color.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,7 @@ class HomeTabBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TabBar(
-            physics: NeverScrollableScrollPhysics(),
+            controller: homeController.tabController,
             isScrollable: false,
             dividerColor: AppColors.white,
             indicator: BoxDecoration(
@@ -26,20 +28,15 @@ class HomeTabBar extends StatelessWidget {
             ),
             unselectedLabelColor: Colors.black,
             labelColor: Colors.white,
-            onTap: (index) {
-              if (index == 0) {
-                homeController.fetchAndAssignPosts(followed: true);
-              } else {
-                homeController.fetchAndAssignPosts(randomized: true);
-              }
-            },
             tabs: [
-              _buildTab("Following", 0),
-              _buildTab("Random", 1),
+             _buildTab("Following", 0)
+              ,
+             _buildTab("Random", 1) ,
             ],
           ),
           Expanded(
             child: TabBarView(
+              controller: homeController.tabController,
               children: [
                 RandomSizedPostsScreen(followed: true),
                 RandomSizedPostsScreen(randomized: true),
@@ -52,38 +49,31 @@ class HomeTabBar extends StatelessWidget {
   }
 
   Widget _buildTab(String text, int index) {
-    return Builder(
-      builder: (context) {
-        final TabController tabController = DefaultTabController.of(context);
-        return AnimatedBuilder(
-          animation: tabController,
-          builder: (context, child) {
-            final bool isSelected = tabController.index == index;
-
-            return Container(
-              width: Get.width* 0.8, // Set a fixed width
-              padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black,
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(30),
-                color: isSelected ? Colors.black : Colors.transparent,
-              ),
-              child: Center( // Ensure text alignment stays consistent
-                child: AppText(
-                  text: text,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400,
-                  color: isSelected ? Colors.white : AppColors.appColor,
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
+    final homeController = Get.find<HomeController>();
+    return   Obx((){
+      bool isSelected=text==homeController.selectedTabValue.value;
+      log("index is $index and selected is ${homeController.selectedTabIndex.value}");
+      return Container(
+        width: Get.width* 0.8, // Set a fixed width
+        padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.black,
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(30),
+          color: isSelected ? Colors.black : Colors.transparent,
+        ),
+        child: Center( // Ensure text alignment stays consistent
+          child: AppText(
+            text: text,
+            fontSize: 13,
+            fontWeight: FontWeight.w400,
+            color: isSelected ? Colors.white : AppColors.appColor,
+          ),
+        ),
+      );
+    });
 
   }
 }
