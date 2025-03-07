@@ -83,7 +83,7 @@ class AddCommunityScreen extends StatelessWidget {
                       },
                       width: Get.width / 2,
                       borderRadius: 25,
-                      hintText: "Enter Community Name",
+                      hintText: "Enter parties Name",
                       borderColor: AppColors.textFieldHintColor,
                       controller: controller.emailController,
                     ),

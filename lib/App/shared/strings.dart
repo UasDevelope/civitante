@@ -47,9 +47,9 @@ class AppStrings {
 
   static String get Enter_Your_SSN_Number => "Enter Your SSN Number";
 
-  static String get my_communities => "My Communities";
+  static String get my_communities => "My parties";
 
-  static String get communities => "Communities";
+  static String get communities => "parties";
 
   static String get contact_admin => "Contact Admin";
 
@@ -111,7 +111,7 @@ class AppStrings {
   static String get Warning => "Warning!";
 
   static String get Warning_You_have_iolated_our_community_olicy_again =>
-      "Warning! You have violated our community policy again.";
+      "Warning! You have violated our parties policy again.";
 
   static String get Account => "Account";
 
@@ -143,11 +143,11 @@ class AppStrings {
 
   static String get Bucket => "Bucket";
 
-  static String get Add_Community => "Add Community";
+  static String get Add_Community => "Add parties";
 
-  static String get Enter_Community_Name => "Enter Community Name";
+  static String get Enter_Community_Name => "Enter parties Name";
 
-  static String get Edit_Community => "Edit Community";
+  static String get Edit_Community => "Edit parties";
 
   static String get Visibility => "Visibility";
 
@@ -155,7 +155,7 @@ class AppStrings {
 
   static String get Submit_Request => "Submit Request";
 
-  static String get Community => "Community";
+  static String get Community => "parties";
 
   static String get Enter_Description => "Enter Description";
 

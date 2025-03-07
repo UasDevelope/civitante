@@ -25,34 +25,83 @@ class AddCommunityController extends GetxController {
 
   Future<void> addCommunity() async {
     try {
-      CustomLoadingDialog.showCustomLoadingDialog("Adding Community....");
-      final locationController = LocateController.locationController;
+      if (_validateInputs()) {
+        CustomLoadingDialog.showCustomLoadingDialog("Adding Community....");
 
-      String? userId = AppConstant().userID;
+        final locationController = LocateController.locationController;
+        String? userId = AppConstant().userID;
 
-      log("User id is $userId");
+        log("User id is $userId");
+        log("Location name is ${locationController.userLocation["locationName"]}");
 
-      log("Location name is ${locationController.userLocation["locationName"]}");
+        final data = {
+          "name": emailController.text,
+          "membership": membership.value.toLowerCase(),
+          "category": category.value,
+          "interests": [interest.value],
+          "description": descriptionController.text,
+          "image": communityImage.value,
+          "visibility": {"location": visibility.value},
+          "cost": 100,
+          "createdBy": userId
+        };
 
-      final data = {
-        "name": emailController.text,
-        "membership": membership.value.toLowerCase(),
-        "category": category.value,
-        "interests": [interest.value],
-        "description": descriptionController.text,
-        "image": communityImage.value,
-        "visibility": {"location": visibility.value},
-        "cost": 100,
-        "createdBy": userId
-      };
-      final response = await HttpService.post("/addCommunity", data);
-      final controller = LocateController.myCommunities;
-      controller.fetchCommunities();
-      CustomLoadingDialog.closeLoadingDialog();
-      Get.back();
-      log("Response is ${response}");
+        log(data.toString());
+        final response = await HttpService.post("/addCommunity", data);
+        final controller = LocateController.myCommunities;
+        controller.fetchCommunities();
+        CustomLoadingDialog.closeLoadingDialog();
+        Get.back();
+        ToastUtil.showToast(message: "error!", backgroundColor: Colors.orange);
+        log("Response is ${response}");
+      }
     } catch (e) {
-      ToastUtil.showToast(message: "$e", backgroundColor: Colors.red);
-    } finally {}
+      ToastUtil.showToast(message: "error!$e", backgroundColor: Colors.orange);
+    }
+  }
+
+  /// **Validation Function**
+  bool _validateInputs() {
+    if (emailController.text.isEmpty) {
+      ToastUtil.showToast(
+          message: "Community name is required!",
+          backgroundColor: Colors.orange);
+      return false;
+    }
+    if (membership.value.isEmpty) {
+      ToastUtil.showToast(
+          message: "Membership type is required!",
+          backgroundColor: Colors.orange);
+      return false;
+    }
+    if (category.value.isEmpty) {
+      ToastUtil.showToast(
+          message: "Category is required!", backgroundColor: Colors.orange);
+      return false;
+    }
+    if (interest.value.isEmpty) {
+      ToastUtil.showToast(
+          message: "At least one interest is required!",
+          backgroundColor: Colors.orange);
+      return false;
+    }
+    if (descriptionController.text.isEmpty) {
+      ToastUtil.showToast(
+          message: "Description is required!", backgroundColor: Colors.orange);
+      return false;
+    }
+    if (communityImage.value.isEmpty) {
+      ToastUtil.showToast(
+          message: "Please upload a community image!",
+          backgroundColor: Colors.orange);
+      return false;
+    }
+    if (visibility.value.isEmpty) {
+      ToastUtil.showToast(
+          message: "Visibility setting is required!",
+          backgroundColor: Colors.orange);
+      return false;
+    }
+    return true;
   }
 }

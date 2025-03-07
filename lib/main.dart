@@ -2,7 +2,6 @@ import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-
 void main() async {
   //
   WidgetsFlutterBinding.ensureInitialized();
