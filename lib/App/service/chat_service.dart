@@ -35,11 +35,13 @@ class ChatService {
     required String userId,
     required RxList<Map<String, dynamic>> messages,
     required VoidCallback onMessagesUpdated,
-  }) {
+  })
+  {
     debugPrint("Joining community: $communityId");
     socket.emit("joinCommunityChat", {"communityId": communityId});
-
+    log("Community joined");
     socket.on("joinedCommunity", (data) {
+      log("Data with the emition is $data");
       messages.clear();
       if (data["recentMessage"] != null) {
         for (var msg in data["recentMessage"]) {

@@ -648,7 +648,7 @@ class _CustomCard2State extends State<CustomCard2> {
                                 itemBuilder: (context, index) {
                                   var comment = widget
                                       .post.comments[index]; // Safe access
-
+                                  User user=comment.user;
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 16),
@@ -662,10 +662,8 @@ class _CustomCard2State extends State<CustomCard2> {
                                           children: [
                                             CircleAvatar(
                                               radius: 26,
-                                              backgroundImage: homeController
-                                                      .imageUrl.isNotEmpty
-                                                  ? NetworkImage(homeController
-                                                      .imageUrl.value)
+                                              backgroundImage:user.profileImage!.isNotEmpty
+                                                  ? NetworkImage(user.profileImage!)
                                                   : AssetImage(AppImages.person)
                                                       as ImageProvider,
                                             ),
@@ -674,8 +672,8 @@ class _CustomCard2State extends State<CustomCard2> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Obx(() => Text(
-                                                      homeController.name.value,
+                                                Text(
+                                                      user.name,
                                                       style:
                                                           GoogleFonts.poppins(
                                                               fontSize: 16,
@@ -684,7 +682,7 @@ class _CustomCard2State extends State<CustomCard2> {
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w600),
-                                                    )),
+                                                    ),
                                                 SizedBox(height: 4),
                                                 Row(
                                                   children: [
@@ -795,6 +793,7 @@ class _CustomCard2State extends State<CustomCard2> {
                                                           color:
                                                               AppColors.green),
                                                       onPressed: () {
+                                                        log("comment id is ${comment.id}");
                                                         homeController
                                                             .addReplyToComment(
                                                                 widget.post.id,
@@ -828,8 +827,11 @@ class _CustomCard2State extends State<CustomCard2> {
                                               itemCount:
                                                   comment.replies?.length ?? 0,
                                               itemBuilder: (context, replyIndex) {
-                                                var commentReply = comment
-                                                    .replies![replyIndex].text;
+                                                var commentData = comment
+                                                    .replies![replyIndex];
+                                                var commentReply=commentData.text;
+                                                var user=commentData.user;
+
                                                 return Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
@@ -841,13 +843,12 @@ class _CustomCard2State extends State<CustomCard2> {
                                                       children: [
                                                         CircleAvatar(
                                                           radius: 16,
-                                                          backgroundImage: homeController
-                                                                  .imageUrl
+                                                          backgroundImage: user
+                                                                  .profileImage!
                                                                   .isNotEmpty
                                                               ? NetworkImage(
-                                                                  homeController
-                                                                      .imageUrl
-                                                                      .value)
+                                                              user
+                                                                  .profileImage!)
                                                               : AssetImage(
                                                                       AppImages
                                                                           .person)
@@ -859,9 +860,9 @@ class _CustomCard2State extends State<CustomCard2> {
                                                               CrossAxisAlignment
                                                                   .start,
                                                           children: [
-                                                            Obx(() => Text(
-                                                                  homeController
-                                                                      .name.value,
+                                                            Text(
+                                                                  user
+                                                                      .name,
                                                                   style: GoogleFonts.poppins(
                                                                       fontSize:
                                                                           13,
@@ -870,7 +871,7 @@ class _CustomCard2State extends State<CustomCard2> {
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w600),
-                                                                )),
+                                                                ),
                                                             SizedBox(height: 1),
                                                             Row(
                                                               children: [

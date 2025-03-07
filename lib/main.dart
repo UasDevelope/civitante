@@ -33,12 +33,15 @@ class _CivitanteAppState extends State<CivitanteApp> {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      title: 'Civitante',
       getPages: AppPages.pages,
       initialRoute:
           AppRoutes.splash, // Ensure AppRoutes.splash is defined correctly.
       initialBinding:
           InitialBinding(), // Ensure InitialBinding() is correctly set up.
+
       // home: OtpScreen(),
+
       defaultTransition:
           Transition.fadeIn, // Optional: for smoother page transitions.
     );

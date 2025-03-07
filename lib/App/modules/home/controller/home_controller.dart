@@ -209,7 +209,7 @@ class HomeController extends GetxController{
       log('Requested data is $data');
       final response = await HttpService.post("/addCommentToPost/$postId", data);
 
-      log("Response is $response");
+      log("Response for comment is   ${response["comments"].last}");
 
       final errorMessage = _parseErrorMessage(response);
       print("Response of Pints is :$errorMessage");
@@ -229,12 +229,12 @@ class HomeController extends GetxController{
           ),
         );
         commentController.clear();
-      }else{
-        final newComment = Comment(id: UniqueKey().toString(),
-          user: User(id: post.createdBy.id,
-              name: post.createdBy.name),
+      }
+      else{
+        final newComment = Comment(id: response["comments"].last["_id"],
+          user: User(
+              name: name.value,profileImage: imageUrl.value),
           text: commentController.text,
-
           createdAt: DateTime.now(), isCommentLikedByUser: false.obs, repliesCount: 0.obs, isEdited: false.obs,
 
         );
@@ -283,11 +283,14 @@ class HomeController extends GetxController{
           ),
         );
         commentReplyController.clear();
-      } else {
+      }
+      else {
         // Create new reply object
         final newReply = Comment(
           id: UniqueKey().toString(),
-          user: User(id: userId, name: "Current User"),
+          user: User(id: userId, name: name.value,
+          profileImage: imageUrl.value
+          ),
           text: text,
           createdAt: DateTime.now(),
           isCommentLikedByUser: false.obs,
@@ -299,8 +302,8 @@ class HomeController extends GetxController{
         for (var comment in post.comments) {
           if (comment.id == commentId) {
             comment.replies ??= RxList<Comment>(); // Ensure replies list exists
-            comment.replies!.add(newReply);
-            comment.replies!.refresh(); // Refresh UI
+            comment.replies.add(newReply);
+            comment.replies.refresh(); // Refresh UI
             comment.repliesCount.value++;
             break;
           }

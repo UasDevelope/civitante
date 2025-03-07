@@ -210,7 +210,7 @@ class User {
   final DateTime? lastSeen; // Last seen timestamp
 
   User({
-    required this.id,
+     this.id="",
     required this.name,
     this.email,
     this.profileImage,
