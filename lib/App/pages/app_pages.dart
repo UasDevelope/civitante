@@ -4,7 +4,7 @@ import 'package:civitante/App/modules/auth/view/otp_screen.dart';
 import 'package:civitante/App/modules/auth/view/pro_account.dart';
 import 'package:civitante/App/modules/auth/view/signup.dart';
 import 'package:civitante/App/modules/bottom/view/bottom_nav.dart';
-import 'package:civitante/App/modules/communities/view/community.dart';
+// import 'package:civitante/App/modules/communities/view/community.dart';
 import 'package:civitante/App/modules/communityDetails/view/communityDetails.dart';
 import 'package:civitante/App/modules/editMyCommunity/view/edityMyCommunity.dart';
 import 'package:civitante/App/modules/forget/view/new_password.dart';
@@ -75,10 +75,10 @@ class AppPages {
         name: AppRoutes.myCommunity,
         page: () => MyCommunitiesScreen(),
         binding: InitialBinding()),
-    GetPage(
-        name: AppRoutes.communities,
-        page: () => CommunityScreen(),
-        binding: InitialBinding()),
+    // GetPage(
+    //     name: AppRoutes.communities,
+    //     page: () => CommunityScreen(),
+    //     binding: InitialBinding()),
     GetPage(
         name: AppRoutes.contactAdmin,
         page: () => AdminContactScreen(),

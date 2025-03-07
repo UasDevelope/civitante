@@ -26,13 +26,16 @@ class MyCommunitiesTabBar extends StatelessWidget {
               dividerColor: AppColors.white,
               indicator: BoxDecoration(
                 color: Colors.black,
-
                 borderRadius: BorderRadius.circular(20),
               ),
               unselectedLabelColor: Colors.black,
               labelColor: Colors.white,
               indicatorPadding: EdgeInsets.zero,
               labelPadding: EdgeInsets.zero, // Remove additional padding
+              onTap: (index) {
+                // Update selected status when tab changes
+                controller.selectedStatus.value = _getStatusText(index);
+              },
               tabs: [
                 _buildTab("Accepted", 0),
                 _buildTab("Pending", 1),
@@ -42,6 +45,7 @@ class MyCommunitiesTabBar extends StatelessWidget {
           ),
           Expanded(
             child: TabBarView(
+              controller: controller.tabController,
               children: [
                 MyCommunitiesList(),
                 MyCommunitiesList(),
@@ -55,38 +59,42 @@ class MyCommunitiesTabBar extends StatelessWidget {
   }
 
   Widget _buildTab(String text, int index) {
-    return Builder(
-      builder: (context) {
-        final controller = LocateController.myCommunities;
-        final TabController tabController = DefaultTabController.of(context)!;
-        return AnimatedBuilder(
-          animation: tabController,
-          builder: (context, child) {
-            return Obx(() {
-              final bool isSelected =
-                  controller.selectedStatus.value == text.toLowerCase();
-              return Container(
-                padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                margin: EdgeInsets.symmetric(
-                    horizontal: 4), // Spacing between tabs
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 1,
-                  ), // Border for each tab
-                  borderRadius: BorderRadius.circular(30), // Rounded corners
-                ),
-                child: AppText(
-                  text: text,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: isSelected ? Colors.white : AppColors.appColor,
-                ),
-              );
-            });
-          },
-        );
-      },
-    );
+    return Obx(() {
+      final controller = LocateController.myCommunities;
+      final bool isSelected = controller.selectedStatus.value == text.toLowerCase();
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        margin: EdgeInsets.symmetric(horizontal: 4), // Spacing between tabs
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.black : Colors.white, // Fix color change
+          border: Border.all(
+            color: Colors.black,
+            width: 1,
+          ), // Border for each tab
+          borderRadius: BorderRadius.circular(30), // Rounded corners
+        ),
+        child: AppText(
+          text: text,
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          color: isSelected ? Colors.white : AppColors.appColor,
+        ),
+      );
+    });
+  }
+
+  // Helper method to get status text
+  String _getStatusText(int index) {
+    switch (index) {
+      case 0:
+        return "accepted";
+      case 1:
+        return "pending";
+      case 2:
+        return "rejected";
+      default:
+        return "";
+    }
   }
 }
+
