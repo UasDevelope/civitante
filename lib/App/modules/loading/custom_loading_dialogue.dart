@@ -1,57 +1,33 @@
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:civitante/App/utilse/widgets.dart';
 
 class CustomLoadingDialog extends StatelessWidget {
   final String text;
 
-  const CustomLoadingDialog({super.key, required this.text});
+  const CustomLoadingDialog({super.key,  this.text=""});
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      child: Center(
-        child: Container(
-          height: Get.height * 0.25, // Responsive height
-          width: Get.width * 0.6, // Responsive width
-          decoration: BoxDecoration(
-            color:
-                AppColors.greyShade, // Used greyShade instead of splashGradient
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.Slate_gray.withOpacity(
-                    0.4), // Adjusted shadow color
-                blurRadius: 10,
-                offset: Offset(0, 4),
-              ),
-            ],
+      child: Stack(
+        children: [
+          // Blurred background effect
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // Blur effect
+            child: Container(
+              color: Colors.black.withOpacity(0.1), // Light transparent overlay
+            ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CupertinoActivityIndicator(
-                color: Colors.grey, // Used AppColors.white
-                radius: 20,
-              ),
-              SizedBox(height: 20),
-              DefaultTextStyle(
-                style: TextStyle(
-                  color: AppColors.appColor, // Adjusted text color
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-                child: Text(
-                  text,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
+          Center(
+            child: CupertinoActivityIndicator(
+              radius: 20, // Spinner size
+              color: Colors.white, // Spinner color
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -66,7 +42,7 @@ class CustomLoadingDialog extends StatelessWidget {
   // Show the loading dialog
   static void showCustomLoadingDialog(String loadingText) {
     if (!(Get.isDialogOpen ?? false)) {
-      Get.dialog(CustomLoadingDialog(text: loadingText),
+      Get.dialog(const CustomLoadingDialog(text: ""),
           barrierDismissible: false);
     }
   }

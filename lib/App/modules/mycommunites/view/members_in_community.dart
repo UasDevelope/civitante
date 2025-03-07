@@ -5,6 +5,7 @@ import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 import '../../home/widgets/homeAppbar.dart';
 import '../../home/widgets/home_search.dart';
+import '../../previewUserProfile/view/previewprofile.dart';
 
 class MembersInCommunity extends StatelessWidget {
   final String communityId;
@@ -45,64 +46,52 @@ class MembersInCommunity extends StatelessWidget {
                   physics: ScrollPhysics(),
                   itemBuilder: (itemBuilder, index) {
                     final data = controller.filteredMemberUsers[index];
-                    return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: AppColors.greyShade),
-                        color: Colors.white60,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Row(
-                          children: [
-                            // Profile Image
-                            CircleAvatar(
-                              radius: 25,
-                              backgroundImage: NetworkImage(data.profileImage),
-                            ),
-                            const SizedBox(width: 16),
-                            // User Details
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    data.name,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    '${data.costPoints} pts',
-                                    style: const TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
+                    return InkWell(
+                     onTap: (){
+                       Get.to(PreviewProfileScreen(id: data.id,));
+                     },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: AppColors.greyShade),
+                          color: Colors.white60,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            children: [
+                              // Profile Image
+                              CircleAvatar(
+                                radius: 25,
+                                backgroundImage: NetworkImage(data.profileImage),
                               ),
-                            ),
-                            // Chat Icon inside a Circle
-                            Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors
-                                    .light_gray, // Adjust color as needed
-                              ),
-                              child: IconButton(
-                                onPressed: () {
-                                  // Add your chat functionality here
-                                },
-                                icon: Icon(
-                                  Icons.chat_outlined,
-                                  color: Colors.white,
-                                  size: 20,
+                              const SizedBox(width: 16),
+                              // User Details
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      data.name,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      '${data.costPoints} pts',
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                          ],
+                              // Chat Icon inside a Circle
+                            ],
+                          ),
                         ),
                       ),
                     );

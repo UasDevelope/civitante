@@ -90,12 +90,13 @@ class _MyCommunityDetailState extends State<MyCommunityDetail> {
                                         const SizedBox(height: 4),
                                         InkWell(
                                           onTap: () {
+
                                             Get.to(MembersInCommunity(
                                                 communityId: widget.community!.id));
                                           },
                                           child: AppText(
                                               text:
-                                              '${widget.community!.totalMembers} members',
+    '${widget.community!.totalMembers} ${widget.community!.totalMembers<=1?"member":"members"}',
                                               fontWeight: FontWeight.w500,
                                               color: AppColors.moreblue,
                                               fontSize: 12),

@@ -25,9 +25,8 @@ class CustomDrawer extends StatelessWidget {
               ),
               child: GestureDetector(
                 onTap: () {
-                  Get.to(BottomNavScreen());
-
-                  // Get.back(); // Close the drawer when tapping the arrow
+                  // Get.to(BottomNavScreen());
+                  Get.back(); // Close the drawer when tapping the arrow
                 },
                 child: Image.asset(
                   AppImages.arrowback,

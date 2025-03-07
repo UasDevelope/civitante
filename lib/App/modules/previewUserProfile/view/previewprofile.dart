@@ -80,7 +80,7 @@ class PreviewProfileScreen extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 40,
-                    backgroundImage: AssetImage(AppImages.person),
+                    backgroundImage: NetworkImage(controller.imageUrl.value),
                   ),
                   SizedBox(width: 16),
                   Expanded(
