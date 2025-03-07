@@ -236,7 +236,6 @@ class HomeController extends GetxController{
               name: name.value,profileImage: imageUrl.value),
           text: commentController.text,
           createdAt: DateTime.now(), isCommentLikedByUser: false.obs, repliesCount: 0.obs, isEdited: false.obs,
-
         );
 
         // Add comment to observable list
