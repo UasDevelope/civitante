@@ -27,6 +27,7 @@ class _MyCommunityDetailState extends State<MyCommunityDetail> {
   final CommunityDetailController controller =
       Get.put(CommunityDetailController());
 
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +43,7 @@ class _MyCommunityDetailState extends State<MyCommunityDetail> {
   @override
   Widget build(BuildContext context) {
     // communityPostController.fetchAndAssignPosts(communityId: widget.community!.id);
+bool isJoined=widget.community!.isJoined;
 
     return Scaffold(
         backgroundColor: Colors.white, // Change the background color
@@ -230,7 +232,7 @@ class _MyCommunityDetailState extends State<MyCommunityDetail> {
                       ],
                     ),
                     SizedBox(height: 20),
-                    // Recent Posts
+                    if(isJoined==true||!widget.isAllCommunity)
                     AppText(
                         text: 'Recent Posts',
                         fontWeight: FontWeight.w500,
@@ -242,6 +244,7 @@ class _MyCommunityDetailState extends State<MyCommunityDetail> {
               ),
             ),
               // ListView for Posts
+             if(isJoined==true||!widget.isAllCommunity)
               Expanded(
                   child: RandomSizedPostsScreen(
                     isCommunityDetails: true,

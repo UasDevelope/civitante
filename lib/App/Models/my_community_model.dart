@@ -9,6 +9,7 @@ class MyCommunityModel {
   final int totalMembers;
   final int cost;
   final DateTime createdAt;
+  final bool isJoined;
 
   MyCommunityModel({
     required this.id,
@@ -21,6 +22,7 @@ class MyCommunityModel {
     required this.totalMembers,
     required this.cost,
     required this.createdAt,
+    this.isJoined = false, // Default value set to false
   });
 
   // Factory method to create an instance from JSON with null safety
@@ -28,8 +30,7 @@ class MyCommunityModel {
     return MyCommunityModel(
       id: json['_id']?.toString() ?? '',
       name: json['name']?.toString() ?? 'Unknown',
-      description:
-          json['description']?.toString() ?? 'No description available',
+      description: json['description']?.toString() ?? 'No description available',
       image: json['image']?.toString() ?? '',
       category: json['category']?.toString() ?? 'Uncategorized',
       interests: json['interests'] is List
@@ -45,6 +46,7 @@ class MyCommunityModel {
       createdAt: json['createdAt'] != null
           ? DateTime.tryParse(json['createdAt'].toString()) ?? DateTime.now()
           : DateTime.now(),
+      isJoined: json['isJoined'] is bool ? json['isJoined'] : false, // Ensure default false
     );
   }
 
@@ -61,6 +63,7 @@ class MyCommunityModel {
       'totalMembers': totalMembers,
       'cost': cost,
       'createdAt': createdAt.toIso8601String(),
+      'isJoined': isJoined,
     };
   }
 }
