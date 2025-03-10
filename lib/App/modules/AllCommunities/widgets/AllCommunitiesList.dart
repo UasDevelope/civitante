@@ -16,6 +16,7 @@ class MyCommunitiesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = LocateController.allCommunity;
+    final myCommunity = LocateController.myCommunities;
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -41,45 +42,48 @@ class MyCommunitiesList extends StatelessWidget {
                 groupName: group.name,
                 memberCount: group.totalMembers.toString(),
                 data: group,
+                isJoined: group.isJoined,
+                onJoinTap: (){
+                },
               );
             },
           );
         }
       }),
-      floatingActionButton: InkWell(
-        onTap: (){
-          Get.to(AddCommunityScreen());
-        },
-        splashColor: Colors.transparent,
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                AppColors.Slate_gray.withOpacity(0.9),
-                AppColors.Slate_gray.withOpacity(1.0),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.Slate_gray.withOpacity(0.4),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          padding: const EdgeInsets.all(16), // Padding for image
-          child: Image.asset(
-            AppImages.add,
-            width: 24, // Adjust size as needed
-            height: 24,
-            color: AppColors.white, // Tint with white for contrast
-            fit: BoxFit.contain,
-          ),
-        ),
-      ),
+      // floatingActionButton: InkWell(
+      //   onTap: (){
+      //     Get.to(AddCommunityScreen());
+      //   },
+      //   splashColor: Colors.transparent,
+      //   child: Container(
+      //     decoration: BoxDecoration(
+      //       gradient: LinearGradient(
+      //         colors: [
+      //           AppColors.Slate_gray.withOpacity(0.9),
+      //           AppColors.Slate_gray.withOpacity(1.0),
+      //         ],
+      //         begin: Alignment.topLeft,
+      //         end: Alignment.bottomRight,
+      //       ),
+      //       shape: BoxShape.circle,
+      //       boxShadow: [
+      //         BoxShadow(
+      //           color: AppColors.Slate_gray.withOpacity(0.4),
+      //           blurRadius: 12,
+      //           offset: const Offset(0, 4),
+      //         ),
+      //       ],
+      //     ),
+      //     padding: const EdgeInsets.all(16), // Padding for image
+      //     child: Image.asset(
+      //       AppImages.add,
+      //       width: 24, // Adjust size as needed
+      //       height: 24,
+      //       color: AppColors.white, // Tint with white for contrast
+      //       fit: BoxFit.contain,
+      //     ),
+      //   ),
+      // ),
 
     );
   }
@@ -91,13 +95,17 @@ class MyCommunitiesCard extends StatelessWidget {
   final String memberCount;
   final MyCommunityModel? data;
   final bool isAllCommunity;
+  final bool isJoined;
+  final VoidCallback? onJoinTap;
 
   const MyCommunitiesCard(
       {Key? key,
       required this.imageUrl,
       required this.groupName,
       required this.memberCount,
+        this.isJoined=false,
         this.isAllCommunity=false,
+        this.onJoinTap,
       this.data})
       : super(key: key);
 
@@ -147,7 +155,10 @@ class MyCommunitiesCard extends StatelessWidget {
                 ),
               ),
               // Icon
-              const Icon(Icons.person, color: Colors.grey),
+              if(!isJoined)
+              InkWell(
+                  onTap: onJoinTap,
+                  child: const Icon(Icons.person, color: Colors.grey)),
             ],
           ),
         ),

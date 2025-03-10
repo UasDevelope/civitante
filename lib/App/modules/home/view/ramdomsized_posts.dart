@@ -175,22 +175,36 @@ class RandomSizedPostsScreen extends StatelessWidget {
                           duration: const Duration(microseconds: 300),
                           isLoop: true,
                           onSwipe: (previousIndex, currentIndex, direction) {
-                            if (currentIndex! >=
-                                    homeController.filteredPosts.length ||
-                                currentIndex < 0) {
+                            if (currentIndex == null) return false;
+
+                            // Prevent swiping forward if it's the last post
+                            if (direction == CardSwiperDirection.right &&
+                                currentIndex >= homeController.filteredPosts.length - 1) {
+                              print('Cannot swipe forward, already at the last post');
                               return false;
                             }
-                            final post =
-                                homeController.filteredPosts[currentIndex];
-                            homeController.viewPostById(post.id, currentIndex);
-                            print(
-                                'Swiped to Post: ${post.id} in direction: $direction');
-                            if (direction == CardSwiperDirection.left) {
-                              print('Swiped backward to previous post');
-                            } else if (direction == CardSwiperDirection.right) {
-                              print('Swiped forward to next post');
+
+                            // Prevent swiping backward if it's the first post
+                            if (direction == CardSwiperDirection.left && currentIndex <= 0) {
+                              print('Cannot swipe backward, already at the first post');
+                              return false;
                             }
-                            return true;
+
+                            // Ensure index is within range before accessing the list
+                            if (currentIndex >= 0 && currentIndex < homeController.filteredPosts.length) {
+                              final post = homeController.filteredPosts[currentIndex];
+                              homeController.viewPostById(post.id, currentIndex);
+                              print('Swiped to Post: ${post.id} in direction: $direction');
+
+                              if (direction == CardSwiperDirection.left) {
+                                print('Swiped backward to previous post');
+                              } else if (direction == CardSwiperDirection.right) {
+                                print('Swiped forward to next post');
+                              }
+                              return true;
+                            }
+
+                            return false;
                           },
                           cardBuilder: (context, index, percentThresholdX,
                               percentThresholdY) {

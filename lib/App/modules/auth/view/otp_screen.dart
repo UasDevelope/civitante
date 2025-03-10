@@ -10,6 +10,8 @@ class OtpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final arguments = Get.arguments as Map<String, dynamic>? ?? {};
+    String email = arguments["email"] as String? ?? "";
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SafeArea(
@@ -25,7 +27,7 @@ class OtpScreen extends StatelessWidget {
                 fontWeight: FontWeight.w800,
                 fontSize: 21),
             AppText(
-                text: "waqasakhtar548@gmail.com",
+                text: email,
                 fontWeight: FontWeight.w400,
                 fontSize: 13),
             SizedBox(

@@ -136,6 +136,9 @@ class AuthController extends GetxController {
        log("Response token is $token");
        PrefUtil.setString(PrefUtil.userId, token);
        AppConstant().userID = token;
+       // Get.offNamed(AppRoutes.otpScreen,arguments: {
+       //   "email":signupEmailController.text
+       // });
        signupEmailController.clear();
        fullNameController.clear();
        signupLocationController.clear();
@@ -403,7 +406,7 @@ class AuthController extends GetxController {
       //upgradeToPro();
       loginEmailController.clear();
       loginPassworedController.clear();
-      goToNext(AppRoutes.bottomNav);
+      goToNext(AppRoutes.faceIDScreen);
 
       // Optional: Handle the returned user data
       var user = response['user'];
@@ -455,7 +458,7 @@ class AuthController extends GetxController {
           AppConstant().userID = token;
 
           loading.value = false;
-          goToNext(AppRoutes.bottomNav);
+          goToNext(AppRoutes.faceIDScreen);
         } else {
           loading.value = false;
           String errorMsg = response['details'] != null
@@ -575,7 +578,7 @@ class AuthController extends GetxController {
           PrefUtil.setString(PrefUtil.userId, token);
           AppConstant().userID = token;
           loading.value = false;
-          goToNext(AppRoutes.bottomNav);
+          goToNext(AppRoutes.faceIDScreen);
         } else {
           loading.value = false;
           String errorMsg = response['details'] != null
@@ -631,7 +634,7 @@ class AuthController extends GetxController {
           AppConstant().userID = token;
 
           loading.value = false;
-          goToNext(AppRoutes.bottomNav);
+          goToNext(AppRoutes.faceIDScreen);
         } else {
           loading.value = false;
           String errorMsg = response['details'] != null

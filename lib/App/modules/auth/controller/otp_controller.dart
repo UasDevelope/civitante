@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'dart:async';
 
+import '../../../routes/routes.dart';
+
 class OtpController extends GetxController {
   var otp = ''.obs;
   final int otpLength = 4;
@@ -38,6 +40,13 @@ class OtpController extends GetxController {
     if (otp.value.length < otpLength) {
       otp.value += digit;
     }
+    if (otp.value.length == otpLength) {
+      onComplete();
+    }
+  }
+  void onComplete() {
+    Get.toNamed(AppRoutes.faceIDScreen);
+    print("OTP Entered: ${otp.value}");
   }
 
   void deleteDigit() {

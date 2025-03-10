@@ -35,7 +35,7 @@ class InviteMember extends StatelessWidget {
               Obx(() => controller.selectedIndexes.isNotEmpty
                   ? IconButton(
                       onPressed: () {
-                        controller.addOrRemoveFromCommunity(communityId);
+                        controller.addOrRemoveFromCommunity(communityId,selectedIndex:controller.selectedIndexes);
                       },
                       icon: Icon(Icons.add))
                   : Container()),

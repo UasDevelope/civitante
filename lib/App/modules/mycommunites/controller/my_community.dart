@@ -159,12 +159,14 @@ class MyCommunityController extends GetxController
   /// add or remove community by using  [selectedIndexes]
 
   Future<void> addOrRemoveFromCommunity(String communityId,
-      {String actionType = "add"}) async {
+      {String actionType = "add",
+        required List<String> selectedIndex
+      }) async {
     try {
       CustomLoadingDialog.showCustomLoadingDialog(
           actionType == "add" ? "Inviting user...." : "Removing user....");
       final response = await HttpService.post("/addOrRemoveUser/$communityId",
-          {"memberIds": selectedIndexes, "action": actionType});
+          {"memberIds": selectedIndex, "action": actionType});
       log("Response for add and remove community is $response");
       fetchCommunities();
       CustomLoadingDialog.closeLoadingDialog();

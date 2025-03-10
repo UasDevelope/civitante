@@ -10,6 +10,7 @@ class PrefUtil {
   static const String changeToken = "token";
   static const String commentList = "commentList";
   static const String deviceId = "deviceId";
+  static const String isUserFaceAuthCompleted = "isUserFaceAuthCompleted";
 
   static const String lng = "lng";
 

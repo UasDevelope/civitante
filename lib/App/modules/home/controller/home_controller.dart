@@ -45,6 +45,7 @@ class HomeController extends GetxController
   }
   RxList<Post> posts = <Post>[].obs; // Original list of posts
   RxList<Post> filteredPosts = <Post>[].obs; // New list for filtered posts
+  RxInt currentPostIndex = 0.obs; // Track current post index
   final TextEditingController commentController = TextEditingController();
   final TextEditingController commentReplyController = TextEditingController();
   RxBool isPostLoading = false.obs;

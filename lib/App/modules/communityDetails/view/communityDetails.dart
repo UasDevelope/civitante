@@ -134,6 +134,11 @@ bool isJoined=widget.community!.isJoined;
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               buildActionCommunityButton(AppImages.addCircle, () {
+                                Get.toNamed(AppRoutes.post, arguments: {
+                                  "communityId": widget.community!.id
+                                });
+                              }),
+                              buildActionCommunityButton(AppImages.invite, () {
                                 Get.to(InviteMember(
                                   communityId: widget.community!.id,
                                 ));
@@ -173,17 +178,17 @@ bool isJoined=widget.community!.isJoined;
                               // ),
                             ],
                           ),
-                        if (widget.isAllCommunity)
+                        if (isJoined==true)
                           Column(
                             spacing: 10,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              buildActionCommunityButton(AppImages.addCircle, () {
-                                Get.toNamed(AppRoutes.post, arguments: {
-                                  "communityId": widget.community!.id
-                                });
-                              }),
+                              // buildActionCommunityButton(AppImages.addCircle, () {
+                              //   Get.toNamed(AppRoutes.post, arguments: {
+                              //     "communityId": widget.community!.id
+                              //   });
+                              // }),
                               buildActionCommunityButton(AppImages.chat, () {
                                 Get.to(CommunityChat(
                                   communityId: widget.community!.id,
@@ -192,6 +197,9 @@ bool isJoined=widget.community!.isJoined;
                               }),
                             ],
                           ),
+                        if(isJoined==false)
+                        SizedBox(height: 24,width: 24,)
+
                       ],
                     ),
                     // Community Name and Members
@@ -232,7 +240,7 @@ bool isJoined=widget.community!.isJoined;
                       ],
                     ),
                     SizedBox(height: 20),
-                    if(isJoined==true||!widget.isAllCommunity)
+                    if(isJoined==true)
                     AppText(
                         text: 'Recent Posts',
                         fontWeight: FontWeight.w500,
@@ -244,7 +252,7 @@ bool isJoined=widget.community!.isJoined;
               ),
             ),
               // ListView for Posts
-             if(isJoined==true||!widget.isAllCommunity)
+             if(isJoined==true)
               Expanded(
                   child: RandomSizedPostsScreen(
                     isCommunityDetails: true,

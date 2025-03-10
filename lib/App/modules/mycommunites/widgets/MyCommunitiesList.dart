@@ -33,7 +33,7 @@ class MyCommunitiesList extends StatelessWidget {
             itemBuilder: (context, index) {
               final data = controller.filteredCommunities[index];
               return MyCommunitiesCard(
-                isAllCommunity: controller.selectedStatus.value!="accepted",
+                isAllCommunity: false,
                 imageUrl: data.image,
                 groupName: data.name,
                 memberCount: data.totalMembers.toString(),

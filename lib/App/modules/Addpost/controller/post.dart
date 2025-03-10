@@ -226,7 +226,7 @@ class PostController extends GetxController {
         backgroundColor: Colors.red,
       );
     } finally {
-      // isloading.value = false;
+      isloading.value = false;
     }
   }
 

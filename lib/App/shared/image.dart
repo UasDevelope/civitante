@@ -44,6 +44,8 @@ class AppImages {
   static String get user => "user".png;
   static String get chat => "chat".png;
   static String get history => "history".png;
+  static String get invite => "invite".png;
+  // static String get clockTick => "tick".mp3;
 }
 
 extension on String {
