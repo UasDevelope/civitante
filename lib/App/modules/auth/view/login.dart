@@ -7,6 +7,8 @@ import 'package:loading_overlay/loading_overlay.dart';
 import '../../../shared/validators.dart';
 import '../../../utilse/widgets.dart';
 import 'dart:io';
+
+import '../widget/captcha_widget.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
   GlobalKey<FormState> loginGlobalKey = GlobalKey<FormState>();
@@ -97,12 +99,12 @@ class LoginScreen extends StatelessWidget {
                           SizedBox(
                             height: 80,
                             child: RecaptchaV2(
-                              apiKey: "6Ldqv9sqAAAAAGUMIuQcWL-1WSySnEq_S6I66YbZ",
-                              onVerifiedSuccessfully: (token) async {
-                                log("Recaptcha token $token");
+                              apiKey: "6LeXYfEqAAAAAOwhKVmaj4H_RXXmwdJCM7IS3MxL", // Site key
+                              onVerifiedSuccessfully: (String token) async {
+                                log("Recaptcha token: $token");
                                 final bool isTokenVerified = await verifyRecaptchaV2Token(
                                   token: token,
-                                  apiSecret: "6Ldqv9sqAAAAACQSGDktRo0Ur0X6TNnkhk71phoh",
+                                  apiSecret: "6LeXYfEqAAAAABzjex2n3FGDm1ONLesHBgT1kld1", // Secret key
                                 );
                                 if (isTokenVerified) {
                                   log("Token verified successfully");
@@ -110,8 +112,15 @@ class LoginScreen extends StatelessWidget {
                                   log("Token verification failed");
                                 }
                               },
+
                             ),
                           ),
+
+                          // RecaptchaWidget(
+                          //   onVerified: (String token) async {
+                          //
+                          //   }
+                          // ),
                           Center(
                             child: AppButton(
                               useGradient: false,

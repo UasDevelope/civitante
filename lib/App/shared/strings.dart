@@ -1,7 +1,7 @@
 // Consistent camelCase formatting
 class AppStrings {
   static String get started =>
-      "Civitante – Engage\nRespectfully, Earn\nResponsibly.";
+      "civiats – Engage\nRespectfully, Earn\nResponsibly.";
 
   static String get getStarted => 'Get Started';
 

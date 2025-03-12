@@ -317,6 +317,28 @@ class HomeController extends GetxController
     }
   }
 
+  Future<void> addLikeToReply(String postId, String commentId, String replyId, Comment commentData) async {
+    try {
+      // Optimistic Update
+      bool isCurrentlyLiked = commentData.isReplyLikedByUser!.value;
+      if (isCurrentlyLiked) {
+        commentData.likes?.remove("67ceb0ba200e253d5a1cb447"); // Replace with actual user ID
+        commentData.isReplyLikedByUser!.value = false;
+      } else {
+        commentData.likes?.add("67ceb0ba200e253d5a1cb447");
+        commentData.isReplyLikedByUser!.value = true;
+      }
+
+      final response = await HttpService.post("/addLikeToReply/$postId/$commentId/$replyId", {});
+      log("Response is $response");
+
+      // Update state based on API response
+      final responseData = jsonDecode(response);
+      commentData.isReplyLikedByUser!.value = responseData['isLike'];
+    } catch (e) {
+      log("Error is $e");
+    }
+  }
 
 
   Future<int> addLikeToPost(String postId, int index) async {

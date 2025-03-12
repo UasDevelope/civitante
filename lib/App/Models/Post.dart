@@ -156,6 +156,7 @@ class Comment {
   RxList<String>? likes;
   RxList<Comment> replies; // Always initialized
   RxBool isCommentLikedByUser;
+  RxBool? isReplyLikedByUser;
 
   // New Fields
   final RxInt repliesCount; // Number of replies
@@ -171,6 +172,7 @@ class Comment {
     this.likes,
     RxList<Comment>? replies, // Now optional
     required this.isCommentLikedByUser,
+     this.isReplyLikedByUser,
     required this.repliesCount,
     required this.isEdited,
   }) : replies = replies ?? RxList<Comment>(); // Ensuring replies is never null
@@ -192,6 +194,7 @@ class Comment {
       replies: RxList<Comment>((json['replies'] as List<dynamic>? ?? []).map((x) => Comment.fromJson(x)).toList()), // Ensuring replies is never null
 
       isCommentLikedByUser: RxBool(json['isCommentLikedByUser'] ?? false),
+      isReplyLikedByUser: RxBool(json['isReplyLikedByUser'] ?? false),
       repliesCount: RxInt(json['repliesCount'] ?? 0),
       isEdited: RxBool(json['isEdited'] ?? false),
     );

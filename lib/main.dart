@@ -6,10 +6,10 @@ void main() async {
   //
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  // Stripe.publishableKey = 'pk_test_I71hW1HMRNeKcsF2IRuQk3ga00ZtdU01e5';
-  // Stripe.merchantIdentifier = 'merchant.flutter.stripe.test';
-  // Stripe.urlScheme = 'flutterstripe';
-  // await Stripe.instance.applySettings();
+  Stripe.publishableKey = 'pk_test_I71hW1HMRNeKcsF2IRuQk3ga00ZtdU01e5';
+  Stripe.merchantIdentifier = 'merchant.flutter.stripe.test';
+  Stripe.urlScheme = 'flutterstripe';
+  await Stripe.instance.applySettings();
   PrefUtil.init();
 
 //

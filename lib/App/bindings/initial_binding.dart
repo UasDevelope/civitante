@@ -34,7 +34,7 @@ class InitialBinding extends Bindings {
     Get.lazyPut(() => SettingController());
     Get.lazyPut(() => HomeController());
     Get.lazyPut(() => PostController());
-    Get.lazyPut(() => FaceIDController());
+    // Get.lazyPut(() => FaceIDController());
     Get.lazyPut(() => OtpController());
     Get.lazyPut(() => WalletController());
     Get.lazyPut(() => SettingController());

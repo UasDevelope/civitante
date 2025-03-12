@@ -1,13 +1,6 @@
 class Validators  {
   // Email Validation
   static String? emailValidator(String value) {
-    if (value.isEmpty) {
-      return "Email cannot be empty";
-    }
-    // final emailRgx = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
-    // if (!emailRgx.hasMatch(value)) {
-    //   return "Please enter a valid email";
-    // }
     return null;
   }
 

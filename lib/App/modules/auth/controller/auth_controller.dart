@@ -114,7 +114,7 @@ class AuthController extends GetxController {
      loading.value = true;
      //  CustomLoadingDialog.showCustomLoadingDialog("Registering user...");
      var data = {
-       "email": signupEmailController.text,
+       "email": signupEmailController.text.trim().toLowerCase(),
        "name": fullNameController.text,
        "location": {
          "long": locationController.longitude.value,
@@ -144,8 +144,10 @@ class AuthController extends GetxController {
        signupLocationController.clear();
        signupPasswordController.clear();
        SignupConfirmPasswordController.clear();
+       Get.offAllNamed(AppRoutes.bottomNav);
+
        // CustomLoadingDialog.closeLoadingDialog();
-       goToNext(AppRoutes.faceIDScreen);
+       // goToNext(AppRoutes.faceIDScreen);
      } else {
        //CustomLoadingDialog.closeLoadingDialog();
        String errorMsg = response['details'] != null
@@ -174,7 +176,7 @@ class AuthController extends GetxController {
 
     // Prepare data for the API request
     var data = {
-      "email": signupEmailController.text,
+      "email": signupEmailController.text.toLowerCase(),
       "name": fullNameController.text,
       "location": {
         "long": locationController.longitude.value,
@@ -406,7 +408,7 @@ class AuthController extends GetxController {
       //upgradeToPro();
       loginEmailController.clear();
       loginPassworedController.clear();
-      goToNext(AppRoutes.faceIDScreen);
+      Get.offAllNamed(AppRoutes.bottomNav);
 
       // Optional: Handle the returned user data
       var user = response['user'];
@@ -458,7 +460,8 @@ class AuthController extends GetxController {
           AppConstant().userID = token;
 
           loading.value = false;
-          goToNext(AppRoutes.faceIDScreen);
+          Get.offAllNamed(AppRoutes.bottomNav);
+          // goToNext(AppRoutes.faceIDScreen);
         } else {
           loading.value = false;
           String errorMsg = response['details'] != null
@@ -516,7 +519,7 @@ class AuthController extends GetxController {
           PrefUtil.setString(PrefUtil.userId, token);
           AppConstant().userID = token;
           loading.value = false;
-          goToNext(AppRoutes.faceIDScreen);
+          Get.offAllNamed(AppRoutes.bottomNav);
         } else {
           loading.value = false;
           String errorMsg = response['details'] != null
@@ -578,7 +581,7 @@ class AuthController extends GetxController {
           PrefUtil.setString(PrefUtil.userId, token);
           AppConstant().userID = token;
           loading.value = false;
-          goToNext(AppRoutes.faceIDScreen);
+          Get.offAllNamed(AppRoutes.bottomNav);
         } else {
           loading.value = false;
           String errorMsg = response['details'] != null
@@ -634,7 +637,7 @@ class AuthController extends GetxController {
           AppConstant().userID = token;
 
           loading.value = false;
-          goToNext(AppRoutes.faceIDScreen);
+          Get.offAllNamed(AppRoutes.bottomNav);
         } else {
           loading.value = false;
           String errorMsg = response['details'] != null

@@ -61,11 +61,11 @@ class AppPages {
         page: () => BottomNavScreen(),
         transition: Transition.zoom,
         binding: InitialBinding()),
-    GetPage(
-        name: AppRoutes.faceIDScreen,
-        page: () => FaceIDScreen(),
-        transition: Transition.zoom,
-        binding: InitialBinding()),
+    // GetPage(
+    //     name: AppRoutes.faceIDScreen,
+    //     page: () => FaceIDScreen(),
+    //     transition: Transition.zoom,
+    //     binding: InitialBinding()),
     GetPage(
         name: AppRoutes.otpScreen,
         page: () => OtpScreen(),

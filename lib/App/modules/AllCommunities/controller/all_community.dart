@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
 import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,7 @@ class AllCommunityController extends GetxController
     }
   }
 
+
   Future<void> fetchAllCommunities() async {
     try {
       isCommunityLoading.value = true;
@@ -55,6 +57,19 @@ class AllCommunityController extends GetxController
       log("Error is $e");
     } finally {
       isCommunityLoading.value = false;
+    }
+  }
+  Future<void> joinCommunity(String communityId) async {
+    try {
+      CustomLoadingDialog.showCustomLoadingDialog("loadingText");
+      final response =
+          await HttpService.post("/joinCommunity/$communityId",{});
+      log("Response is $response");
+fetchAllCommunities();
+    } catch (e) {
+log("Error is $e");
+    } finally {
+CustomLoadingDialog.closeLoadingDialog();
     }
   }
 

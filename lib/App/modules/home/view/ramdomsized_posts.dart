@@ -1045,16 +1045,24 @@ class _CustomCard2State extends State<CustomCard2> {
                                                                 ),
                                                                 SizedBox(
                                                                     width: 8),
-                                                                GestureDetector(
-                                                                  onTap: () {},
+                                                                Obx(()=>GestureDetector(
+                                                                  onTap: () {
+                                                                    log("Reply id is ${commentData.id}");
+                                                                    homeController.addLikeToReply(widget.post.id,
+                                                                        comment.id,
+                                                                        commentData.id,commentData);
+                                                                  },
                                                                   child: Icon(
-                                                                    Icons
-                                                                        .thumb_up_alt_outlined,
+                                                                    commentData.isReplyLikedByUser!.value
+                                                                  ? Icons
+                                                                      .thumb_up_alt
+                                                                      : Icons
+                                                                      .thumb_up_alt_outlined,
                                                                     size: 16,
-                                                                    color: Colors
+                                                                    color:commentData.isReplyLikedByUser!.value? Colors.green:Colors
                                                                         .black,
                                                                   ),
-                                                                ),
+                                                                ),)
                                                               ],
                                                             ),
                                                           ],

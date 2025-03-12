@@ -44,6 +44,7 @@ class MyCommunitiesList extends StatelessWidget {
                 data: group,
                 isJoined: group.isJoined,
                 onJoinTap: (){
+                  controller.joinCommunity(group.id);
                 },
               );
             },

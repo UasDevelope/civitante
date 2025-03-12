@@ -40,14 +40,14 @@ class SplashController extends GetxController {
           print("Token has expired, redirecting to login...");
           Get.offAllNamed(AppRoutes.started);
         } else {
-          if (isUserAuth.isEmpty || isUserAuth != "true") {
-            print("User is not authenticated with FaceAuth, redirecting...");
-            Get.offAllNamed(AppRoutes.faceIDScreen);
-          } else {
+          // if (isUserAuth.isEmpty || isUserAuth != "true") {
+          //   print("User is not authenticated with FaceAuth, redirecting...");
+          //   Get.offAllNamed(AppRoutes.faceIDScreen);
+          // } else {
             print("Token is valid, FaceAuth completed, redirecting to home...");
             AppConstant().userID = token;
             Get.offAllNamed(AppRoutes.bottomNav);
-          }
+          // }
         }
       } else {
         print("No token found, redirecting to login...");
