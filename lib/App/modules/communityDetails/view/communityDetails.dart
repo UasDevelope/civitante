@@ -129,72 +129,72 @@ bool isJoined=widget.community!.isJoined;
                         // Action Buttons
                         if (!widget.isAllCommunity)
                           Column(
-                            spacing: 10,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              buildActionCommunityButton(AppImages.addCircle, () {
-                                Get.toNamed(AppRoutes.post, arguments: {
-                                  "communityId": widget.community!.id
-                                });
-                              }),
-                              buildActionCommunityButton(AppImages.invite, () {
-                                Get.to(InviteMember(
-                                  communityId: widget.community!.id,
-                                ));
-                              }),
+                              buildActionCommunityButton(
+                                assetPath: AppImages.addCircle,
+                                onTap: () {
+                                  Get.toNamed(AppRoutes.post, arguments: {
+                                    "communityId": widget.community!.id,
+                                  });
+                                },
+                                tooltip: "Create Post",
+                              ),
+                              buildActionCommunityButton(
 
-                              buildActionCommunityButton(AppImages.eidt, () {
-                                Get.toNamed(AppRoutes.editMycommunity,
-                                    arguments: {"data": widget.community!});
-                              }),
-                              // buildActionCommunityButton(AppImages.video, () {
-                              //   Get.to(NewMeetingView());
-                              // }),
-                              buildActionCommunityButton(AppImages.chat, () {
-                                Get.to(CommunityChat(
-                                  communityId: widget.community!.id,
-                                ));
-                              }),
-                              // Container(
-                              //   decoration: BoxDecoration(
-                              //     shape: BoxShape.circle,
-                              //     color: AppColors
-                              //         .light_gray, // Adjust color as needed
-                              //   ),
-                              //   child: IconButton(
-                              //     onPressed: () {
-                              //       Get.to(CommunityChat(
-                              //         communityId: widget.community!.id,
-                              //       ));
-                              //       // Add your chat functionality here
-                              //     },
-                              //     icon: Icon(
-                              //       Icons.chat_outlined,
-                              //       color: Colors.white,
-                              //       size: 20,
-                              //     ),
-                              //   ),
-                              // ),
+                                assetPath: AppImages.invite,
+                                onTap: () {
+                                  Get.to(InviteMember(
+                                    communityId: widget.community!.id,
+                                  ));
+                                },
+                                tooltip: "Invite Members",
+                              ),
+                              buildActionCommunityButton(
+                                assetPath: AppImages.eidt,
+                                onTap: () {
+                                  Get.toNamed(AppRoutes.editMycommunity, arguments: {
+                                    "data": widget.community!,
+                                  });
+                                },
+                                tooltip: "Edit Community",
+                              ),
+                              buildActionCommunityButton(
+                                assetPath: AppImages.chat,
+                                onTap: () {
+                                  Get.to(CommunityChat(
+                                    communityId: widget.community!.id,
+                                  ));
+                                },
+                                tooltip: "Community Chat",
+                              ),
                             ],
                           ),
-                        if (isJoined==true)
+
+                        if (isJoined == true)
                           Column(
-                            spacing: 10,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              // buildActionCommunityButton(AppImages.addCircle, () {
-                              //   Get.toNamed(AppRoutes.post, arguments: {
-                              //     "communityId": widget.community!.id
-                              //   });
-                              // }),
-                              buildActionCommunityButton(AppImages.chat, () {
-                                Get.to(CommunityChat(
-                                  communityId: widget.community!.id,
-                                ));
-                                log("Print");
-                              }),
+                              buildActionCommunityButton(
+                                assetPath: AppImages.addCircle,
+                                onTap: () {
+                                  Get.toNamed(AppRoutes.post, arguments: {
+                                    "communityId": widget.community!.id,
+                                  });
+                                },
+                                tooltip: "Create Post",
+                              ),
+                              buildActionCommunityButton(
+                                assetPath: AppImages.chat,
+                                onTap: () {
+                                  Get.to(CommunityChat(
+                                    communityId: widget.community!.id,
+                                  ));
+                                },
+                                tooltip: "Community Chat",
+                              ),
                             ],
                           ),
                         if(isJoined==false)
@@ -240,7 +240,7 @@ bool isJoined=widget.community!.isJoined;
                       ],
                     ),
                     SizedBox(height: 20),
-                    if(isJoined==true)
+                    if(isJoined==true||!widget.isAllCommunity)
                     AppText(
                         text: 'Recent Posts',
                         fontWeight: FontWeight.w500,
@@ -252,7 +252,7 @@ bool isJoined=widget.community!.isJoined;
               ),
             ),
               // ListView for Posts
-             if(isJoined==true)
+             if(isJoined==true||!widget.isAllCommunity)
               Expanded(
                   child: RandomSizedPostsScreen(
                     isCommunityDetails: true,
