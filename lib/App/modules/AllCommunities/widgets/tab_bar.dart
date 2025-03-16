@@ -40,6 +40,7 @@ class AllCommunitiesTabBar extends StatelessWidget {
           ),
           Expanded(
             child: TabBarView(
+
               controller: controller.tabController,
               children: [
                 MyCommunitiesList(),

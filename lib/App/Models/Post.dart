@@ -149,12 +149,14 @@ class CreatedBy {
 
 class Comment {
   final String id;
+  RxInt? likesCount;
   final User user;
   final String text;
   final DateTime createdAt;
 
-  RxList<String>? likes;
-  RxList<Comment> replies; // Always initialized
+  RxList<dynamic>? likes;
+  RxList<dynamic>? replyLikesCount;
+  RxList<Comment> replies;
   RxBool isCommentLikedByUser;
   RxBool? isReplyLikedByUser;
 
@@ -168,8 +170,10 @@ class Comment {
     required this.user,
     required this.text,
     required this.createdAt,
+    this.likesCount,
 
     this.likes,
+    this.replyLikesCount,
     RxList<Comment>? replies, // Now optional
     required this.isCommentLikedByUser,
      this.isReplyLikedByUser,
@@ -182,10 +186,15 @@ class Comment {
     return Comment(
       id: json['_id'] ?? '',
       user: User.fromJson(json['user'] ?? {}),
+      likesCount: RxInt(json['likesCount'] ?? 0),
       text: json['text'] ?? '',
       createdAt:
           DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
       likes: json['likes'] != null
+          ? RxList<String>((json['likes'] as List<dynamic>)
+              .map((e) => e.toString())
+              .toList())
+          : null, replyLikesCount: json['likes'] != null
           ? RxList<String>((json['likes'] as List<dynamic>)
               .map((e) => e.toString())
               .toList())

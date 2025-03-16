@@ -16,6 +16,11 @@ class HomeController extends GetxController
   late TabController tabController;
   var selectedTabIndex = 0.obs;
   var selectedTabValue = "Following".obs;
+  RxBool isFollowing=true.obs;
+  void toggleSwitchLane(){
+    isFollowing.value=!isFollowing.value;
+    fetchAndAssignPosts(followed: isFollowing.value);
+  }
   var commentReplyList = <Map<String, String>>[].obs;
   void storeComment(String commentId, String commentText, String userId,String userImage) {
     Map<String, String> commentData = {
@@ -49,11 +54,39 @@ class HomeController extends GetxController
   final TextEditingController commentController = TextEditingController();
   final TextEditingController commentReplyController = TextEditingController();
   RxBool isPostLoading = false.obs;
-  RxString selectCatagory = "General".obs;
-  RxString selectedCategory = "General".obs;
-  RxList<String> categoriesList = ["General","Tech","Lifestyle","Business","Health"].obs;
+  RxString selectCatagory = "Technology & Innovation".obs;
+  RxString selectedCategory = "Technology & Innovation".obs;
+  RxList<String> categoriesList = ['Technology & Innovation',
+    'Business & Finance',
+    'General & Entertainment',
+    'Health & Wellness',
+    'Science & Education',
+    'Lifestyle & Self-Improvement',
+    'Politics & Society',
+    'Sports & Recreation',
+    'Art & Creativity',
+    'Food & Culinary',
+    'Automotive & Transport',
+    'Work & Careers',
+    'DIY & Home Improvement',
+    'Relationships & Social Life',
+    'Animals & Nature'].obs;
   RxList<String> categories =
-      ['General', 'Tech', 'Lifestyle', 'Business', 'Health'].obs;
+      ['Technology & Innovation',
+        'Business & Finance',
+        'General & Entertainment',
+        'Health & Wellness',
+        'Science & Education',
+        'Lifestyle & Self-Improvement',
+        'Politics & Society',
+        'Sports & Recreation',
+        'Art & Creativity',
+        'Food & Culinary',
+        'Automotive & Transport',
+        'Work & Careers',
+        'DIY & Home Improvement',
+        'Relationships & Social Life',
+        'Animals & Nature'].obs;
   RxString searchedValue = "".obs;
   void filterPostsByCategory() {
     if (selectCatagory.value == "General") {
@@ -81,16 +114,16 @@ class HomeController extends GetxController
   void filterPost() {
     String searchQuery = searchedValue.value.toLowerCase();
 
-    // If the search value is not empty, filter the posts
     if (searchQuery.isNotEmpty) {
       var filtered = posts.where((post) {
-        // log("Post.category is ${post.category}");
         return post.title.toLowerCase().contains(searchQuery) ||
-            post.description.toLowerCase().contains(searchQuery);
+            post.description.toLowerCase().contains(searchQuery) ||
+            post.category.toLowerCase().contains(searchQuery) ||
+            post.createdBy.name.toLowerCase().contains(searchQuery) ||
+            post.tags.any((tag) => tag.toLowerCase().contains(searchQuery));
       }).toList();
       filteredPosts.value = filtered;
     } else {
-      // If the search value is empty, show all posts
       filteredPosts.value = posts;
     }
   }
@@ -239,6 +272,8 @@ class HomeController extends GetxController
               name: name.value,profileImage: imageUrl.value),
           text: commentController.text,
           createdAt: DateTime.now(), isCommentLikedByUser: false.obs, repliesCount: 0.obs, isEdited: false.obs,
+          likes: [].obs
+
         );
 
         // Add comment to observable list
@@ -267,7 +302,7 @@ class HomeController extends GetxController
       final errorMessage = _parseErrorMessage(response);
       print("Response of Points is: $errorMessage");
 
-      if (errorMessage == "Not enough points to reply") {
+      if (errorMessage == "Not enough points to reply to this comment") {
         Get.dialog(
           AlertDialog(
             backgroundColor: AppColors.light_gray,
@@ -297,6 +332,8 @@ class HomeController extends GetxController
           createdAt: DateTime.now(),
           isCommentLikedByUser: false.obs,
           repliesCount: 0.obs,
+          isReplyLikedByUser: false.obs,
+          replyLikesCount: <dynamic>[].obs,
           isEdited: false.obs,
         );
 
@@ -319,24 +356,48 @@ class HomeController extends GetxController
 
   Future<void> addLikeToReply(String postId, String commentId, String replyId, Comment commentData) async {
     try {
-      // Optimistic Update
-      bool isCurrentlyLiked = commentData.isReplyLikedByUser!.value;
-      if (isCurrentlyLiked) {
-        commentData.likes?.remove("67ceb0ba200e253d5a1cb447"); // Replace with actual user ID
-        commentData.isReplyLikedByUser!.value = false;
-      } else {
-        commentData.likes?.add("67ceb0ba200e253d5a1cb447");
-        commentData.isReplyLikedByUser!.value = true;
-      }
-
+      // API Request
       final response = await HttpService.post("/addLikeToReply/$postId/$commentId/$replyId", {});
       log("Response is $response");
 
-      // Update state based on API response
+      // Parse error message
+      final errorMessage = _parseErrorMessage(response);
+      log("Error Message: $errorMessage");
+
+      // Check if the user lacks enough points
+      if (errorMessage == "Not enough points to like this reply") {
+        Get.dialog(
+          AlertDialog(
+            backgroundColor: AppColors.light_gray,
+            title: AppText(text: "Dear User", fontWeight: FontWeight.w600),
+            content: AppText(text: errorMessage, fontSize: 14),
+            actions: [
+              AppButton(
+                textColor: AppColors.light_gray,
+                text: "Buy Now!",
+                onPressed: () {
+                  Get.to(WalletScreen());
+                },
+              )
+            ],
+          ),
+        );
+        return; // ✅ Exit early to prevent UI update
+      }
+
+      // ✅ Parse API Response
       final responseData = jsonDecode(response);
+
+      // ✅ Update UI only after confirming API response
       commentData.isReplyLikedByUser!.value = responseData['isLike'];
+
+      // Convert dynamic list to List<String> and update replyLikesCount
+      List<String> updatedLikesList = List<String>.from(responseData['likes'] ?? []);
+      commentData.replyLikesCount?.clear();
+      commentData.replyLikesCount?.addAll(updatedLikesList);
+
     } catch (e) {
-      log("Error is $e");
+      log("❌ Error in addLikeToReply: $e");
     }
   }
 
@@ -390,52 +451,72 @@ class HomeController extends GetxController
       return 0;
     }
   }
-  Future<void> addLikeToComment(String postId, String commentId, int index, int commentIndex) async {
+  Future<void> addLikeToComment(String postId, String commentId, Comment commentData) async {
     try {
-      var response = await HttpService.post("/addLikeToComment/$postId/$commentId", {});
+      print("🔹 Starting addLikeToComment for PostID: $postId, CommentID: $commentId");
+      print("🔹 Initial Like Status: ${commentData.isCommentLikedByUser!.value}");
+      print("🔹 Initial Likes Count: ${commentData.likes?.length}");
 
-      print("API Response: $response");
+      // API Request
+      print("🔹 Sending API request...");
+      final response = await HttpService.post("/addLikeToComment/$postId/$commentId", {});
+      print("🔹 API Response: $response");
 
-      if (response != null && response['error'] == null) {
-        bool isLiked = response["isLike"] ?? false;
-        var comment = filteredPosts[index].comments[commentIndex];
+      // Parse error message
+      final errorMessage = _parseErrorMessage(response);
+      log("Error Message: $errorMessage");
 
-        if (comment.isCommentLikedByUser != null) {
-          comment.isCommentLikedByUser.value = isLiked;
-        } else {
-          print("Warning: isCommentLikedByUser is null for comment ID: $commentId");
-        }
-      } else {
-        final errorMessage = _parseErrorMessage(response);
-        print("Response Error: $errorMessage");
-
-        if (errorMessage == "Not enough points to like this comment") {
-          Get.dialog(
-            AlertDialog(
-              backgroundColor: AppColors.light_gray,
-              title: AppText(text: "Dear User", fontWeight: FontWeight.w600),
-              content: AppText(text: errorMessage, fontSize: 14),
-              actions: [
-                AppButton(
-                  textColor: AppColors.light_gray,
-                  text: "Buy Now!",
-                  onPressed: () {
-                    Get.to(WalletScreen());
-                  },
-                )
-              ],
-            ),
-          );
-        }
+      // Handle insufficient points case
+      if (errorMessage == "Not enough points to like this comment") {
+        print("🔹 User doesn't have enough points to like this comment.");
+        Get.dialog(
+          AlertDialog(
+            backgroundColor: AppColors.light_gray,
+            title: AppText(text: "Dear User", fontWeight: FontWeight.w600),
+            content: AppText(text: errorMessage, fontSize: 14),
+            actions: [
+              AppButton(
+                textColor: AppColors.light_gray,
+                text: "Buy Now!",
+                onPressed: () {
+                  Get.to(WalletScreen());
+                },
+              ),
+            ],
+          ),
+        );
+        return; // ✅ Exit early to prevent UI update
       }
-    } catch (e, stackTrace) {
-      print("Exception: ${e.toString()}");
-      print("Stack Trace: $stackTrace");
 
-      ToastUtil.showToast(
-        message: "Failed to like comment: ${e.toString()}",
-        backgroundColor: Colors.red,
+      // ✅ Ensure response is a valid Map<String, dynamic>
+      if (response is! Map<String, dynamic>) {
+        print("❌ Unexpected response format: $response");
+        return;
+      }
+
+      // ✅ Update UI with API response values
+      commentData.isCommentLikedByUser!.value = response['isLike'];
+      commentData.likes?.clear();
+      commentData.likes?.addAll(
+        (response['likes'] as List)
+            .where((like) => like['_id'] != null) // ✅ Ensure _id exists
+            .map((like) => like['_id'].toString()) // ✅ Convert to String
+            .toList(), // ✅ Convert to List<String>
       );
+
+      log("likes is ${commentData.likes}");
+
+      // ✅ Update Like Count
+      int updatedLikeCount = response['likesCount'] ?? 0;
+      print("🔹 API Updated Like Count: $updatedLikeCount");
+
+      // Assign the updated like count
+      commentData.likesCount!.value = updatedLikeCount;
+      print("🔹 Final Likes Count: ${commentData.likesCount}");
+
+    } catch (e, stackTrace) {
+      print("❌ Exception in addLikeToComment: $e");
+      print("📜 Stack Trace: $stackTrace");
     }
   }
   Future<void> addPostRating(String postId, int rating, int index) async {

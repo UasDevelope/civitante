@@ -34,6 +34,7 @@ class MyCommunitiesList extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             itemCount: controller.filteredCommunities.length,
             shrinkWrap: true,
+            physics: const AlwaysScrollableScrollPhysics(), // Ensure scrolling works
             itemBuilder: (context, index) {
               final group = controller.filteredCommunities[index];
               return MyCommunitiesCard(
@@ -99,67 +100,112 @@ class MyCommunitiesCard extends StatelessWidget {
   final bool isJoined;
   final VoidCallback? onJoinTap;
 
-  const MyCommunitiesCard(
-      {Key? key,
-      required this.imageUrl,
-      required this.groupName,
-      required this.memberCount,
-        this.isJoined=false,
-        this.isAllCommunity=false,
-        this.onJoinTap,
-      this.data})
-      : super(key: key);
+  const MyCommunitiesCard({
+    Key? key,
+    required this.imageUrl,
+    required this.groupName,
+    required this.memberCount,
+    this.isJoined = false,
+    this.isAllCommunity = false,
+    this.onJoinTap,
+    this.data,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Get.to(MyCommunityDetail(
+      onTap: () => Get.to(
+        MyCommunityDetail(
           isAllCommunity: isAllCommunity,
           community: data,
-        ));
-      },
+        ),
+      ),
       child: Card(
         color: AppColors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        elevation: 3,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Row(
             children: [
-              CircleAvatar(
-                radius: 25,
-                backgroundImage: NetworkImage(imageUrl),
+              // Community Avatar
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      color: Colors.grey[300],
+                      child: const Icon(
+                        Icons.group,
+                        color: Colors.grey,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              const SizedBox(width: 16),
-              // Group Details
+              const SizedBox(width: 12),
+
+              // Community Info
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       groupName,
                       style: const TextStyle(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         fontSize: 16,
+                        overflow: TextOverflow.ellipsis,
                       ),
+                      maxLines: 1,
                     ),
                     const SizedBox(height: 4),
                     Text(
                       '$memberCount members',
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 13,
                       ),
                     ),
                   ],
                 ),
               ),
-              // Icon
-              if(!isJoined)
-              InkWell(
-                  onTap: onJoinTap,
-                  child: const Icon(Icons.person, color: Colors.grey)),
+
+              // Join Button
+              if (!isJoined)
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: InkWell(
+                    onTap: onJoinTap,
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey[400]!),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Text(
+                        'Join',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),

@@ -43,7 +43,7 @@ class AllCommunitiesScreen extends StatelessWidget {
                       height: Get.height * 0.02,
                     ),
                     Container(
-                        height: Get.height / 1.7,
+                        height: Get.height / 1.3,
                         child: AllCommunitiesTabBar()),
                   ],
                 ),

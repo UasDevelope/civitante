@@ -84,13 +84,13 @@ class ProfileController extends GetxController {
               ? response['totalPosts'].length
               : 0);
 
-      followers.value = response['followers'] is int
-          ? response['followers']
-          : (response['followers'] is List ? response['followers'].length : 0);
+      followers.value = response['followersCount'] is int
+          ? response['followersCount']
+          : (response['followersCount'] is List ? response['followersCount'].length : 0);
 
-      following.value = response['following'] is int
-          ? response['following']
-          : (response['following'] is List ? response['following'].length : 0);
+      following.value = response['followingCount'] is int
+          ? response['followingCount']
+          : (response['followingCount'] is List ? response['followingCount'].length : 0);
 
       imageUrl.value = response['profileImage']?.toString() ?? '';
       nameController.text = name.value;

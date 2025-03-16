@@ -17,26 +17,26 @@ class BottomNavScreen extends StatelessWidget {
       body: Obx(() => LoadingOverlay(
           isLoading: controller.showloading.value,
           child: controller.pages[controller.currentIndex.value])),
-      floatingActionButton: SizedBox(
-        width: Get.width * 0.2, // Adjust the button width
-        height: Get.height * 0.1, // Adjust the button height
-        child: FloatingActionButton(
-          shape: CircleBorder(),
-          backgroundColor: Colors.black,
-          onPressed: () {
-            Get.toNamed(AppRoutes.post);
-          },
-          child: Padding(
-            padding: EdgeInsets.all(
-                10.0), // Adjust the padding to decrease image size
-            child: Image.asset(
-              AppImages.add,
-              height: 40,
-            ),
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: SizedBox(
+      //   width: Get.width * 0.2, // Adjust the button width
+      //   height: Get.height * 0.1, // Adjust the button height
+      //   child: FloatingActionButton(
+      //     shape: CircleBorder(),
+      //     backgroundColor: Colors.black,
+      //     onPressed: () {
+      //       Get.toNamed(AppRoutes.post);
+      //     },
+      //     child: Padding(
+      //       padding: EdgeInsets.all(
+      //           10.0), // Adjust the padding to decrease image size
+      //       child: Image.asset(
+      //         AppImages.add,
+      //         height: 40,
+      //       ),
+      //     ),
+      //   ),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: Obx(() => BottomAppBar(
             color: Colors.black,
             shape: CircularNotchedRectangle(),
@@ -57,7 +57,11 @@ class BottomNavScreen extends StatelessWidget {
                     isActive: controller.currentIndex.value == 1,
                     onTap: () => controller.changeIndex(1),
                   ),
-                  SizedBox(width: Get.width * 0.2), // Space for FAB
+                  buildNavItem(
+                    icon: AppImages.add,
+                    isActive: controller.currentIndex.value == 2,
+                    onTap: () => controller.changeIndex(2),
+                  ),
                   buildNavItem(
                     icon: AppImages.wallet,
                     isActive: controller.currentIndex.value == 3,

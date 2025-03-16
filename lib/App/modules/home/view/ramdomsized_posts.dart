@@ -26,6 +26,7 @@ class RandomSizedPostsScreen extends StatelessWidget {
   final bool explore;
   final bool? followed;
   final bool? randomized;
+  final bool isShowFilter;
   final bool isCommunityDetails;
 
   const RandomSizedPostsScreen(
@@ -33,6 +34,7 @@ class RandomSizedPostsScreen extends StatelessWidget {
       this.communityId = "",
       this.explore = false,
       this.followed = false,
+      this.isShowFilter=true,
       this.randomized = false,
       this.isCommunityDetails = false});
 
@@ -60,49 +62,51 @@ class RandomSizedPostsScreen extends StatelessWidget {
                 ),
               ),
             if (explore == true)
-              Column(
-                children: [
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Wrap(
-                    spacing: 8.0,
-                    runSpacing: 8.0,
-                    children: homeController.categoriesList.map((category) {
-                      return Obx(() => InkWell(
-                            onTap: () {
-                              homeController.selectedCategory.value =
-                                  category; // Update selected category
-                              print(
-                                  "Selected Category: ${homeController.selectedCategory.value}");
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: homeController.selectedCategory.value ==
-                                        category
-                                    ? AppColors.Slate_gray
-                                    : AppColors.light_gray,
-                                borderRadius: BorderRadius.circular(20),
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Wrap(
+                      spacing: 8.0,
+                      runSpacing: 8.0,
+                      children: homeController.categoriesList.map((category) {
+                        return Obx(() => InkWell(
+                              onTap: () {
+                                homeController.selectedCategory.value =
+                                    category; // Update selected category
+                                print(
+                                    "Selected Category: ${homeController.selectedCategory.value}");
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: homeController.selectedCategory.value ==
+                                          category
+                                      ? AppColors.Slate_gray
+                                      : AppColors.light_gray,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: AppText(
+                                  text: category,
+                                  fontSize: 14,
+                                  color: homeController.selectedCategory.value ==
+                                          category
+                                      ? Colors.white
+                                      : Colors
+                                          .black, // Change text color for better visibility
+                                ),
                               ),
-                              child: AppText(
-                                text: category,
-                                fontSize: 14,
-                                color: homeController.selectedCategory.value ==
-                                        category
-                                    ? Colors.white
-                                    : Colors
-                                        .black, // Change text color for better visibility
-                              ),
-                            ),
-                          ));
-                    }).toList(),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                ],
+                            ));
+                      }).toList(),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                  ],
+                ),
               ),
             if (explore == false)
               Row(
@@ -137,6 +141,7 @@ class RandomSizedPostsScreen extends StatelessWidget {
                   //   ),
                   // ),
                   // SizedBox(height: 10,),
+                 if(isShowFilter)
                   HomeFilterMenues(
                     onSelected: (value) {
                       if (value == 'Comments') {
@@ -171,50 +176,58 @@ class RandomSizedPostsScreen extends StatelessWidget {
                           padding: EdgeInsets.only(bottom: 14),
                           cardsCount: homeController.filteredPosts.length,
                           numberOfCardsDisplayed: 1,
-                          threshold: 5,
-                          duration: const Duration(microseconds: 300),
-                          isLoop: true,
+                          threshold: 20, // Increased threshold to reduce accidental swipes
+                          duration: const Duration(milliseconds: 300),
+                          isLoop: false,
                           onSwipe: (previousIndex, currentIndex, direction) {
                             if (currentIndex == null) return false;
 
-                            // Prevent swiping forward if it's the last post
-                            if (direction == CardSwiperDirection.right &&
-                                currentIndex >= homeController.filteredPosts.length - 1) {
-                              print('Cannot swipe forward, already at the last post');
+                            // Ignore small or diagonal swipes
+                            if (direction == CardSwiperDirection.top || direction == CardSwiperDirection.bottom) {
+                              print("Ignored vertical swipe");
                               return false;
                             }
 
-                            // Prevent swiping backward if it's the first post
-                            if (direction == CardSwiperDirection.left && currentIndex <= 0) {
-                              print('Cannot swipe backward, already at the first post');
-                              return false;
-                            }
-
-                            // Ensure index is within range before accessing the list
-                            if (currentIndex >= 0 && currentIndex < homeController.filteredPosts.length) {
-                              final post = homeController.filteredPosts[currentIndex];
-                              homeController.viewPostById(post.id, currentIndex);
-                              print('Swiped to Post: ${post.id} in direction: $direction');
-
-                              if (direction == CardSwiperDirection.left) {
-                                print('Swiped backward to previous post');
-                              } else if (direction == CardSwiperDirection.right) {
-                                print('Swiped forward to next post');
+                            // Swiping Left (Backward to Previous Post)
+                            if (direction == CardSwiperDirection.left) {
+                              if (previousIndex > 0) {
+                                final previousPost = homeController.filteredPosts[previousIndex - 1];
+                                homeController.viewPostById(previousPost.id, previousIndex - 1);
+                                print('Swiped backward to previous post: ${previousPost.id}');
+                                return true;
+                              } else {
+                                print('Already at the first post');
+                                return false;
                               }
-                              return true;
+                            }
+
+                            // Swiping Right (Forward to Next Post)
+                            if (direction == CardSwiperDirection.right) {
+                              if (previousIndex < homeController.filteredPosts.length - 1) {
+                                final nextPost = homeController.filteredPosts[previousIndex + 1];
+                                homeController.viewPostById(nextPost.id, previousIndex + 1);
+                                print('Swiped forward to next post: ${nextPost.id}');
+                                return true;
+                              } else {
+                                print('Already at the last post');
+                                return false;
+                              }
                             }
 
                             return false;
                           },
-                          cardBuilder: (context, index, percentThresholdX,
-                              percentThresholdY) {
-                            if (index >= homeController.filteredPosts.length ||
-                                index < 0) {
+                          cardBuilder: (context, index, percentThresholdX, percentThresholdY) {
+                            if (index < 0 || index >= homeController.filteredPosts.length) {
                               return const SizedBox.shrink();
                             }
+
                             final post = homeController.filteredPosts[index];
+
                             return GestureDetector(
                               onTap: () {
+
+                                    homeController.viewPostById(post.id, index);
+
                                 Get.toNamed(AppRoutes.postDetail, arguments: {
                                   "data": post,
                                   "currentUser": false,
@@ -322,7 +335,8 @@ class RandomSizedPostsScreen extends StatelessWidget {
                               onTap: () {
                                 var response =
                                     homeController.viewPostById(post.id, index);
-                                print('Here is value: $response');
+                                print('Here is value: ${response}');
+                                log("hhhjjknnk...");
 
                                 Get.toNamed(AppRoutes.postDetail, arguments: {
                                   "data": post,
@@ -545,7 +559,7 @@ class _CustomCard2State extends State<CustomCard2> {
                       right: 8,
                       child: Row(
                         children: [
-                          GestureDetector(
+                          Obx(()=>GestureDetector(
                             onTap: () {
                               log("Printed image");
                             },
@@ -553,20 +567,21 @@ class _CustomCard2State extends State<CustomCard2> {
                               icon: Image.asset(
                                 AppImages.view,
                                 height: 25,
-                                color: widget.post.isViewed == true
+                                color: widget.post.isViewed.value == true
                                     ? AppColors.green
                                     : AppColors.white,
                               ),
                               label: widget.post.views.toString(),
                               textColor: AppColors.blue,
                             ),
-                          ),
+                          )),
                           const SizedBox(width: 10),
                           Obx(() {
                             return GestureDetector(
                               onTap: () async {
                                 // Use `await` to make sure the like count updates correctly
                                 if (widget.currentUser == false) {
+                                  log("Index is ${widget.index} and post id is ${widget.post.id}");
                                   int newLikesCount =
                                       await homeController.addLikeToPost(
                                           widget.post.id, widget.index);
@@ -866,28 +881,34 @@ class _CustomCard2State extends State<CustomCard2> {
                                                     Obx(
                                                       () => GestureDetector(
                                                         onTap: () async {
+                                                          log("Index widget ${widget.index} $index");
+
                                                           await homeController
                                                               .addLikeToComment(
                                                                   widget
                                                                       .post.id,
                                                                   comment.id,
-                                                                  widget.index,
-                                                                  index);
+                                                          comment);
                                                         },
-                                                        child: Icon(
-                                                          comment.isCommentLikedByUser
-                                                                  .value
-                                                              ? Icons
-                                                                  .thumb_up_alt
-                                                              : Icons
-                                                                  .thumb_up_alt_outlined,
-                                                          size: 20,
-                                                          color: comment
-                                                                  .isCommentLikedByUser
-                                                                  .value
-                                                              ? AppColors.green
-                                                              : AppColors
-                                                                  .appColor,
+                                                        child: Row(
+                                                          children: [
+                                                            Icon(
+                                                              comment.isCommentLikedByUser
+                                                                      .value
+                                                                  ? Icons
+                                                                      .thumb_up_alt
+                                                                  : Icons
+                                                                      .thumb_up_alt_outlined,
+                                                              size: 20,
+                                                              color: comment
+                                                                      .isCommentLikedByUser
+                                                                      .value
+                                                                  ? AppColors.green
+                                                                  : AppColors
+                                                                      .appColor,
+                                                            ),
+                                                            Obx(()=>Text("${comment.likes!.length}")),
+                                                          ],
                                                         ),
                                                       ),
                                                     ),
@@ -1052,15 +1073,20 @@ class _CustomCard2State extends State<CustomCard2> {
                                                                         comment.id,
                                                                         commentData.id,commentData);
                                                                   },
-                                                                  child: Icon(
-                                                                    commentData.isReplyLikedByUser!.value
-                                                                  ? Icons
-                                                                      .thumb_up_alt
-                                                                      : Icons
-                                                                      .thumb_up_alt_outlined,
-                                                                    size: 16,
-                                                                    color:commentData.isReplyLikedByUser!.value? Colors.green:Colors
-                                                                        .black,
+                                                                  child: Row(
+                                                                    children: [
+                                                                      Icon(
+                                                                        commentData.isReplyLikedByUser!.value
+                                                                      ? Icons
+                                                                          .thumb_up_alt
+                                                                          : Icons
+                                                                          .thumb_up_alt_outlined,
+                                                                        size: 16,
+                                                                        color:commentData.isReplyLikedByUser!.value? Colors.green:Colors
+                                                                            .black,
+                                                                      ),
+                                                                      Obx(()=>Text("${commentData.replyLikesCount!.length}"))
+                                                                    ],
                                                                   ),
                                                                 ),)
                                                               ],

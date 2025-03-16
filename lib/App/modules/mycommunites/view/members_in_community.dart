@@ -15,58 +15,84 @@ class MembersInCommunity extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(MyCommunityController());
     controller.fetchMemberUsers(communityId);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: HomeAppbar(
         title: "Members",
         onRightIconPressed: () {},
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(14.0),
-          child: Column(
-            spacing: Get.height * 0.02,
-            children: [
-              HomeSerchField(
-                hintText: "Search here...", // Custom hint text
-                onChanged: (value) {
-                  controller.onChangeMemberUserSearch(value);
-                },
-              ),
-              Obx(() {
-                if (controller.isMemberUserLoading.value) {
-                  return MyCommunityShimmer();
-                } else if (controller.filteredMemberUsers.isEmpty) {
-                  return LottieAnimationWidget();
-                }
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // Search Field
+            HomeSerchField(
+              hintText: "Search members...",
+              onChanged: controller.onChangeMemberUserSearch,
+            ),
+            const SizedBox(height: 16),
 
-                return ListView.separated(
-                  itemCount: controller.filteredMemberUsers.length,
-                  shrinkWrap: true,
-                  physics: ScrollPhysics(),
-                  itemBuilder: (itemBuilder, index) {
-                    final data = controller.filteredMemberUsers[index];
-                    return InkWell(
-                     onTap: (){
-                       Get.to(PreviewProfileScreen(id: data.id,));
-                     },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: AppColors.greyShade),
-                          color: Colors.white60,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
+            // Members List
+            Expanded(
+              child: Obx(
+                    () {
+                  if (controller.isMemberUserLoading.value) {
+                    return const MyCommunityShimmer();
+                  }
+                  if (controller.filteredMemberUsers.isEmpty) {
+                    return const LottieAnimationWidget();
+                  }
+
+                  return ListView.separated(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: controller.filteredMemberUsers.length,
+                    itemBuilder: (context, index) {
+                      final data = controller.filteredMemberUsers[index];
+
+                      return InkWell(
+                        onTap: () => Get.to(PreviewProfileScreen(id: data.id)),
+                        borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: AppColors.greyShade, width: 1),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.1),
+                                spreadRadius: 1,
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
                           child: Row(
                             children: [
-                              // Profile Image
-                              CircleAvatar(
-                                radius: 25,
-                                backgroundImage: NetworkImage(data.profileImage),
+                              // Profile Avatar
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(
+                                  data.profileImage,
+                                  width: 50,
+                                  height: 50,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) => Container(
+                                    width: 50,
+                                    height: 50,
+                                    color: Colors.grey[300],
+                                    child: const Icon(
+                                      Icons.person,
+                                      color: Colors.grey,
+                                      size: 30,
+                                    ),
+                                  ),
+                                ),
                               ),
-                              const SizedBox(width: 16),
-                              // User Details
+                              const SizedBox(width: 12),
+
+                              // User Info
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,37 +100,35 @@ class MembersInCommunity extends StatelessWidget {
                                     Text(
                                       data.name,
                                       style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.w600,
                                         fontSize: 16,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
+                                      maxLines: 1,
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
                                       '${data.costPoints} pts',
-                                      style: const TextStyle(
-                                        color: Colors.grey,
+                                      style: TextStyle(
+                                        color: Colors.grey[600],
                                         fontSize: 14,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              // Chat Icon inside a Circle
+
                             ],
                           ),
                         ),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return SizedBox(
-                      height: Get.height * 0.02,
-                    );
-                  },
-                );
-              })
-            ],
-          ),
+                      );
+                    },
+                    separatorBuilder: (context, index) => const SizedBox(height: 12),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

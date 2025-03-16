@@ -45,6 +45,7 @@ class AppImages {
   static String get chat => "chat".png;
   static String get history => "history".png;
   static String get invite => "invite".png;
+  static String get blackLogo => "blackLogo".png;
   // static String get clockTick => "tick".mp3;
 }
 

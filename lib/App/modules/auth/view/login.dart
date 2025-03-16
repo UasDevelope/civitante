@@ -35,10 +35,10 @@ class LoginScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           SizedBox(
-                            height: Get.height * 0.01,
+                            height: Get.height * 0.03,
                           ),
                           Image.asset(
-                            AppImages.logo,
+                            AppImages.blackLogo,
                             height: 150,
                             fit: BoxFit.cover,
                           ),

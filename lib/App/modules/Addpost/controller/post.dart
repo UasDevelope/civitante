@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
+import 'package:civitante/App/modules/profile/controller/profile_controller.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -16,9 +17,25 @@ import '../../home/controller/home_controller.dart';
 class PostController extends GetxController {
   RxString selectedLanguage = 'English'.obs;
   RxList<String> languages = ['English', 'Spanish', 'French', 'German'].obs;
-  RxString selectCatagory = "General".obs;
-  RxList<String> categories =
-      ['General', 'Tech', 'Lifestyle', 'Business', 'Health'].obs;
+  RxString selectCatagory = "Technology & Innovation".obs;
+  RxList<String> categories = [
+    'Technology & Innovation',
+    'Business & Finance',
+    'General & Entertainment',
+    'Health & Wellness',
+    'Science & Education',
+    'Lifestyle & Self-Improvement',
+    'Politics & Society',
+    'Sports & Recreation',
+    'Art & Creativity',
+    'Food & Culinary',
+    'Automotive & Transport',
+    'Work & Careers',
+    'DIY & Home Improvement',
+    'Relationships & Social Life',
+    'Animals & Nature'
+  ].obs;
+
   final TextEditingController tagController = TextEditingController();
   final titleController = TextEditingController();
   final descController = TextEditingController();
@@ -117,6 +134,7 @@ class PostController extends GetxController {
 
   void addPost({String communityId = ""}) async {
     try {
+      final profileController=ProfileController(true);
       isloading.value = true;
       // 1. Validate User ID
       final userID = AppConstant().userID;
@@ -128,22 +146,9 @@ class PostController extends GetxController {
         return;
       }
 
-      // 2. Validate Required Fields
-      if (titleController.text.trim().isEmpty) {
-        ToastUtil.showToast(
-          message: "Please enter a title",
-          backgroundColor: Colors.orange,
-        );
-        return;
-      }
 
-      if (descController.text.trim().isEmpty) {
-        ToastUtil.showToast(
-          message: "Please enter a description",
-          backgroundColor: Colors.orange,
-        );
-        return;
-      }
+
+
 
       if (images.isEmpty) {
         ToastUtil.showToast(
@@ -177,15 +182,25 @@ class PostController extends GetxController {
       // 5. Handle Response
       if (response != null && response['error'] == null) {
         final homeController = Get.find<HomeController>();
-        homeController.fetchAndAssignPosts();
+
+        if(communityId==""){
+          log("Fetching random posts...");
+          profileController.fetchAndAssignPosts();
+          homeController.fetchAndAssignPosts();
+          final bottomNavController=LocateController.bottomNaveController;
+          bottomNavController.currentIndex.value=4;
+        }
+        else{
+          log("Fetching community post");
+          homeController.fetchAndAssignPosts(communityId: communityId);
+        }
         ToastUtil.showToast(
           message: response['message'] ?? "Post created successfully!",
           backgroundColor: Colors.green,
         );
+
         isloading.value = false;
       //  CustomLoadingDialog.closeLoadingDialog();
-        final controller = LocateController.homeController;
-        controller.fetchAndAssignPosts(communityId: communityId);
         _clearForm();
         Get.back();
       } else {
@@ -193,8 +208,8 @@ class PostController extends GetxController {
         log("Response is $response");
         final errorMessage = _parseErrorMessage(response);
         print("Response of Pints is :$errorMessage");
-        if(errorMessage == "Not enough points to create a post")
-        Get.dialog(
+        if(errorMessage == "Not enough points to create a post") {
+          Get.dialog(
           AlertDialog(
             backgroundColor: AppColors.light_gray,
             title: AppText(text: "Dear User",fontWeight: FontWeight.w600),
@@ -208,6 +223,7 @@ class PostController extends GetxController {
             ],
           ),
         );
+        }
 
         // ToastUtil.showToast(
         //   message: errorMessage,

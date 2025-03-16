@@ -1,6 +1,7 @@
 import 'package:civitante/App/modules/drawer/view/drawer.dart';
 import 'package:civitante/App/modules/followlist/view/followlist_screen.dart';
 import 'package:civitante/App/modules/home/widgets/homeAppbar.dart';
+import 'package:civitante/App/modules/shimmer/profile_gridview_shimmer.dart';
 import 'package:civitante/App/shared/app_button.dart';
 import 'package:civitante/App/shared/app_text.dart';
 import 'package:civitante/App/shared/color.dart';
@@ -107,31 +108,96 @@ class PreviewProfileScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 4),
                         SizedBox(height: 8),
-                        Obx(() => ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
-                                side: BorderSide(
-                                    color: AppColors.textFieldHintColor,
-                                    width: 0.4),
-                                shape: RoundedRectangleBorder(
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                          GestureDetector(
+                              onTap: () {
+                                controller.followUnfollowUser("follow");
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: AppColors.textFieldHintColor, width: 0.4),
                                   borderRadius: BorderRadius.circular(20),
+                                  color: Colors.transparent,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.add,
+                                      color: AppColors.Slate_gray,
+                                      size: 18,
+                                    ),
+                                    SizedBox(width: 5),
+                                    AppText(
+                                      text: "Follow",
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                      color: AppColors.Slate_gray,
+                                    ),
+                                  ],
                                 ),
                               ),
-                              onPressed: () {
-                                controller.followUnfollowUser();
+                            ),
+                            SizedBox(width: 10), // Spacing between buttons
+                             GestureDetector(
+                              onTap: (){
+                                controller.followUnfollowUser("unfollow");
+
                               },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: AppText(
-                                    text: controller.isFollow == false
-                                        ? '+ Follow'
-                                        : 'Unfollow',
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14,
-                                    color: AppColors.Slate_gray),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: AppColors.textFieldHintColor, width: 0.4),
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.transparent,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.remove,
+                                      color: AppColors.Slate_gray,
+                                      size: 18,
+                                    ),
+                                    SizedBox(width: 5),
+                                    AppText(
+                                      text: "Unfollow",
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                      color: AppColors.Slate_gray,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            )),
+                            ),
+                          ],
+                        ),
+                        // Obx(() => ElevatedButton(
+                        //       style: ElevatedButton.styleFrom(
+                        //         backgroundColor: Colors.transparent,
+                        //         shadowColor: Colors.transparent,
+                        //         side: BorderSide(
+                        //             color: AppColors.textFieldHintColor,
+                        //             width: 0.4),
+                        //         shape: RoundedRectangleBorder(
+                        //           borderRadius: BorderRadius.circular(20),
+                        //         ),
+                        //       ),
+                        //       onPressed: () {
+                        //         controller.followUnfollowUser("follow");
+                        //       },
+                        //       child: Padding(
+                        //         padding: const EdgeInsets.all(8.0),
+                        //         child: AppText(
+                        //             text: controller.isFollow == false
+                        //                 ? '+ Follow'
+                        //                 : 'Unfollow',
+                        //             fontWeight: FontWeight.w600,
+                        //             fontSize: 14,
+                        //             color: AppColors.Slate_gray),
+                        //       ),
+                        //     )),
                         if(controller.isFollow == true)
                           AppButton(
                             textColor: AppColors.white,
@@ -204,7 +270,12 @@ class PreviewProfileScreen extends StatelessWidget {
         StatsRow(),
         SizedBox(height: 16,),
 
-        Obx(() => Padding(
+        Obx(() {
+          if(controller.isLoading.value){
+            return ProfileGridViewShimmer();
+          }
+          else{
+            return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: GridView.builder(
                 physics: NeverScrollableScrollPhysics(),
@@ -226,7 +297,9 @@ class PreviewProfileScreen extends StatelessWidget {
                       child: GridItem(post: controller.posts[index]));
                 },
               ),
-            )),
+            );
+          }
+        }),
       ],
     );
   }

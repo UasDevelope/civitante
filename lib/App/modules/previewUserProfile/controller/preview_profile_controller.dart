@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
 import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/toast_util.dart';
@@ -61,14 +62,14 @@ class PreviewProfileController extends GetxController {
               ? response['totalPosts'].length
               : 0);
 
-      followers.value = response['followers'] is int
-          ? response['followers']
-          : (response['followers'] is List ? response['followers'].length : 0);
-      isFollow.value = response['isFollow'] ?? true;
+      followers.value = response['followersCount'] is int
+          ? response['followersCount']
+          : (response['followersCount'] is List ? response['followersCount'].length : 0);
+      isFollow.value = response['isFollowing'] ?? true;
 
-      following.value = response['following'] is int
-          ? response['following']
-          : (response['following'] is List ? response['following'].length : 0);
+      following.value = response['followingCount'] is int
+          ? response['followingCount']
+          : (response['followingCount'] is List ? response['followingCount'].length : 0);
 
       imageUrl.value = response['profileImage']?.toString() ?? '';
       posts.assignAll(_parsePosts(postsData));
@@ -80,13 +81,17 @@ class PreviewProfileController extends GetxController {
     }
   }
 
-  Future<void> followUnfollowUser() async {
+  Future<void> followUnfollowUser(String action) async {
     try {
-      var response = await HttpService.post('/followUnfollow/$id', {});
+      CustomLoadingDialog.showCustomLoadingDialog("");
+      log("id is $id");
+      var response = await HttpService.post('/followUnfollow/$id', {
+        "action":action
+      });
 
       if (response != null && response['error'] == null) {
-
-        isFollow.value = response['isFollow'];
+        log("Response of follow is $response");
+        isFollow.value = response['isFollowing'];
 
         followers.value = response['followersCount'];
 
@@ -94,10 +99,12 @@ class PreviewProfileController extends GetxController {
           message: response['message'] ?? "Action completed successfully",
           backgroundColor: Colors.green,
         );
+        CustomLoadingDialog.closeLoadingDialog();
       } else {
         final errorMessage = _parseErrorMessage(response);
         print("Response of Pints is :$errorMessage");
-        if(errorMessage == "Not enough points to follow this user")
+        if(errorMessage == "Not enough points to follow this user") {
+          CustomLoadingDialog.closeLoadingDialog();
           Get.dialog(
             AlertDialog(
               backgroundColor: AppColors.light_gray,
@@ -112,12 +119,14 @@ class PreviewProfileController extends GetxController {
               ],
             ),
           );
+        }
         // ToastUtil.showToast(
         //   message: "Error: $errorMessage",
         //   backgroundColor: Colors.red,
         // );
       }
     } catch (e) {
+      CustomLoadingDialog.closeLoadingDialog();
       ToastUtil.showToast(
         message: "Failed to process request: ${e.toString()}",
         backgroundColor: Colors.red,
