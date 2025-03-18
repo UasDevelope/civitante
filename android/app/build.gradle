@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.app.civitante"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35//flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

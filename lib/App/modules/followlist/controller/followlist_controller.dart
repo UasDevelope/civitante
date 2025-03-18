@@ -11,7 +11,7 @@ class FollowListController extends GetxController{
 
     try {
       var response = await HttpService.get(url);
-      print("Response: $response");
+      print("Response for followers is: $response");
 
       if (response == null) {
         print("Error: Response is null");

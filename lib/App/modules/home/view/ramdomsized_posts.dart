@@ -21,7 +21,7 @@ import '../widgets/engament_row.dart';
 import '../widgets/home_search.dart';
 import '../widgets/slider_label.dart';
 
-class RandomSizedPostsScreen extends StatelessWidget {
+class RandomSizedPostsScreen extends StatefulWidget {
   final String communityId;
   final bool explore;
   final bool? followed;
@@ -39,10 +39,15 @@ class RandomSizedPostsScreen extends StatelessWidget {
       this.isCommunityDetails = false});
 
   @override
+  State<RandomSizedPostsScreen> createState() => _RandomSizedPostsScreenState();
+}
+
+class _RandomSizedPostsScreenState extends State<RandomSizedPostsScreen> {
+  @override
   Widget build(BuildContext context) {
     final homeController = Get.find<HomeController>();
     homeController.fetchAndAssignPosts(
-        communityId: communityId, randomized: randomized, followed: followed);
+        communityId: widget.communityId, randomized: widget.randomized, followed: widget.followed);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -51,7 +56,7 @@ class RandomSizedPostsScreen extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(height: 10),
-            if (explore == true)
+            if (widget.explore == true)
               Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15),
                 child: HomeSerchField(
@@ -61,7 +66,7 @@ class RandomSizedPostsScreen extends StatelessWidget {
                   },
                 ),
               ),
-            if (explore == true)
+            if (widget.explore == true)
               SingleChildScrollView(
                 child: Column(
                   children: [
@@ -108,7 +113,7 @@ class RandomSizedPostsScreen extends StatelessWidget {
                   ],
                 ),
               ),
-            if (explore == false)
+            if (widget.explore == false)
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -141,7 +146,7 @@ class RandomSizedPostsScreen extends StatelessWidget {
                   //   ),
                   // ),
                   // SizedBox(height: 10,),
-                 if(isShowFilter)
+                 if(widget.isShowFilter)
                   HomeFilterMenues(
                     onSelected: (value) {
                       if (value == 'Comments') {
@@ -154,15 +159,15 @@ class RandomSizedPostsScreen extends StatelessWidget {
                   ),
                 ],
               ),
-            if (explore == false)
+            if (widget.explore == false)
               Expanded(
                 child: RefreshIndicator(
                     color: AppColors.appColor,
                     onRefresh: () async {
                       await homeController.fetchAndAssignPosts(
-                          communityId: communityId,
-                          randomized: randomized,
-                          followed: followed);
+                          communityId: widget.communityId,
+                          randomized: widget.randomized,
+                          followed: widget.followed);
                     },
                     child: Obx(() {
                       if (homeController.isPostLoading.value) {
@@ -179,54 +184,70 @@ class RandomSizedPostsScreen extends StatelessWidget {
                           threshold: 20, // Increased threshold to reduce accidental swipes
                           duration: const Duration(milliseconds: 300),
                           isLoop: false,
-                          onSwipe: (previousIndex, currentIndex, direction) {
-                            if (currentIndex == null) return false;
+                            onSwipe: (previousIndex, currentIndex, direction) {
+                              if (currentIndex == null) {
+                                print("⚠️ Swipe ignored: Current index is null.");
+                                return false;
+                              }
 
-                            // Ignore small or diagonal swipes
-                            if (direction == CardSwiperDirection.top || direction == CardSwiperDirection.bottom) {
-                              print("Ignored vertical swipe");
+                              int lastIndex = homeController.filteredPosts.length - 1;
+
+                              print("🔄 Swipe detected. Previous index: $previousIndex, Current index: $currentIndex, Last index: $lastIndex");
+                              print("➡️ Swipe direction: $direction");
+
+                              if (direction == CardSwiperDirection.left) {
+                                if (previousIndex > 0) {
+                                  int targetIndex = homeController.currentIndex.value-1;
+                                  homeController.changeIndex(targetIndex);
+                                  final previousPost = homeController.filteredPosts[targetIndex];
+                                  // Call viewPostById but don't expect it to return anything
+                                  homeController.viewPostById(previousPost.id, targetIndex);
+
+                                  print("✅ Swiped left: Navigated to previous post ID: ${previousPost.id}, New index: $targetIndex ad current index is $currentIndex");
+                                  return true;
+                                } else {
+                                  print("❌ Already at the first post.");
+                                  return false;
+                                }
+                              }
+
+                              if (direction == CardSwiperDirection.right) {
+                                if (previousIndex < lastIndex) {
+                                  int targetIndex = homeController.currentIndex.value + 1;
+                                  homeController.changeIndex(targetIndex);
+                                  final nextPost = homeController.filteredPosts[targetIndex];
+
+                                  // Call viewPostById but don't expect it to return anything
+                                  homeController.viewPostById(nextPost.id, targetIndex);
+
+                                  print("✅ Swiped right: Navigated to next post ID: ${nextPost.id}, New index: $targetIndex ad current index is $currentIndex");
+                                  return true;
+                                } else {
+                                  print("❌ Already at the last post.");
+                                  return false;
+                                }
+                              }
+
                               return false;
-                            }
+                            },
+                            cardBuilder: (context, index, percentThresholdX, percentThresholdY) {
+                          print("🛠️ Building card for index: $index");
 
-                            // Swiping Left (Backward to Previous Post)
-                            if (direction == CardSwiperDirection.left) {
-                              if (previousIndex > 0) {
-                                final previousPost = homeController.filteredPosts[previousIndex - 1];
-                                homeController.viewPostById(previousPost.id, previousIndex - 1);
-                                print('Swiped backward to previous post: ${previousPost.id}');
-                                return true;
-                              } else {
-                                print('Already at the first post');
-                                return false;
-                              }
-                            }
+                          // Validate index to prevent out-of-range errors
+                          if (index < 0 || index >= homeController.filteredPosts.length) {
+                            print("⚠️ Index out of range: $index");
+                            return const SizedBox.shrink();
+                          }
 
-                            // Swiping Right (Forward to Next Post)
-                            if (direction == CardSwiperDirection.right) {
-                              if (previousIndex < homeController.filteredPosts.length - 1) {
-                                final nextPost = homeController.filteredPosts[previousIndex + 1];
-                                homeController.viewPostById(nextPost.id, previousIndex + 1);
-                                print('Swiped forward to next post: ${nextPost.id}');
-                                return true;
-                              } else {
-                                print('Already at the last post');
-                                return false;
-                              }
-                            }
 
-                            return false;
-                          },
-                          cardBuilder: (context, index, percentThresholdX, percentThresholdY) {
-                            if (index < 0 || index >= homeController.filteredPosts.length) {
-                              return const SizedBox.shrink();
-                            }
+                          // Ensure correct post is being displayed
 
-                            final post = homeController.filteredPosts[index];
-
+                          return Obx((){
+                            final post = homeController.filteredPosts[homeController.currentIndex.value];
+                            print("📄 Correcting Post Display: Expected Index: ${index} Actual Index: ${homeController.currentIndex.value}, Post ID: ${post.id}, Title: ${post.title}");
                             return GestureDetector(
                               onTap: () {
-
-                                    homeController.viewPostById(post.id, index);
+                                homeController.viewPostById(post.id, index);
 
                                 Get.toNamed(AppRoutes.postDetail, arguments: {
                                   "data": post,
@@ -236,14 +257,16 @@ class RandomSizedPostsScreen extends StatelessWidget {
                               child: AnimatedSwitcher(
                                 duration: const Duration(milliseconds: 300),
                                 child: CustomCard2(
-                                  isCommunityDetails: isCommunityDetails,
+                                  key: ValueKey(post.id),
+                                  isCommunityDetails: widget.isCommunityDetails,
                                   haveDescAndTags: false,
                                   post: post,
                                   index: index,
                                 ),
                               ),
                             );
-                          },
+                          });
+                        }
                         );
                       }
                     })
@@ -292,16 +315,16 @@ class RandomSizedPostsScreen extends StatelessWidget {
                     // }),
                     ),
               ),
-            if (explore == true)
+            if (widget.explore == true)
               Expanded(
                 child: RefreshIndicator(
                   color: AppColors.appColor,
                   onRefresh: () async {
                     // Call your refresh method from the controller
                     await homeController.fetchAndAssignPosts(
-                        communityId: communityId,
-                        randomized: randomized,
-                        followed: followed);
+                        communityId: widget.communityId,
+                        randomized: widget.randomized,
+                        followed: widget.followed);
                   },
                   child: Obx(() {
                     if (homeController.isPostLoading.value) {
@@ -344,7 +367,7 @@ class RandomSizedPostsScreen extends StatelessWidget {
                                 });
                               },
                               child: CustomCard2(
-                                isCommunityDetails: isCommunityDetails,
+                                isCommunityDetails: widget.isCommunityDetails,
                                 haveDescAndTags: false,
                                 post: post,
                                 index: index,

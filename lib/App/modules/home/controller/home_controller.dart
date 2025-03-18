@@ -16,6 +16,10 @@ class HomeController extends GetxController
   late TabController tabController;
   var selectedTabIndex = 0.obs;
   var selectedTabValue = "Following".obs;
+  RxInt currentIndex=0.obs;
+  void changeIndex(int newIndex){
+    currentIndex.value=newIndex;
+  }
   RxBool isFollowing=true.obs;
   void toggleSwitchLane(){
     isFollowing.value=!isFollowing.value;

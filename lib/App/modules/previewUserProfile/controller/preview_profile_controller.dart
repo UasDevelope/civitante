@@ -103,6 +103,7 @@ class PreviewProfileController extends GetxController {
       } else {
         final errorMessage = _parseErrorMessage(response);
         print("Response of Pints is :$errorMessage");
+
         if(errorMessage == "Not enough points to follow this user") {
           CustomLoadingDialog.closeLoadingDialog();
           Get.dialog(
@@ -120,6 +121,11 @@ class PreviewProfileController extends GetxController {
             ),
           );
         }
+        else{
+          CustomLoadingDialog.closeLoadingDialog();
+          ToastUtil.showToast(message: errorMessage,backgroundColor: Colors.red);
+        }
+
         // ToastUtil.showToast(
         //   message: "Error: $errorMessage",
         //   backgroundColor: Colors.red,
