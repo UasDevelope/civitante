@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PrefUtil {
   static const String userId = "userId";
+  static const String token = "token";
   static const String sessionExpire = "sessionExpire";
   static const String userName = "userName";
   static const String userImage = "userImage";
@@ -61,7 +62,7 @@ class PrefUtil {
   // Example of a method to save a list of maps as a list of JSON strings
   static Future<bool> setList(String key, List<Map<String, dynamic>> value) {
     List<String> jsonStringList =
-    value.map((item) => json.encode(item)).toList();
+        value.map((item) => json.encode(item)).toList();
     return _prefs!.setStringList(key, jsonStringList);
   }
 

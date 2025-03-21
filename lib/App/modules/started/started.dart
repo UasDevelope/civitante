@@ -1,6 +1,8 @@
 import 'dart:developer';
-import 'package:civitante/App/shared/strings.dart';
+
 import 'package:flutter/material.dart';
+
+import '../../utilse/notifcation_utils.dart';
 import '../../utilse/widgets.dart';
 
 class StartedScreen extends StatelessWidget {
@@ -39,6 +41,7 @@ class StartedScreen extends StatelessWidget {
                 color: Colors.blue,
                 radius: 30,
                 onPressed: () {
+                  NotificationUtil().triggerLocalNotification();
                   log('==============Redirecting to LoginScreen================>Routes-------->${AppRoutes.login}');
                   Get.toNamed(AppRoutes.login);
                 },

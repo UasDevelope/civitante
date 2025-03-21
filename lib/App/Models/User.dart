@@ -36,19 +36,19 @@ class UserMatch {
       location: Location.fromJson(json["location"] ?? {}),
       totalPosts: json["totalPosts"] ?? 0,
       posts: (json["posts"] as List<dynamic>?)
-          ?.map((e) => Post.fromJson(e))
-          .toList() ??
+              ?.map((e) => Post.fromJson(e))
+              .toList() ??
           [],
       isFollow: json["isFollow"] ?? false,
       followersCount: json["followersCount"] ?? 0,
       followingCount: json["followingCount"] ?? 0,
       followers: (json["followers"] as List<dynamic>?)
-          ?.map((e) => Follower.fromJson(e))
-          .toList() ??
+              ?.map((e) => Follower.fromJson(e))
+              .toList() ??
           [],
       following: (json["following"] as List<dynamic>?)
-          ?.map((e) => Follower.fromJson(e))
-          .toList() ??
+              ?.map((e) => Follower.fromJson(e))
+              .toList() ??
           [],
     );
   }
@@ -135,8 +135,8 @@ class Post {
       commentsCount: json["commentsCount"] ?? 0,
       views: json["views"] ?? 0,
       comments: (json["comments"] as List<dynamic>?)
-          ?.map((e) => Comment.fromJson(e))
-          .toList() ??
+              ?.map((e) => Comment.fromJson(e))
+              .toList() ??
           [],
     );
   }
@@ -207,8 +207,8 @@ class Comment {
       likesCount: json["likesCount"] ?? 0,
       repliesCount: json["repliesCount"] ?? 0,
       replies: (json["replies"] as List<dynamic>?)
-          ?.map((e) => Comment.fromJson(e))
-          .toList() ??
+              ?.map((e) => Comment.fromJson(e))
+              .toList() ??
           [],
     );
   }
@@ -230,11 +230,13 @@ class Follower {
   String id;
   String name;
   String profileImage;
+  int followCount;
 
   Follower({
     required this.id,
     required this.name,
     required this.profileImage,
+    required this.followCount,
   });
 
   factory Follower.fromJson(Map<String, dynamic> json) {
@@ -242,6 +244,7 @@ class Follower {
       id: json["_id"] ?? "",
       name: json["name"] ?? "",
       profileImage: json["profileImage"] ?? "",
+      followCount: json["followCount"] ?? 0,
     );
   }
 

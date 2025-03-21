@@ -2,13 +2,16 @@ import 'package:civitante/App/modules/followlist/controller/followlist_controlle
 import 'package:civitante/App/shared/image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../../shared/app_text.dart';
 import '../../../shared/color.dart';
 
 class FollowListScreen extends StatelessWidget {
   FollowListScreen(
-      {super.key, required this.isFollowing, required this.userID,
-        this.isCurrentUser = false});
+      {super.key,
+      required this.isFollowing,
+      required this.userID,
+      this.isCurrentUser = false});
 
   final bool isFollowing;
   final String userID;
@@ -18,7 +21,8 @@ class FollowListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    controller.getFollowers(isCurrentUser?"/getProfile/":"/getProfile/$userID");
+    controller
+        .getFollowers(isCurrentUser ? "/getProfile/" : "/getProfile/$userID");
     print("Followers heere: ${controller.user}");
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -36,7 +40,8 @@ class FollowListScreen extends StatelessWidget {
           children: [
             Expanded(
               child: FutureBuilder(
-                future: controller.getFollowers(isCurrentUser?"/getProfile/":"/getProfile/$userID"),
+                future: controller.getFollowers(
+                    isCurrentUser ? "/getProfile/" : "/getProfile/$userID"),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
@@ -50,9 +55,14 @@ class FollowListScreen extends StatelessWidget {
                           : (controller.user.value?.followers?.length ?? 0),
                       itemBuilder: (context, index) {
                         // Ensure we do not access out of range index
-                        if ((isFollowing && (controller.user.value?.following?.isEmpty ?? true)) ||
-                            (!isFollowing && (controller.user.value?.followers?.isEmpty ?? true))) {
-                          return SizedBox.shrink(); // Return an empty widget if list is empty
+                        if ((isFollowing &&
+                                (controller.user.value?.following?.isEmpty ??
+                                    true)) ||
+                            (!isFollowing &&
+                                (controller.user.value?.followers?.isEmpty ??
+                                    true))) {
+                          return SizedBox
+                              .shrink(); // Return an empty widget if list is empty
                         }
 
                         var user = isFollowing
@@ -60,7 +70,8 @@ class FollowListScreen extends StatelessWidget {
                             : controller.user.value!.followers[index];
 
                         return Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 6, vertical: 8),
                           decoration: BoxDecoration(
                             color: AppColors.white,
                             borderRadius: BorderRadius.circular(12),
@@ -77,14 +88,21 @@ class FollowListScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               CircleAvatar(
-                                backgroundColor:AppColors.light_gray,
-                                backgroundImage: (user.profileImage == null || user.profileImage.isEmpty)
-                                    ? AssetImage(AppImages.user) as ImageProvider
+                                backgroundColor: AppColors.light_gray,
+                                backgroundImage: (user.profileImage == null ||
+                                        user.profileImage.isEmpty)
+                                    ? AssetImage(AppImages.user)
+                                        as ImageProvider
                                     : NetworkImage(user.profileImage),
                               ),
                               SizedBox(width: 10),
                               AppText(
                                 text: user.name ?? "Unknown",
+                                fontWeight: FontWeight.w500,
+                              ),
+                              Spacer(),
+                              AppText(
+                                text: user.followCount.toString(),
                                 fontWeight: FontWeight.w500,
                               ),
                             ],

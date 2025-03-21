@@ -1,5 +1,6 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../../Models/Post.dart';
 import '../../../utilse/widgets.dart';
@@ -14,6 +15,7 @@ class SliderWithLabels extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeController = Get.find<HomeController>();
+    log("Post rating value is ${post.rate.value}");
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: Column(
@@ -26,7 +28,7 @@ class SliderWithLabels extends StatelessWidget {
               const SizedBox(width: 5),
               for (int i = 1; i <= 5; i++) ...[
                 Obx(
-                      () => Dot(
+                  () => Dot(
                     color: post.rate?.value != null && post.rate!.value! >= i
                         ? AppColors.blue
                         : AppColors.Slate_gray,
@@ -38,7 +40,7 @@ class SliderWithLabels extends StatelessWidget {
                 if (i < 5)
                   Expanded(
                     child: Obx(
-                          () => Divider(
+                      () => Divider(
                         thickness: 1,
                         color: post.rate?.value != null && post.rate!.value! > i
                             ? Colors.yellowAccent
@@ -54,12 +56,32 @@ class SliderWithLabels extends StatelessWidget {
             padding: const EdgeInsets.only(right: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children:  [
-                AppText(text: "Bad", color: AppColors.Slate_gray, fontWeight: FontWeight.w400, fontSize: 8),
-                AppText(text: "Okay", color: AppColors.Slate_gray, fontWeight: FontWeight.w400, fontSize: 8),
-                AppText(text: "Good", color: AppColors.Slate_gray, fontWeight: FontWeight.w400, fontSize: 8),
-                AppText(text: "Great", color: AppColors.Slate_gray, fontWeight: FontWeight.w400, fontSize: 8),
-                AppText(text: "Excellent", color: AppColors.Slate_gray, fontWeight: FontWeight.w400, fontSize: 8),
+              children: [
+                AppText(
+                    text: "Bad",
+                    color: AppColors.Slate_gray,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 8),
+                AppText(
+                    text: "Okay",
+                    color: AppColors.Slate_gray,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 8),
+                AppText(
+                    text: "Good",
+                    color: AppColors.Slate_gray,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 8),
+                AppText(
+                    text: "Great",
+                    color: AppColors.Slate_gray,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 8),
+                AppText(
+                    text: "Excellent",
+                    color: AppColors.Slate_gray,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 8),
               ],
             ),
           ),

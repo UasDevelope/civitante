@@ -1,15 +1,14 @@
 import 'package:civitante/App/modules/AllCommunities/controller/all_community.dart';
 import 'package:civitante/App/modules/auth/controller/auth_controller.dart';
-import 'package:civitante/App/modules/auth/controller/face_id_controller.dart';
 import 'package:civitante/App/modules/auth/controller/otp_controller.dart';
 import 'package:civitante/App/modules/bottom/controller/bottom_nave_controller.dart';
 import 'package:civitante/App/modules/contactadmin/controller/contact_admin.dart';
 import 'package:civitante/App/modules/forget/controller/forget_controller.dart';
 import 'package:civitante/App/modules/home/controller/home_controller.dart';
+import 'package:civitante/App/modules/kpi/controller/kpis_controller.dart';
 import 'package:civitante/App/modules/mycommunites/controller/my_community.dart';
 import 'package:civitante/App/modules/profile/controller/profile_controller.dart';
 import 'package:civitante/App/modules/setting/controller/setting.dart';
-import 'package:civitante/App/modules/splash/controller/splash_controller.dart';
 import 'package:civitante/App/modules/wallet/controller/wallet_controller.dart';
 import 'package:civitante/App/utilse/location_controller.dart';
 import 'package:civitante/App/utilse/widgets.dart';
@@ -45,5 +44,6 @@ class InitialBinding extends Bindings {
     Get.lazyPut<FAQController>(() => FAQController());
     Get.lazyPut<MyCommunityController>(() => MyCommunityController());
     Get.lazyPut<AllCommunityController>(() => AllCommunityController());
+    Get.lazyPut<KPISController>(() => KPISController());
   }
 }

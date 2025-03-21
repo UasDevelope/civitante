@@ -10,33 +10,34 @@ import '../../../utilse/pref.dart';
 import '../../../utilse/toast_util.dart';
 
 class HomeController extends GetxController
-    with GetSingleTickerProviderStateMixin{
-
+    with GetSingleTickerProviderStateMixin {
   RxString selectedCommentId = ''.obs;
   late TabController tabController;
   var selectedTabIndex = 0.obs;
   var selectedTabValue = "Following".obs;
-  RxInt currentIndex=0.obs;
-  void changeIndex(int newIndex){
-    currentIndex.value=newIndex;
+  RxInt currentIndex = 0.obs;
+  void changeIndex(int newIndex) {
+    currentIndex.value = newIndex;
   }
-  RxBool isFollowing=true.obs;
-  void toggleSwitchLane(){
-    isFollowing.value=!isFollowing.value;
+
+  RxBool isFollowing = true.obs;
+  void toggleSwitchLane() {
+    isFollowing.value = !isFollowing.value;
     fetchAndAssignPosts(followed: isFollowing.value);
   }
+
   var commentReplyList = <Map<String, String>>[].obs;
-  void storeComment(String commentId, String commentText, String userId,String userImage) {
+  void storeComment(
+      String commentId, String commentText, String userId, String userImage) {
     Map<String, String> commentData = {
       "commentId": commentId,
       "commentText": commentText,
       "userId": userId,
-      "userImage":userImage,
+      "userImage": userImage,
     };
     commentReplyList.add(commentData);
     log("Updated Comment List: $commentReplyList");
   }
-
 
   void toggleReplyBox(String commentId) {
     if (selectedCommentId.value == commentId) {
@@ -52,6 +53,7 @@ class HomeController extends GetxController
   void updateRating(String postId, int rate) {
     newRates[postId] = rate; // Update the rating for a specific post
   }
+
   RxList<Post> posts = <Post>[].obs; // Original list of posts
   RxList<Post> filteredPosts = <Post>[].obs; // New list for filtered posts
   RxInt currentPostIndex = 0.obs; // Track current post index
@@ -60,7 +62,8 @@ class HomeController extends GetxController
   RxBool isPostLoading = false.obs;
   RxString selectCatagory = "Technology & Innovation".obs;
   RxString selectedCategory = "Technology & Innovation".obs;
-  RxList<String> categoriesList = ['Technology & Innovation',
+  RxList<String> categoriesList = [
+    'Technology & Innovation',
     'Business & Finance',
     'General & Entertainment',
     'Health & Wellness',
@@ -74,27 +77,30 @@ class HomeController extends GetxController
     'Work & Careers',
     'DIY & Home Improvement',
     'Relationships & Social Life',
-    'Animals & Nature'].obs;
-  RxList<String> categories =
-      ['Technology & Innovation',
-        'Business & Finance',
-        'General & Entertainment',
-        'Health & Wellness',
-        'Science & Education',
-        'Lifestyle & Self-Improvement',
-        'Politics & Society',
-        'Sports & Recreation',
-        'Art & Creativity',
-        'Food & Culinary',
-        'Automotive & Transport',
-        'Work & Careers',
-        'DIY & Home Improvement',
-        'Relationships & Social Life',
-        'Animals & Nature'].obs;
+    'Animals & Nature'
+  ].obs;
+  RxList<String> categories = [
+    'Technology & Innovation',
+    'Business & Finance',
+    'General & Entertainment',
+    'Health & Wellness',
+    'Science & Education',
+    'Lifestyle & Self-Improvement',
+    'Politics & Society',
+    'Sports & Recreation',
+    'Art & Creativity',
+    'Food & Culinary',
+    'Automotive & Transport',
+    'Work & Careers',
+    'DIY & Home Improvement',
+    'Relationships & Social Life',
+    'Animals & Nature'
+  ].obs;
   RxString searchedValue = "".obs;
   void filterPostsByCategory() {
     if (selectCatagory.value == "General") {
-      filteredPosts.value = filteredPosts; // Show all posts if "General" is selected
+      filteredPosts.value =
+          filteredPosts; // Show all posts if "General" is selected
     } else {
       filteredPosts.value = filteredPosts
           .where((post) => post.category == selectCatagory.value)
@@ -142,6 +148,7 @@ class HomeController extends GetxController
     filteredPosts.value = List.from(filteredPosts.value)
       ..sort((a, b) => b.commentsCount.value.compareTo(a.commentsCount.value));
   }
+
   void sortPosts() {
     print('Sorting by Likes and Comments...');
     filteredPosts.value = List.from(filteredPosts.value)
@@ -150,14 +157,14 @@ class HomeController extends GetxController
         if (likesComparison != 0) {
           return likesComparison;
         }
-        return b.commentsCount.value.compareTo(a.commentsCount.value); // Sort by comments if likes are equal
+        return b.commentsCount.value.compareTo(
+            a.commentsCount.value); // Sort by comments if likes are equal
       });
   }
 
-
-
   /// Fetch and assign posts
-  Future<void> fetchAndAssignPosts({String communityId = "", bool? followed, bool? randomized }) async {
+  Future<void> fetchAndAssignPosts(
+      {String communityId = "", bool? followed, bool? randomized}) async {
     try {
       posts.clear();
       filteredPosts.clear();
@@ -167,7 +174,8 @@ class HomeController extends GetxController
       //   log("Last community id $communityId");
       // }
       isPostLoading.value = true;
-      final result = await getPosts(communityId: communityId,followed: followed,randomized: randomized);
+      final result = await getPosts(
+          communityId: communityId, followed: followed, randomized: randomized);
 
       // Ensure the fetched list is not null before assigning
       if (result.isNotEmpty) {
@@ -200,7 +208,8 @@ class HomeController extends GetxController
   }
 
   /// Fetch posts from API
-  Future<List<Post>> getPosts({String? communityId, bool? followed, bool? randomized}) async {
+  Future<List<Post>> getPosts(
+      {String? communityId, bool? followed, bool? randomized}) async {
     try {
       // Construct the request URL based on priority
       String endpoint = '/getPosts';
@@ -216,7 +225,7 @@ class HomeController extends GetxController
       log("Fetching: $endpoint");
 
       var response = await HttpService.get(endpoint);
-     log("Raw Response: $response");
+      log("Raw Response: $response");
 
       // Decode JSON response if it's a string
       if (response is String) {
@@ -226,7 +235,7 @@ class HomeController extends GetxController
       // Ensure response is a valid map and contains either 'posts' or 'error'
       if (response is Map<String, dynamic>) {
         if (response.containsKey('posts') && response['posts'] is List) {
-         // log("Parsed Posts: ${response['posts']}");
+          // log("Parsed Posts: ${response['posts']}");
           return parsePosts(response['posts']);
         }
 
@@ -247,60 +256,63 @@ class HomeController extends GetxController
     try {
       var data = {"userId": userId, "text": commentController.text};
       log('Requested data is $data');
-      final response = await HttpService.post("/addCommentToPost/$postId", data);
+      final response =
+          await HttpService.post("/addCommentToPost/$postId", data);
 
       log("Response for comment is   ${response["comments"].last}");
 
       final errorMessage = _parseErrorMessage(response);
       print("Response of Pints is :$errorMessage");
-      if(errorMessage == "Not enough points to comment"){
+      if (errorMessage == "Not enough points to comment") {
         Get.dialog(
           AlertDialog(
             backgroundColor: AppColors.light_gray,
-            title: AppText(text: "Dear User",fontWeight: FontWeight.w600),
-            content: AppText(text: errorMessage,fontSize: 14),
+            title: AppText(text: "Dear User", fontWeight: FontWeight.w600),
+            content: AppText(text: errorMessage, fontSize: 14),
             actions: [
               AppButton(
                 textColor: AppColors.light_gray,
-                text: "Buy Now!", onPressed: () {
-                Get.to(WalletScreen());
-              },)
+                text: "Buy Now!",
+                onPressed: () {
+                  Get.to(WalletScreen());
+                },
+              )
             ],
           ),
         );
         commentController.clear();
-      }
-      else{
-        final newComment = Comment(id: response["comments"].last["_id"],
-          user: User(
-              name: name.value,profileImage: imageUrl.value),
-          text: commentController.text,
-          createdAt: DateTime.now(), isCommentLikedByUser: false.obs, repliesCount: 0.obs, isEdited: false.obs,
-          likes: [].obs
-
-        );
+      } else {
+        final newComment = Comment(
+            id: response["comments"].last["_id"],
+            user: User(name: name.value, profileImage: imageUrl.value),
+            text: commentController.text,
+            createdAt: DateTime.now(),
+            isCommentLikedByUser: false.obs,
+            repliesCount: 0.obs,
+            isEdited: false.obs,
+            likes: [].obs);
 
         // Add comment to observable list
         post.comments.add(newComment);
 
         // Optionally refresh UI immediately
-        (post.comments
-        as RxList)
-            .refresh();
+        (post.comments as RxList).refresh();
         commentController.clear();
       }
-
     } catch (e) {
       ToastUtil.showToast(message: "$e", backgroundColor: Colors.red);
     } finally {}
   }
-  Future<void> addReplyToComment(String postId, String commentId, Post post,String text) async {
+
+  Future<void> addReplyToComment(
+      String postId, String commentId, Post post, String text) async {
     String userId = PrefUtil.getString(PrefUtil.userId);
     try {
       var data = {"userId": userId, "text": text};
       log('Reply requested data is $data');
 
-      final response = await HttpService.post("/addReplyToComment/$postId/$commentId", data);
+      final response =
+          await HttpService.post("/addReplyToComment/$postId/$commentId", data);
       log("Reply response is $response");
 
       final errorMessage = _parseErrorMessage(response);
@@ -324,14 +336,12 @@ class HomeController extends GetxController
           ),
         );
         commentReplyController.clear();
-      }
-      else {
+      } else {
         // Create new reply object
         final newReply = Comment(
           id: UniqueKey().toString(),
-          user: User(id: userId, name: name.value,
-          profileImage: imageUrl.value
-          ),
+          user:
+              User(id: userId, name: name.value, profileImage: imageUrl.value),
           text: text,
           createdAt: DateTime.now(),
           isCommentLikedByUser: false.obs,
@@ -358,10 +368,12 @@ class HomeController extends GetxController
     }
   }
 
-  Future<void> addLikeToReply(String postId, String commentId, String replyId, Comment commentData) async {
+  Future<void> addLikeToReply(String postId, String commentId, String replyId,
+      Comment commentData) async {
     try {
       // API Request
-      final response = await HttpService.post("/addLikeToReply/$postId/$commentId/$replyId", {});
+      final response = await HttpService.post(
+          "/addLikeToReply/$postId/$commentId/$replyId", {});
       log("Response is $response");
 
       // Parse error message
@@ -396,15 +408,14 @@ class HomeController extends GetxController
       commentData.isReplyLikedByUser!.value = responseData['isLike'];
 
       // Convert dynamic list to List<String> and update replyLikesCount
-      List<String> updatedLikesList = List<String>.from(responseData['likes'] ?? []);
+      List<String> updatedLikesList =
+          List<String>.from(responseData['likes'] ?? []);
       commentData.replyLikesCount?.clear();
       commentData.replyLikesCount?.addAll(updatedLikesList);
-
     } catch (e) {
       log("❌ Error in addLikeToReply: $e");
     }
   }
-
 
   Future<int> addLikeToPost(String postId, int index) async {
     try {
@@ -421,21 +432,22 @@ class HomeController extends GetxController
         print("Post liked successfully: $response");
         return response['likesCount'] ?? 0; // Like added successfully
       } else {
-
         final errorMessage = _parseErrorMessage(response);
         print("Response of Pints is :$errorMessage");
-        if(errorMessage == "Not enough points to like this post")
+        if (errorMessage == "Not enough points to like this post")
           Get.dialog(
             AlertDialog(
               backgroundColor: AppColors.light_gray,
-              title: AppText(text: "Dear User",fontWeight: FontWeight.w600),
-              content: AppText(text: errorMessage,fontSize: 14),
+              title: AppText(text: "Dear User", fontWeight: FontWeight.w600),
+              content: AppText(text: errorMessage, fontSize: 14),
               actions: [
                 AppButton(
                   textColor: AppColors.light_gray,
-                  text: "Buy Now!", onPressed: () {
-                  Get.to(WalletScreen());
-                },)
+                  text: "Buy Now!",
+                  onPressed: () {
+                    Get.to(WalletScreen());
+                  },
+                )
               ],
             ),
           );
@@ -455,15 +467,20 @@ class HomeController extends GetxController
       return 0;
     }
   }
-  Future<void> addLikeToComment(String postId, String commentId, Comment commentData) async {
+
+  Future<void> addLikeToComment(
+      String postId, String commentId, Comment commentData) async {
     try {
-      print("🔹 Starting addLikeToComment for PostID: $postId, CommentID: $commentId");
-      print("🔹 Initial Like Status: ${commentData.isCommentLikedByUser!.value}");
+      print(
+          "🔹 Starting addLikeToComment for PostID: $postId, CommentID: $commentId");
+      print(
+          "🔹 Initial Like Status: ${commentData.isCommentLikedByUser!.value}");
       print("🔹 Initial Likes Count: ${commentData.likes?.length}");
 
       // API Request
       print("🔹 Sending API request...");
-      final response = await HttpService.post("/addLikeToComment/$postId/$commentId", {});
+      final response =
+          await HttpService.post("/addLikeToComment/$postId/$commentId", {});
       print("🔹 API Response: $response");
 
       // Parse error message
@@ -517,12 +534,12 @@ class HomeController extends GetxController
       // Assign the updated like count
       commentData.likesCount!.value = updatedLikeCount;
       print("🔹 Final Likes Count: ${commentData.likesCount}");
-
     } catch (e, stackTrace) {
       print("❌ Exception in addLikeToComment: $e");
       print("📜 Stack Trace: $stackTrace");
     }
   }
+
   Future<void> addPostRating(String postId, int rating, int index) async {
     print("Rating Submitted: $rating for Post ID: $postId");
 
@@ -548,13 +565,32 @@ class HomeController extends GetxController
           filteredPosts[index].rate.value = newRating;
         }
 
-        print("Updated Rating: ${filteredPosts[index].rate.value} for Post Index: $index");
+        print(
+            "Updated Rating: ${filteredPosts[index].rate.value} for Post Index: $index");
 
         ToastUtil.showToast(
           message: "Rated successfully with: $newRating ⭐",
         );
       } else {
         final errorMessage = _parseErrorMessage(response);
+        if (errorMessage == "Not enough points to star") {
+          Get.dialog(
+            AlertDialog(
+              backgroundColor: AppColors.light_gray,
+              title: AppText(text: "Dear User", fontWeight: FontWeight.w600),
+              content: AppText(text: errorMessage, fontSize: 14),
+              actions: [
+                AppButton(
+                  textColor: AppColors.light_gray,
+                  text: "Buy Now!",
+                  onPressed: () {
+                    Get.to(WalletScreen());
+                  },
+                )
+              ],
+            ),
+          );
+        }
         print("Response Error: $errorMessage");
         ToastUtil.showToast(
           message: "Failed to rate post: $errorMessage",
@@ -569,8 +605,6 @@ class HomeController extends GetxController
       );
     }
   }
-
-
 
   String _parseErrorMessage(dynamic response) {
     try {
@@ -649,18 +683,20 @@ class HomeController extends GetxController
     tabController.addListener(() {
       if (!tabController.indexIsChanging) {
         if (tabController.index == 0) {
-          selectedTabValue.value="Following";
+          selectedTabValue.value = "Following";
           fetchAndAssignPosts(followed: true);
         } else {
-          selectedTabValue.value="Random";
+          selectedTabValue.value = "Random";
           fetchAndAssignPosts(randomized: true);
         }
-        selectedTabIndex.value==tabController.index;
-      }});
-    fetchAndAssignPosts(followed: true,randomized: false,communityId: '');
+        selectedTabIndex.value == tabController.index;
+      }
+    });
+    fetchAndAssignPosts(followed: true, randomized: false, communityId: '');
     fetchCurrentUser();
     super.onInit();
   }
+
   RxString name = ''.obs;
   RxString imageUrl = ''.obs;
 
@@ -675,8 +711,6 @@ class HomeController extends GetxController
 
       imageUrl.value = response['profileImage']?.toString() ?? '';
     } catch (e, stackTrace) {
-    } finally {
-
-    }
+    } finally {}
   }
 }

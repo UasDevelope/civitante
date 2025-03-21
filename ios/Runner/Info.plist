@@ -2,12 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSMicrophoneUsageDescription</key>
-	<string></string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>We use speech synthesis for guiding users</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>We use Face ID for authentication</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -32,20 +26,35 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>We need Bluetooth access for notifications.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>To scan cards</string>
+	<string>We need camera access to scan cards.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>We use Face ID for authentication.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>We need your location to provide location-based services.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>We need your location to provide location-based services.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your location to provide location-based services.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need microphone access for voice recognition features.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>We need permission to save photos to your photo library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need access to your photo library to pick images.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>We use speech synthesis for guiding users.</string>
+	<key>NSUserNotificationUsageDescription</key>
+	<string>We need notification permission to keep you updated.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -63,5 +72,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UNAuthorizationOptionAlert</key>
+	<true/>
+	<key>UNAuthorizationOptionBadge</key>
+	<true/>
+	<key>UNAuthorizationOptionSound</key>
+	<true/>
 </dict>
 </plist>

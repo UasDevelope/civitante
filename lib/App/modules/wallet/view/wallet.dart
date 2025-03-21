@@ -1,12 +1,12 @@
-import 'package:civitante/App/modules/notification/view/notification.dart';
 import 'package:civitante/App/modules/wallet/view/transaction_history.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:civitante/App/utilse/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import '../../../service/payment_service.dart';
-import '../../../shared/strings.dart';
-import '../../previewUserProfile/widget/status_row.dart';
+import '../../kpi/controller/kpis_controller.dart';
+import '../../kpi/view/kpis_screen.dart';
+import '../../shimmer/kpis_shimmer.dart';
 import '../controller/wallet_controller.dart';
 import 'BuyPointsScreen.dart';
 
@@ -22,9 +22,11 @@ class WalletScreen extends StatelessWidget {
   WalletScreen({super.key});
 
   final WalletController controller = Get.put(WalletController());
+  final KPISController kpisController = Get.find<KPISController>();
 
   @override
   Widget build(BuildContext context) {
+    kpisController.fetchUserStats();
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.white,
@@ -65,10 +67,17 @@ class WalletScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    StatsRow(),
-                    SizedBox(
-                      height: 26,
-                    ),
+                    Obx(() => controller.isLoading.value
+                        ? KpisShimmer(
+                            itemCount: 2,
+                          )
+                        : Column(
+                            children: ["Posts", "Followers"]
+                                .map((metric) =>
+                                    buildMetricSection(metric, kpisController))
+                                .toList(),
+                          )),
+
                     _buildPointsCard(),
                     const SizedBox(height: 23),
 
@@ -182,7 +191,6 @@ class WalletScreen extends StatelessWidget {
   }
 
   void _handleBuyPoints(BuildContext context) async {
-
     if (controller.pointsData.value?.paymentId == true) {
       Get.to(() => BuyPointsScreen());
     } else {
