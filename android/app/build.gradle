@@ -13,15 +13,21 @@ android {
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
 
     kotlinOptions {
         jvmTarget = "1.8"
     }
 
     defaultConfig {
+            // Required when setting minSdkVersion to 20 or lower
+            multiDexEnabled true
+
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.app.civitante"
         // You can update the following values to match your application needs.
@@ -44,6 +50,13 @@ android {
     }
 }
 dependencies {
+        // For AGP 7.4+
+        coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
+        // For AGP 7.3
+        // coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.3'
+        // For AGP 4.0 to 7.2
+        // coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.9'
+
     // Stripe SDK
 //    implementation 'com.stripe:stripe-android:20.34.0'
 }
