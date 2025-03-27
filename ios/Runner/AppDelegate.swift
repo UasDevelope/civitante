@@ -30,16 +30,21 @@ import FirebaseMessaging
         }
         
         application.registerForRemoteNotifications()
-        
+
+        // ✅ Check if sound.caf file exists in the bundle
+        if let soundURL = Bundle.main.url(forResource: "sound", withExtension: "caf") {
+            print("✅ Sound file found at: \(soundURL)")
+        } else {
+            print("❌ Sound file not found!")
+        }
+
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 
-    // No 'override' here - this is a MessagingDelegate method
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("FCM Token: \(fcmToken ?? "No Token")")
     }
 
-    // Keep the override - this is from FlutterAppDelegate/UIApplicationDelegate
     override func application(
         _ application: UIApplication,
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
@@ -48,7 +53,6 @@ import FirebaseMessaging
         print("APNS Token registered")
     }
 
-    // Keep the override - this is from FlutterAppDelegate/UIApplicationDelegate
     override func application(
         _ application: UIApplication,
         didFailToRegisterForRemoteNotificationsWithError error: Error
@@ -56,7 +60,6 @@ import FirebaseMessaging
         print("Failed to register for remote notifications: \(error.localizedDescription)")
     }
 
-    // No 'override' here - this is from UNUserNotificationCenterDelegate
     override func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification,
