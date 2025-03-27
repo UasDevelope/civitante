@@ -3,12 +3,14 @@ import 'dart:developer';
 
 import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/constant.dart';
+import 'package:civitante/App/utilse/notifcation_utils.dart';
 import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
+
 import '../../../service/auth_services.dart';
 import '../../../utilse/toast_util.dart';
 
@@ -97,7 +99,8 @@ class AuthController extends GetxController {
 
     // Timer(Duration(seconds: 2), () {
     Get.toNamed(route);
-    print('==============Redirecting to $route================>Routes-------->${route}');
+    print(
+        '==============Redirecting to $route================>Routes-------->${route}');
 
     loading.value = false;
     // });
@@ -110,74 +113,77 @@ class AuthController extends GetxController {
 
 // Register Normal User
   void registerNormalUser() async {
-   try {
-     loading.value = true;
-     //  CustomLoadingDialog.showCustomLoadingDialog("Registering user...");
-     var data = {
-       "email": signupEmailController.text.trim().toLowerCase(),
-       "name": fullNameController.text,
-       "location": {
-         "long": locationController.longitude.value,
-         "lat": locationController.latitude.value
-       },
-       "password": signupPasswordController.text,
-       "costPoints": 10
-     };
+    try {
+      loading.value = true;
+      String? token = await NotificationUtil().getToken();
+      //  CustomLoadingDialog.showCustomLoadingDialog("Registering user...");
+      var data = {
+        "email": signupEmailController.text.trim().toLowerCase(),
+        "name": fullNameController.text,
+        "fcmToken": token,
+        "location": {
+          "long": locationController.longitude.value,
+          "lat": locationController.latitude.value
+        },
+        "password": signupPasswordController.text,
+        "costPoints": 10
+      };
 
-     var response = await HttpService.post('/register', data);
+      var response = await HttpService.post('/register', data);
 
-     if (response != null && response['error'] == null) {
-       ToastUtil.showToast(
-         message: response['message'] ?? "Registration successful!",
-         backgroundColor: Colors.green,
-       );
+      if (response != null && response['error'] == null) {
+        ToastUtil.showToast(
+          message: response['message'] ?? "Registration successful!",
+          backgroundColor: Colors.green,
+        );
 
-       String token = response["user"]['token'];
-       log("Response token is $token");
-       PrefUtil.setString(PrefUtil.userId, token);
-       AppConstant().userID = token;
-       // Get.offNamed(AppRoutes.otpScreen,arguments: {
-       //   "email":signupEmailController.text
-       // });
-       signupEmailController.clear();
-       fullNameController.clear();
-       signupLocationController.clear();
-       signupPasswordController.clear();
-       SignupConfirmPasswordController.clear();
-       Get.offAllNamed(AppRoutes.bottomNav);
+        String token = response["user"]['token'];
+        log("Response token is $token");
+        PrefUtil.setString(PrefUtil.userId, token);
+        AppConstant().userID = token;
+        // Get.offNamed(AppRoutes.otpScreen,arguments: {
+        //   "email":signupEmailController.text
+        // });
+        signupEmailController.clear();
+        fullNameController.clear();
+        signupLocationController.clear();
+        signupPasswordController.clear();
+        SignupConfirmPasswordController.clear();
+        Get.offAllNamed(AppRoutes.bottomNav);
 
-       // CustomLoadingDialog.closeLoadingDialog();
-       // goToNext(AppRoutes.faceIDScreen);
-     } else {
-       //CustomLoadingDialog.closeLoadingDialog();
-       String errorMsg = response['details'] != null
-           ? jsonDecode(response['details'])['message']
-           : "Unknown error occurred";
+        // CustomLoadingDialog.closeLoadingDialog();
+        // goToNext(AppRoutes.faceIDScreen);
+      } else {
+        //CustomLoadingDialog.closeLoadingDialog();
+        String errorMsg = response['details'] != null
+            ? jsonDecode(response['details'])['message']
+            : "Unknown error occurred";
 
-       ToastUtil.showToast(
-         message: "Error: $errorMsg",
-         backgroundColor: Colors.red,
-       );
-     }
-   }
-   catch(e){
-     log("The error is $e");
-   }
-   finally{
-     loading.value=false;
-   }
+        ToastUtil.showToast(
+          message: "Error: $errorMsg",
+          backgroundColor: Colors.red,
+        );
+      }
+    } catch (e) {
+      log("The error is $e");
+    } finally {
+      loading.value = false;
+    }
   }
 
 // Register Pro User
   void registerProUser() async {
     // Indicate loading state
     loading.value = true;
+    String? token = await NotificationUtil().getToken();
+
     //  CustomLoadingDialog.showCustomLoadingDialog("Registering Pro User...");
 
     // Prepare data for the API request
     var data = {
       "email": signupEmailController.text.toLowerCase(),
       "name": fullNameController.text,
+      "fcmToken": token,
       "location": {
         "long": locationController.longitude.value,
         "lat": locationController.latitude.value
@@ -384,11 +390,13 @@ class AuthController extends GetxController {
 
   void loginUser() async {
     loading.value = true;
+    String? token = await NotificationUtil().getToken();
 
     /// CustomLoadingDialog.showCustomLoadingDialog("Logging in user....");
     var data = {
       "email": loginEmailController.text,
       "password": loginPassworedController.text,
+      "fcmToken": token
     };
 
     var response = await HttpService.post('/login', data);
@@ -534,7 +542,8 @@ class AuthController extends GetxController {
         }
 
         // Log the data
-        print("User Info: Full Name: $fullName, Email: $email, Token: $accessToken");
+        print(
+            "User Info: Full Name: $fullName, Email: $email, Token: $accessToken");
       } else {
         ToastUtil.showToast(
           message: "Google Sign-Up Failed",
@@ -596,7 +605,7 @@ class AuthController extends GetxController {
         }
 
         // Log the data
-       // log("User Info: Full Name: $fullName, Email: $email, Token: $accessToken");
+        // log("User Info: Full Name: $fullName, Email: $email, Token: $accessToken");
       } else {
         ToastUtil.showToast(
           message: "Apple Sign-Up Failed",
