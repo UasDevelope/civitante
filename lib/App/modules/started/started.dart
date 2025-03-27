@@ -1,8 +1,9 @@
 import 'dart:developer';
 
+import 'package:civitante/App/utilse/notifcation_utils.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
-import '../../utilse/notifcation_utils.dart';
 import '../../utilse/widgets.dart';
 
 class StartedScreen extends StatelessWidget {
@@ -41,9 +42,17 @@ class StartedScreen extends StatelessWidget {
                 color: Colors.blue,
                 radius: 30,
                 onPressed: () {
-                  NotificationUtil().triggerLocalNotification();
+                  NotificationUtil().showNotification(
+                    RemoteMessage(
+                      notification: RemoteNotification(
+                        title: "Test Notification",
+                        body: "This is a local test notification.",
+                      ),
+                    ),
+                  );
+                  // NotificationUtil().triggerLocalNotification();
                   log('==============Redirecting to LoginScreen================>Routes-------->${AppRoutes.login}');
-                  Get.toNamed(AppRoutes.login);
+                  // Get.toNamed(AppRoutes.login);
                 },
               ),
             ),

@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 import '../../../utilse/widgets.dart';
 
 class KpisScreen extends StatelessWidget {
+  final String userId;
+  KpisScreen({this.userId = ""});
   final KPISController controller = Get.find<KPISController>();
   @override
   Widget build(BuildContext context) {
-    controller.fetchUserStats();
+    controller.fetchUserStats(userId: userId);
     return RefreshIndicator(
       onRefresh: () {
         return controller.fetchUserStats();

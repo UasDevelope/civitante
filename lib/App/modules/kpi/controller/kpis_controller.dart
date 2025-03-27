@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:civitante/App/service/http_service.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -5,7 +7,8 @@ import 'package:intl/intl.dart';
 class KPISController extends GetxController {
   var expandedSections = <String, bool>{}.obs;
   var selectedTimeframes = <String, String>{}.obs;
-  var statsData = <String, Map<dynamic, dynamic>>{}.obs; // Changed to dynamic to handle mixed types
+  var statsData = <String, Map<dynamic, dynamic>>{}
+      .obs; // Changed to dynamic to handle mixed types
   var graphData = <String, List<Map<String, dynamic>>>{}.obs;
   RxBool isLoading = false.obs;
   final List<String> metrics = [
@@ -28,7 +31,8 @@ class KPISController extends GetxController {
   ];
 
   // Helper function to extend graph data to 7 days with MM-dd format
-  List<Map<String, dynamic>> extendToSevenDays(List<Map<String, dynamic>> data, String valueKey) {
+  List<Map<String, dynamic>> extendToSevenDays(
+      List<Map<String, dynamic>> data, String valueKey) {
     final DateFormat formatter = DateFormat('MM-dd');
 
     if (data.isEmpty) {
@@ -52,10 +56,13 @@ class KPISController extends GetxController {
       };
     }).toList();
 
-    sortedData.sort((a, b) => DateTime.parse('2025-${a['timestamp']}').compareTo(DateTime.parse('2025-${b['timestamp']}')));
+    sortedData.sort((a, b) => DateTime.parse('2025-${a['timestamp']}')
+        .compareTo(DateTime.parse('2025-${b['timestamp']}')));
 
-    DateTime earliestDate = DateTime.parse('2025-${sortedData.first['timestamp']}');
-    DateTime latestDate = DateTime.parse('2025-${sortedData.last['timestamp']}');
+    DateTime earliestDate =
+        DateTime.parse('2025-${sortedData.first['timestamp']}');
+    DateTime latestDate =
+        DateTime.parse('2025-${sortedData.last['timestamp']}');
     List<Map<String, dynamic>> extendedData = [];
 
     // Add existing data
@@ -78,10 +85,17 @@ class KPISController extends GetxController {
     return extendedData.length > 7 ? extendedData.sublist(0, 7) : extendedData;
   }
 
-  Future<void> fetchUserStats() async {
+  Future<void> fetchUserStats({String userId = ""}) async {
     try {
       isLoading.value = true;
-      final response = await HttpService.get("/getStats");
+      String endpoint = "/getStats";
+      if (userId.isNotEmpty) {
+        endpoint += "/$userId";
+      }
+      log("End point is $endpoint");
+
+      final response = await HttpService.get(endpoint);
+      log("KPIS response is $response");
 
       final stats = response['statsData'];
       final graph = response['graphData'];
@@ -95,38 +109,48 @@ class KPISController extends GetxController {
       statsData['Following'] = stats['Following'].map((key, value) =>
           MapEntry(key.toLowerCase(), double.tryParse(value.toString()) ?? 0));
 
-      statsData['Likes'] = stats['Likes'].map((key, value) =>
-          MapEntry(key.toLowerCase(),
-              value == "NaN" ? 0 : double.tryParse(value.toString()) ?? 0));
+      statsData['Likes'] = stats['Likes'].map((key, value) => MapEntry(
+          key.toLowerCase(),
+          value == "NaN" ? 0 : double.tryParse(value.toString()) ?? 0));
 
-      statsData['Comments'] = stats['Comments'].map((key, value) =>
-          MapEntry(key.toLowerCase(),
-              value == "NaN" ? 0 : double.tryParse(value.toString()) ?? 0));
+      statsData['Comments'] = stats['Comments'].map((key, value) => MapEntry(
+          key.toLowerCase(),
+          value == "NaN" ? 0 : double.tryParse(value.toString()) ?? 0));
 
       statsData['Points Spent'] = stats['PointsSpent'].map((key, value) =>
-          MapEntry(key.toLowerCase(),
-              value is int ? value.toDouble() : double.tryParse(value.toString()) ?? 0));
+          MapEntry(
+              key.toLowerCase(),
+              value is int
+                  ? value.toDouble()
+                  : double.tryParse(value.toString()) ?? 0));
 
-      statsData['Parties'] = stats['CommunityStats']['joined'].map((key, value) =>
-          MapEntry(key.toLowerCase(), value.toDouble()));
+      statsData['Parties'] = stats['CommunityStats']['joined']
+          .map((key, value) => MapEntry(key.toLowerCase(), value.toDouble()));
 
       // Extend graph data to 7 days with MM-dd format
-      graphData['Posts'] = extendToSevenDays(List<Map<String, dynamic>>.from(graph['Posts']), 'value');
-      graphData['Followers'] = extendToSevenDays(List<Map<String, dynamic>>.from(graph['Followers']), 'value');
-      graphData['Following'] = extendToSevenDays(List<Map<String, dynamic>>.from(graph['Following']), 'value');
-      graphData['Points Spent'] = extendToSevenDays(List<Map<String, dynamic>>.from(graph['PointsSpent']), 'value');
+      graphData['Posts'] = extendToSevenDays(
+          List<Map<String, dynamic>>.from(graph['Posts']), 'value');
+      graphData['Followers'] = extendToSevenDays(
+          List<Map<String, dynamic>>.from(graph['Followers']), 'value');
+      graphData['Following'] = extendToSevenDays(
+          List<Map<String, dynamic>>.from(graph['Following']), 'value');
+      graphData['Points Spent'] = extendToSevenDays(
+          List<Map<String, dynamic>>.from(graph['PointsSpent']), 'value');
 
       graphData['Parties'] = extendToSevenDays(
-        (graph['CommunityStats'] as List).map<Map<String, dynamic>>((entry) => {
-          'timestamp': entry['timestamp'],
-          'value': entry['joined'],
-        }).toList(),
+        (graph['CommunityStats'] as List)
+            .map<Map<String, dynamic>>((entry) => {
+                  'timestamp': entry['timestamp'],
+                  'value': entry['joined'],
+                })
+            .toList(),
         'value',
       );
 
-      graphData['Likes'] = extendToSevenDays([], 'value'); // No data provided, so start with empty
-      graphData['Comments'] = extendToSevenDays([], 'value'); // No data provided, so start with empty
-
+      graphData['Likes'] = extendToSevenDays(
+          [], 'value'); // No data provided, so start with empty
+      graphData['Comments'] = extendToSevenDays(
+          [], 'value'); // No data provided, so start with empty
     } catch (e) {
       print("The error is $e");
     } finally {

@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:civitante/App/utilse/widgets.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import '../../../Models/Post.dart';
 import '../../../service/http_service.dart';
+import '../../../utilse/notifcation_utils.dart';
 import '../../../utilse/pref.dart';
 import '../../../utilse/toast_util.dart';
 
@@ -22,6 +24,17 @@ class HomeController extends GetxController
 
   RxBool isFollowing = true.obs;
   void toggleSwitchLane() {
+    NotificationUtil().showNotification(
+      RemoteMessage(
+        notification: RemoteNotification(
+          apple: AppleNotification(
+              sound: AppleNotificationSound(critical: true, name: "sound.caf")),
+          title: "Test Notification",
+          body: "This is a local test notification.",
+        ),
+        data: {"key": "value"},
+      ),
+    );
     isFollowing.value = !isFollowing.value;
     fetchAndAssignPosts(followed: isFollowing.value);
   }
@@ -556,7 +569,12 @@ class HomeController extends GetxController
 
       if (response != null && response['error'] == null) {
         int newRating = response["rate"] ?? rating;
+
         print("New Rating here: $newRating");
+        filteredPosts[index].likesCount.value = response['likesCount'] ?? 0;
+        filteredPosts[index].isLikedByUser.value = true;
+
+        log("Response likes count is ${response['likesCount']}");
 
         // Ensure rate is reactive (RxInt)
         if (filteredPosts[index].rate == null) {

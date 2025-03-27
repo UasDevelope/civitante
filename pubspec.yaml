@@ -59,12 +59,12 @@ dependencies:
   intl: ^0.20.1
   firebase_core: ^3.10.1
   firebase_storage: ^12.4.4
+  flutter_local_notifications: ^19.0.0
   flutter_image_compress: ^2.4.0
   emoji_picker_flutter: ^4.3.0
   shimmer: ^3.0.0
   firebase_auth: ^5.5.0
-
-  awesome_notifications: ^0.10.1
+#  awesome_notifications: ^0.10.1
   firebase_messaging: ^15.2.4
   flutter_easy_recaptcha_v2: ^0.1.0
   google_sign_in: ^6.2.2

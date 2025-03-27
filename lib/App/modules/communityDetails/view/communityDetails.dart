@@ -1,16 +1,15 @@
 import 'dart:developer';
 
 import 'package:civitante/App/Models/my_community_model.dart';
-import 'package:civitante/App/modules/CommunityPost/view/community_post_screen.dart';
 import 'package:civitante/App/modules/chat/view/community_chat.dart';
 import 'package:civitante/App/modules/mycommunites/view/invite_member.dart';
 import 'package:civitante/App/modules/mycommunites/view/members_in_community.dart';
 import 'package:flutter/material.dart';
+
 import '../../../utilse/widgets.dart';
 import '../../home/controller/home_controller.dart';
 import '../../home/view/ramdomsized_posts.dart';
 import '../../home/widgets/filter_menues.dart';
-import '../../meeting/view/new_meeting_view.dart';
 import '../controller/communityDetailsController.dart';
 import '../widgets/communityButton.dart';
 
@@ -29,9 +28,9 @@ class MyCommunityDetail extends StatefulWidget {
 }
 
 class _MyCommunityDetailState extends State<MyCommunityDetail> {
-  final CommunityDetailController controller = Get.put(CommunityDetailController());
+  final CommunityDetailController controller =
+      Get.put(CommunityDetailController());
   final homeController = Get.find<HomeController>();
-
 
   @override
   void initState() {
@@ -56,7 +55,7 @@ class _MyCommunityDetailState extends State<MyCommunityDetail> {
     if (widget.community == null) {
       return const Scaffold(body: Center(child: Text('No community data')));
     }
-
+    log("Is all community ${widget.isAllCommunity}");
     final bool isJoined = widget.community!.isJoined;
 
     return Scaffold(
@@ -88,7 +87,8 @@ class _MyCommunityDetailState extends State<MyCommunityDetail> {
                           width: 80,
                           height: 80,
                           color: Colors.grey[300],
-                          child: const Icon(Icons.group, size: 40, color: Colors.grey),
+                          child: const Icon(Icons.group,
+                              size: 40, color: Colors.grey),
                         ),
                       ),
                     ),
@@ -100,7 +100,7 @@ class _MyCommunityDetailState extends State<MyCommunityDetail> {
                         children: [
                           Text(
                             widget.community!.name,
-                            style:  TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 18,
                               color: AppColors.appColor,
@@ -108,10 +108,11 @@ class _MyCommunityDetailState extends State<MyCommunityDetail> {
                           ),
                           const SizedBox(height: 4),
                           GestureDetector(
-                            onTap: () => Get.to(MembersInCommunity(communityId: widget.community!.id)),
+                            onTap: () => Get.to(MembersInCommunity(
+                                communityId: widget.community!.id)),
                             child: Text(
                               '${widget.community!.totalMembers} ${widget.community!.totalMembers <= 1 ? "member" : "members"}',
-                              style:  TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 14,
                                 color: AppColors.moreblue,
@@ -158,7 +159,7 @@ class _MyCommunityDetailState extends State<MyCommunityDetail> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                       Text(
+                      Text(
                         'Posting Tag Cost',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
@@ -168,7 +169,7 @@ class _MyCommunityDetailState extends State<MyCommunityDetail> {
                       ),
                       Text(
                         '${widget.community!.cost} points',
-                        style:  TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
                           color: AppColors.appColor,
@@ -183,8 +184,8 @@ class _MyCommunityDetailState extends State<MyCommunityDetail> {
               // Recent Posts
               if (isJoined || !widget.isAllCommunity) ...[
                 Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: 16.0),
-                  child:  Row(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
@@ -194,12 +195,10 @@ class _MyCommunityDetailState extends State<MyCommunityDetail> {
                           fontSize: 16,
                           color: AppColors.appColor,
                         ),
-
                       ),
                       HomeFilterMenues(
                         onSelected: (value) {
-
-                            homeController.sortPosts();
+                          homeController.sortPosts();
 
                           print("selected=>$value");
                         },
@@ -225,13 +224,15 @@ class _MyCommunityDetailState extends State<MyCommunityDetail> {
   }
 
   List<Widget> _buildActionButtons(bool isJoined) {
+    log("community-->${widget.isAllCommunity}");
     final List<Widget> buttons = [];
 
     if (!widget.isAllCommunity) {
       buttons.addAll([
         buildActionCommunityButton(
           assetPath: AppImages.addCircle,
-          onTap: () => Get.toNamed(AppRoutes.post, arguments: {"communityId": widget.community!.id}),
+          onTap: () => Get.toNamed(AppRoutes.post,
+              arguments: {"communityId": widget.community!.id}),
           tooltip: "Create Post",
         ),
         buildActionCommunityButton(
@@ -241,7 +242,8 @@ class _MyCommunityDetailState extends State<MyCommunityDetail> {
         ),
         buildActionCommunityButton(
           assetPath: AppImages.eidt,
-          onTap: () => Get.toNamed(AppRoutes.editMycommunity, arguments: {"data": widget.community!}),
+          onTap: () => Get.toNamed(AppRoutes.editMycommunity,
+              arguments: {"data": widget.community!}),
           tooltip: "Edit Community",
         ),
         buildActionCommunityButton(
@@ -254,7 +256,8 @@ class _MyCommunityDetailState extends State<MyCommunityDetail> {
       buttons.addAll([
         buildActionCommunityButton(
           assetPath: AppImages.addCircle,
-          onTap: () => Get.toNamed(AppRoutes.post, arguments: {"communityId": widget.community!.id}),
+          onTap: () => Get.toNamed(AppRoutes.post,
+              arguments: {"communityId": widget.community!.id}),
           tooltip: "Create Post",
         ),
         buildActionCommunityButton(

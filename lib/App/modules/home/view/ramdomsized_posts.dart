@@ -1,20 +1,14 @@
 import 'dart:developer';
+
 import 'package:civitante/App/modules/home/widgets/filter_menues.dart';
-
 import 'package:civitante/App/modules/loading/empty_data.dart';
-
 import 'package:civitante/App/modules/previewUserProfile/view/previewprofile.dart';
 import 'package:civitante/App/service/http_service.dart';
-import 'package:civitante/App/shared/app_text.dart';
-import 'package:civitante/App/shared/color.dart';
-import 'package:civitante/App/shared/image.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
-import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../Models/Post.dart';
-import '../../PostsDetails/view/posts_details_screen.dart';
 import '../../shimmer/randomized_shimmer_post.dart';
 import '../controller/home_controller.dart';
 import '../widgets/engament_row.dart';
@@ -34,7 +28,7 @@ class RandomSizedPostsScreen extends StatefulWidget {
       this.communityId = "",
       this.explore = false,
       this.followed = false,
-      this.isShowFilter=true,
+      this.isShowFilter = true,
       this.randomized = false,
       this.isCommunityDetails = false});
 
@@ -47,7 +41,9 @@ class _RandomSizedPostsScreenState extends State<RandomSizedPostsScreen> {
   Widget build(BuildContext context) {
     final homeController = Get.find<HomeController>();
     homeController.fetchAndAssignPosts(
-        communityId: widget.communityId, randomized: widget.randomized, followed: widget.followed);
+        communityId: widget.communityId,
+        randomized: widget.randomized,
+        followed: widget.followed);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -88,16 +84,18 @@ class _RandomSizedPostsScreenState extends State<RandomSizedPostsScreen> {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: homeController.selectedCategory.value ==
-                                          category
-                                      ? AppColors.Slate_gray
-                                      : AppColors.light_gray,
+                                  color:
+                                      homeController.selectedCategory.value ==
+                                              category
+                                          ? AppColors.Slate_gray
+                                          : AppColors.light_gray,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: AppText(
                                   text: category,
                                   fontSize: 14,
-                                  color: homeController.selectedCategory.value ==
+                                  color: homeController
+                                              .selectedCategory.value ==
                                           category
                                       ? Colors.white
                                       : Colors
@@ -146,17 +144,17 @@ class _RandomSizedPostsScreenState extends State<RandomSizedPostsScreen> {
                   //   ),
                   // ),
                   // SizedBox(height: 10,),
-                 if(widget.isShowFilter)
-                  HomeFilterMenues(
-                    onSelected: (value) {
-                      if (value == 'Comments') {
-                        homeController.sortByComments();
-                      } else {
-                        homeController.sortPosts();
-                      }
-                      print("selected=>$value");
-                    },
-                  ),
+                  if (widget.isShowFilter)
+                    HomeFilterMenues(
+                      onSelected: (value) {
+                        if (value == 'Comments') {
+                          homeController.sortByComments();
+                        } else {
+                          homeController.sortPosts();
+                        }
+                        print("selected=>$value");
+                      },
+                    ),
                 ],
               ),
             if (widget.explore == false)
@@ -178,32 +176,34 @@ class _RandomSizedPostsScreenState extends State<RandomSizedPostsScreen> {
                         return LottieAnimationWidget();
                       } else {
                         return CardSwiper(
-                          padding: EdgeInsets.only(bottom: 14),
-                          cardsCount: homeController.filteredPosts.length,
-                          numberOfCardsDisplayed: 1,
-                          threshold: 20, // Increased threshold to reduce accidental swipes
-                          duration: const Duration(milliseconds: 300),
-                          isLoop: false,
+                            padding: EdgeInsets.only(bottom: 14),
+                            cardsCount: homeController.filteredPosts.length,
+                            numberOfCardsDisplayed: 1,
+                            threshold:
+                                20, // Increased threshold to reduce accidental swipes
+                            duration: const Duration(milliseconds: 300),
+                            isLoop: false,
                             onSwipe: (previousIndex, currentIndex, direction) {
-                              if (currentIndex == null) {
-                                print("⚠️ Swipe ignored: Current index is null.");
-                                return false;
-                              }
+                              int lastIndex =
+                                  homeController.filteredPosts.length - 1;
 
-                              int lastIndex = homeController.filteredPosts.length - 1;
-
-                              print("🔄 Swipe detected. Previous index: $previousIndex, Current index: $currentIndex, Last index: $lastIndex");
+                              print(
+                                  "🔄 Swipe detected. Previous index: $previousIndex, Current index: $currentIndex, Last index: $lastIndex");
                               print("➡️ Swipe direction: $direction");
 
                               if (direction == CardSwiperDirection.left) {
                                 if (previousIndex > 0) {
-                                  int targetIndex = homeController.currentIndex.value-1;
+                                  int targetIndex =
+                                      homeController.currentIndex.value - 1;
                                   homeController.changeIndex(targetIndex);
-                                  final previousPost = homeController.filteredPosts[targetIndex];
+                                  final previousPost =
+                                      homeController.filteredPosts[targetIndex];
                                   // Call viewPostById but don't expect it to return anything
-                                  homeController.viewPostById(previousPost.id, targetIndex);
+                                  homeController.viewPostById(
+                                      previousPost.id, targetIndex);
 
-                                  print("✅ Swiped left: Navigated to previous post ID: ${previousPost.id}, New index: $targetIndex ad current index is $currentIndex");
+                                  print(
+                                      "✅ Swiped left: Navigated to previous post ID: ${previousPost.id}, New index: $targetIndex ad current index is $currentIndex");
                                   return true;
                                 } else {
                                   print("❌ Already at the first post.");
@@ -213,61 +213,75 @@ class _RandomSizedPostsScreenState extends State<RandomSizedPostsScreen> {
 
                               if (direction == CardSwiperDirection.right) {
                                 if (previousIndex < lastIndex) {
-                                  int targetIndex = homeController.currentIndex.value + 1;
+                                  int targetIndex =
+                                      homeController.currentIndex.value + 1;
                                   homeController.changeIndex(targetIndex);
-                                  final nextPost = homeController.filteredPosts[targetIndex];
+                                  final nextPost =
+                                      homeController.filteredPosts[targetIndex];
 
                                   // Call viewPostById but don't expect it to return anything
-                                  homeController.viewPostById(nextPost.id, targetIndex);
+                                  homeController.viewPostById(
+                                      nextPost.id, targetIndex);
 
-                                  print("✅ Swiped right: Navigated to next post ID: ${nextPost.id}, New index: $targetIndex ad current index is $currentIndex");
+                                  print(
+                                      "✅ Swiped right: Navigated to next post ID: ${nextPost.id}, New index: $targetIndex ad current index is $currentIndex");
                                   return true;
                                 } else {
-                                  print("❌ Already at the last post.");
-                                  return false;
+                                  print("🔄 Looping back to first post.");
+                                  homeController.fetchAndAssignPosts(
+                                      followed:
+                                          homeController.isFollowing.value,
+                                      randomized:
+                                          !homeController.isFollowing.value);
+                                  return true;
                                 }
                               }
 
                               return false;
                             },
-                            cardBuilder: (context, index, percentThresholdX, percentThresholdY) {
-                          print("🛠️ Building card for index: $index");
+                            cardBuilder: (context, index, percentThresholdX,
+                                percentThresholdY) {
+                              print("🛠️ Building card for index: $index");
 
-                          // Validate index to prevent out-of-range errors
-                          if (index < 0 || index >= homeController.filteredPosts.length) {
-                            print("⚠️ Index out of range: $index");
-                            return const SizedBox.shrink();
-                          }
+                              // Validate index to prevent out-of-range errors
+                              if (index < 0 ||
+                                  index >=
+                                      homeController.filteredPosts.length) {
+                                print("⚠️ Index out of range: $index");
+                                return const SizedBox.shrink();
+                              }
 
+                              // Ensure correct post is being displayed
 
-                          // Ensure correct post is being displayed
+                              return Obx(() {
+                                final post = homeController.filteredPosts[
+                                    homeController.currentIndex.value];
+                                print(
+                                    "📄 Correcting Post Display: Expected Index: ${index} Actual Index: ${homeController.currentIndex.value}, Post ID: ${post.id}, Title: ${post.title}");
+                                return GestureDetector(
+                                  onTap: () {
+                                    homeController.viewPostById(post.id, index);
 
-                          return Obx((){
-                            final post = homeController.filteredPosts[homeController.currentIndex.value];
-                            print("📄 Correcting Post Display: Expected Index: ${index} Actual Index: ${homeController.currentIndex.value}, Post ID: ${post.id}, Title: ${post.title}");
-                            return GestureDetector(
-                              onTap: () {
-                                homeController.viewPostById(post.id, index);
-
-                                Get.toNamed(AppRoutes.postDetail, arguments: {
-                                  "data": post,
-                                  "currentUser": false,
-                                });
-                              },
-                              child: AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 300),
-                                child: CustomCard2(
-                                  key: ValueKey(post.id),
-                                  isCommunityDetails: widget.isCommunityDetails,
-                                  haveDescAndTags: false,
-                                  post: post,
-                                  index: index,
-                                ),
-                              ),
-                            );
-                          });
-                        }
-                        );
+                                    Get.toNamed(AppRoutes.postDetail,
+                                        arguments: {
+                                          "data": post,
+                                          "currentUser": false,
+                                        });
+                                  },
+                                  child: AnimatedSwitcher(
+                                    duration: const Duration(milliseconds: 300),
+                                    child: CustomCard2(
+                                      key: ValueKey(post.id),
+                                      isCommunityDetails:
+                                          widget.isCommunityDetails,
+                                      haveDescAndTags: false,
+                                      post: post,
+                                      index: index,
+                                    ),
+                                  ),
+                                );
+                              });
+                            });
                       }
                     })
                     // child: Obx(() {
@@ -436,10 +450,9 @@ class _CustomCard2State extends State<CustomCard2> {
                     backgroundImage:
                         widget.post.createdBy.profileImage.isNotEmpty
                             ? NetworkImage(
-                                widget.post.createdBy.profileImage.toString() ??
-                                    AppImages.person)
-                            : AssetImage(AppImages.person.toString() ??
-                                AppImages.person), // Replace with your image
+                                widget.post.createdBy.profileImage.toString())
+                            : AssetImage(AppImages.person
+                                .toString()), // Replace with your image
                   ),
                 ),
                 title: InkWell(
@@ -582,22 +595,22 @@ class _CustomCard2State extends State<CustomCard2> {
                       right: 8,
                       child: Row(
                         children: [
-                          Obx(()=>GestureDetector(
-                            onTap: () {
-                              log("Printed image");
-                            },
-                            child: buildStatItem(
-                              icon: Image.asset(
-                                AppImages.view,
-                                height: 25,
-                                color: widget.post.isViewed.value == true
-                                    ? AppColors.green
-                                    : AppColors.white,
-                              ),
-                              label: widget.post.views.toString(),
-                              textColor: AppColors.blue,
-                            ),
-                          )),
+                          Obx(() => GestureDetector(
+                                onTap: () {
+                                  log("Printed image");
+                                },
+                                child: buildStatItem(
+                                  icon: Image.asset(
+                                    AppImages.view,
+                                    height: 25,
+                                    color: widget.post.isViewed.value == true
+                                        ? AppColors.green
+                                        : AppColors.white,
+                                  ),
+                                  label: widget.post.views.toString(),
+                                  textColor: AppColors.blue,
+                                ),
+                              )),
                           const SizedBox(width: 10),
                           Obx(() {
                             return GestureDetector(
@@ -694,134 +707,134 @@ class _CustomCard2State extends State<CustomCard2> {
                       children: [
                         widget.currentUser == false
                             ? Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color:
-                            Theme.of(context).scaffoldBackgroundColor,
-                            border: Border(
-                              top: BorderSide(
-                                color: Colors.grey.withOpacity(0.2),
-                                width: 0.5,
-                              ),
-                            ),
-                          ),
-                          child: SafeArea(
-                            top: false,
-                            child: Row(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: CupertinoTextField(
-                                    controller:
-                                    homeController.commentController,
-                                    placeholder: "Write a comment...",
-                                    placeholderStyle: TextStyle(
-                                      color: CupertinoColors
-                                          .placeholderText
-                                          .resolveFrom(context),
-                                      fontSize: 16,
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 10,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: CupertinoColors
-                                          .secondarySystemBackground
-                                          .resolveFrom(context),
-                                      borderRadius:
-                                      BorderRadius.circular(25),
-                                      border: Border.all(
-                                        color: CupertinoColors.systemGrey5
-                                            .resolveFrom(context),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    suffix: ValueListenableBuilder<
-                                        TextEditingValue>(
-                                      valueListenable: homeController
-                                          .commentController,
-                                      builder: (context, value, _) {
-                                        return AnimatedOpacity(
-                                          opacity: value.text.isNotEmpty
-                                              ? 1
-                                              : 0,
-                                          duration: const Duration(
-                                              milliseconds: 200),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              homeController
-                                                  .commentController
-                                                  .clear();
-                                            },
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.only(
-                                                  right: 8),
-                                              child: Icon(
-                                                CupertinoIcons
-                                                    .xmark_circle_fill,
-                                                color: CupertinoColors
-                                                    .systemGrey
-                                                    .resolveFrom(context),
-                                                size: 18,
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                decoration: BoxDecoration(
+                                  color:
+                                      Theme.of(context).scaffoldBackgroundColor,
+                                  border: Border(
+                                    top: BorderSide(
+                                      color: Colors.grey.withOpacity(0.2),
+                                      width: 0.5,
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 12),
-                                ValueListenableBuilder<TextEditingValue>(
-                                  valueListenable:
-                                  homeController.commentController,
-                                  builder: (context, value, _) {
-                                    return AnimatedScale(
-                                      scale: value.text.isNotEmpty
-                                          ? 1
-                                          : 0.85,
-                                      duration: const Duration(
-                                          milliseconds: 200),
-                                      child: CupertinoButton(
-                                        padding: const EdgeInsets.all(12),
-                                        borderRadius:
-                                        BorderRadius.circular(25),
-                                        minSize: 0,
-                                        color: value.text.isNotEmpty
-                                            ? CupertinoColors.systemBlue
-                                            : CupertinoColors.systemGrey4,
-                                        onPressed: value.text.isNotEmpty
-                                            ? () async {
-                                          // Post to backend
-                                          if (widget.currentUser ==
-                                              false) {
-                                            await homeController
-                                                .addComments(
-                                                widget.post.id,
-                                                widget.post);
-                                          }
-                                        }
-                                            : null,
-                                        child: Icon(
-                                          CupertinoIcons
-                                              .arrow_up_circle_fill,
-                                          color: CupertinoColors.white,
-                                          size: 28,
+                                child: SafeArea(
+                                  top: false,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: CupertinoTextField(
+                                          controller:
+                                              homeController.commentController,
+                                          placeholder: "Write a comment...",
+                                          placeholderStyle: TextStyle(
+                                            color: CupertinoColors
+                                                .placeholderText
+                                                .resolveFrom(context),
+                                            fontSize: 16,
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                            vertical: 10,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: CupertinoColors
+                                                .secondarySystemBackground
+                                                .resolveFrom(context),
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                            border: Border.all(
+                                              color: CupertinoColors.systemGrey5
+                                                  .resolveFrom(context),
+                                              width: 1,
+                                            ),
+                                          ),
+                                          suffix: ValueListenableBuilder<
+                                              TextEditingValue>(
+                                            valueListenable: homeController
+                                                .commentController,
+                                            builder: (context, value, _) {
+                                              return AnimatedOpacity(
+                                                opacity: value.text.isNotEmpty
+                                                    ? 1
+                                                    : 0,
+                                                duration: const Duration(
+                                                    milliseconds: 200),
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    homeController
+                                                        .commentController
+                                                        .clear();
+                                                  },
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 8),
+                                                    child: Icon(
+                                                      CupertinoIcons
+                                                          .xmark_circle_fill,
+                                                      color: CupertinoColors
+                                                          .systemGrey
+                                                          .resolveFrom(context),
+                                                      size: 18,
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
                                         ),
                                       ),
-                                    );
-                                  },
+                                      const SizedBox(width: 12),
+                                      ValueListenableBuilder<TextEditingValue>(
+                                        valueListenable:
+                                            homeController.commentController,
+                                        builder: (context, value, _) {
+                                          return AnimatedScale(
+                                            scale: value.text.isNotEmpty
+                                                ? 1
+                                                : 0.85,
+                                            duration: const Duration(
+                                                milliseconds: 200),
+                                            child: CupertinoButton(
+                                              padding: const EdgeInsets.all(12),
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
+                                              minSize: 0,
+                                              color: value.text.isNotEmpty
+                                                  ? CupertinoColors.systemBlue
+                                                  : CupertinoColors.systemGrey4,
+                                              onPressed: value.text.isNotEmpty
+                                                  ? () async {
+                                                      // Post to backend
+                                                      if (widget.currentUser ==
+                                                          false) {
+                                                        await homeController
+                                                            .addComments(
+                                                                widget.post.id,
+                                                                widget.post);
+                                                      }
+                                                    }
+                                                  : null,
+                                              child: Icon(
+                                                CupertinoIcons
+                                                    .arrow_up_circle_fill,
+                                                color: CupertinoColors.white,
+                                                size: 28,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        )
+                              )
                             : SizedBox(),
                         Obx(() => widget.post.comments.isNotEmpty
                             ? ListView.builder(
@@ -831,7 +844,7 @@ class _CustomCard2State extends State<CustomCard2> {
                                 itemBuilder: (context, index) {
                                   var comment = widget
                                       .post.comments[index]; // Safe access
-                                  User user=comment.user;
+                                  User user = comment.user;
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 16),
@@ -845,8 +858,10 @@ class _CustomCard2State extends State<CustomCard2> {
                                           children: [
                                             CircleAvatar(
                                               radius: 26,
-                                              backgroundImage:user.profileImage!.isNotEmpty
-                                                  ? NetworkImage(user.profileImage!)
+                                              backgroundImage: user
+                                                      .profileImage!.isNotEmpty
+                                                  ? NetworkImage(
+                                                      user.profileImage!)
                                                   : AssetImage(AppImages.person)
                                                       as ImageProvider,
                                             ),
@@ -856,16 +871,13 @@ class _CustomCard2State extends State<CustomCard2> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                      user.name,
-                                                      style:
-                                                          GoogleFonts.poppins(
-                                                              fontSize: 16,
-                                                              color: AppColors
-                                                                  .appColor,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600),
-                                                    ),
+                                                  user.name,
+                                                  style: GoogleFonts.poppins(
+                                                      fontSize: 16,
+                                                      color: AppColors.appColor,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
                                                 SizedBox(height: 4),
                                                 Row(
                                                   children: [
@@ -911,7 +923,7 @@ class _CustomCard2State extends State<CustomCard2> {
                                                                   widget
                                                                       .post.id,
                                                                   comment.id,
-                                                          comment);
+                                                                  comment);
                                                         },
                                                         child: Row(
                                                           children: [
@@ -926,17 +938,17 @@ class _CustomCard2State extends State<CustomCard2> {
                                                               color: comment
                                                                       .isCommentLikedByUser
                                                                       .value
-                                                                  ? AppColors.green
+                                                                  ? AppColors
+                                                                      .green
                                                                   : AppColors
                                                                       .appColor,
                                                             ),
-                                                            Obx(()=>Text("${comment.likes!.length}")),
+                                                            Obx(() => Text(
+                                                                "${comment.likes!.length}")),
                                                           ],
                                                         ),
                                                       ),
                                                     ),
-
-
                                                   ],
                                                 ),
                                               ],
@@ -1009,17 +1021,19 @@ class _CustomCard2State extends State<CustomCard2> {
                                           padding: EdgeInsets.only(
                                               top: 8, left: Get.width * 0.22),
                                           child: Obx(
-                                            () =>  ListView.builder(
+                                            () => ListView.builder(
                                               physics:
                                                   NeverScrollableScrollPhysics(),
                                               shrinkWrap: true,
                                               itemCount:
                                                   comment.replies?.length ?? 0,
-                                              itemBuilder: (context, replyIndex) {
+                                              itemBuilder:
+                                                  (context, replyIndex) {
                                                 var commentData = comment
                                                     .replies![replyIndex];
-                                                var commentReply=commentData.text;
-                                                var user=commentData.user;
+                                                var commentReply =
+                                                    commentData.text;
+                                                var user = commentData.user;
 
                                                 return Column(
                                                   crossAxisAlignment:
@@ -1035,8 +1049,7 @@ class _CustomCard2State extends State<CustomCard2> {
                                                           backgroundImage: user
                                                                   .profileImage!
                                                                   .isNotEmpty
-                                                              ? NetworkImage(
-                                                              user
+                                                              ? NetworkImage(user
                                                                   .profileImage!)
                                                               : AssetImage(
                                                                       AppImages
@@ -1050,17 +1063,15 @@ class _CustomCard2State extends State<CustomCard2> {
                                                                   .start,
                                                           children: [
                                                             Text(
-                                                                  user
-                                                                      .name,
-                                                                  style: GoogleFonts.poppins(
-                                                                      fontSize:
-                                                                          13,
-                                                                      color: AppColors
-                                                                          .appColor,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600),
-                                                                ),
+                                                              user.name,
+                                                              style: GoogleFonts.poppins(
+                                                                  fontSize: 13,
+                                                                  color: AppColors
+                                                                      .appColor,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600),
+                                                            ),
                                                             SizedBox(height: 1),
                                                             Row(
                                                               children: [
@@ -1083,35 +1094,44 @@ class _CustomCard2State extends State<CustomCard2> {
                                                                         color: AppColors
                                                                             .appColor,
                                                                         fontWeight:
-                                                                            FontWeight
-                                                                                .w400),
+                                                                            FontWeight.w400),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
                                                                     width: 8),
-                                                                Obx(()=>GestureDetector(
-                                                                  onTap: () {
-                                                                    log("Reply id is ${commentData.id}");
-                                                                    homeController.addLikeToReply(widget.post.id,
-                                                                        comment.id,
-                                                                        commentData.id,commentData);
-                                                                  },
-                                                                  child: Row(
-                                                                    children: [
-                                                                      Icon(
-                                                                        commentData.isReplyLikedByUser!.value
-                                                                      ? Icons
-                                                                          .thumb_up_alt
-                                                                          : Icons
-                                                                          .thumb_up_alt_outlined,
-                                                                        size: 16,
-                                                                        color:commentData.isReplyLikedByUser!.value? Colors.green:Colors
-                                                                            .black,
-                                                                      ),
-                                                                      Obx(()=>Text("${commentData.replyLikesCount!.length}"))
-                                                                    ],
+                                                                Obx(
+                                                                  () =>
+                                                                      GestureDetector(
+                                                                    onTap: () {
+                                                                      log("Reply id is ${commentData.id}");
+                                                                      homeController.addLikeToReply(
+                                                                          widget
+                                                                              .post
+                                                                              .id,
+                                                                          comment
+                                                                              .id,
+                                                                          commentData
+                                                                              .id,
+                                                                          commentData);
+                                                                    },
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Icon(
+                                                                          commentData.isReplyLikedByUser!.value
+                                                                              ? Icons.thumb_up_alt
+                                                                              : Icons.thumb_up_alt_outlined,
+                                                                          size:
+                                                                              16,
+                                                                          color: commentData.isReplyLikedByUser!.value
+                                                                              ? Colors.green
+                                                                              : Colors.black,
+                                                                        ),
+                                                                        Obx(() =>
+                                                                            Text("${commentData.replyLikesCount!.length}"))
+                                                                      ],
+                                                                    ),
                                                                   ),
-                                                                ),)
+                                                                )
                                                               ],
                                                             ),
                                                           ],
@@ -1123,7 +1143,6 @@ class _CustomCard2State extends State<CustomCard2> {
                                                 );
                                               },
                                             ),
-
                                           ),
                                         ),
 
@@ -1134,7 +1153,6 @@ class _CustomCard2State extends State<CustomCard2> {
                                 },
                               )
                             : SizedBox.shrink()),
-
                       ],
                     )
                   : SizedBox.shrink(),

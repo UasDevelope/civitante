@@ -1,4 +1,3 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -6,6 +5,25 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
 import 'App/utilse/notifcation_utils.dart';
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Initialize Firebase in the background isolate
+  await Firebase.initializeApp();
+
+  print("Handling a background message: ${message.messageId}");
+  if (message.notification != null) {
+    print("Background Notification Title: ${message.notification!.title}");
+    print("Background Notification Body: ${message.notification!.body}");
+  } else {
+    print("No notification payload in background message");
+  }
+  print("Background Data: ${message.data}");
+
+  // Show notification using NotificationUtil
+  await NotificationUtil().showNotification(message);
+}
 
 void main() async {
   //
@@ -22,16 +40,6 @@ void main() async {
 
 //
   runApp(CivitanteApp());
-}
-
-@pragma('vm:entry-point')
-// Background handler
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
-  print("Handling a background message: ${message.messageId}");
-  // Use this method to automatically convert the push data, in case you gonna use our data standard
-  AwesomeNotifications().createNotificationFromJsonData(message.data);
 }
 
 class CivitanteApp extends StatefulWidget {

@@ -1,7 +1,10 @@
 import 'dart:developer';
+
 import 'package:civitante/App/Models/my_community_model.dart';
 import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
 import 'package:civitante/App/service/http_service.dart';
+import 'package:civitante/App/shared/color.dart';
+import 'package:civitante/App/utilse/toast_util.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -73,6 +76,44 @@ class MyCommunityController extends GetxController
 
   RxBool isNonMemberUserLoading = false.obs;
   var nonMembers = <NonMemberUser>[].obs;
+
+  Future<void> removeMemberFromCommunity(
+      String communityId, String userId) async {
+    try {
+      CustomLoadingDialog.showCustomLoadingDialog("Removing member...");
+      String endPoint = "/leaveCommunity/$communityId";
+
+      final response = await HttpService.post(endPoint, {
+        "userId": userId,
+      });
+
+      log("Response of deleting member from community: $response");
+
+      // Check if response is a Map and contains an error
+      if (response is Map<String, dynamic> && response.containsKey('message')) {
+        ToastUtil.showToast(
+          message: response["message"],
+          backgroundColor: response.containsKey("error")
+              ? AppColors.red_color
+              : AppColors.green,
+        );
+      } else {
+        ToastUtil.showToast(
+          message: "Unexpected response format",
+          backgroundColor: AppColors.red_color,
+        );
+      }
+
+      fetchMemberUsers(communityId);
+    } catch (e) {
+      log("Error removing member: $e");
+      ToastUtil.showToast(
+          message: "Failed to remove member: $e",
+          backgroundColor: AppColors.red_color);
+    } finally {
+      CustomLoadingDialog.closeLoadingDialog();
+    }
+  }
 
   ///[nonMemberUserSearch]
   void onChangeNonMemberUserSearch(String value) {
@@ -159,9 +200,7 @@ class MyCommunityController extends GetxController
   /// add or remove community by using  [selectedIndexes]
 
   Future<void> addOrRemoveFromCommunity(String communityId,
-      {String actionType = "add",
-        required List<String> selectedIndex
-      }) async {
+      {String actionType = "add", required List<String> selectedIndex}) async {
     try {
       CustomLoadingDialog.showCustomLoadingDialog(
           actionType == "add" ? "Inviting user...." : "Removing user....");

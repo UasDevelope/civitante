@@ -1,4 +1,5 @@
-import 'package:civitante/App/modules/drawer/view/drawer.dart';
+import 'dart:developer';
+
 import 'package:civitante/App/modules/followlist/view/followlist_screen.dart';
 import 'package:civitante/App/modules/home/widgets/homeAppbar.dart';
 import 'package:civitante/App/modules/shimmer/profile_gridview_shimmer.dart';
@@ -8,9 +9,11 @@ import 'package:civitante/App/shared/color.dart';
 import 'package:civitante/App/shared/image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../../Models/Post.dart';
 import '../../../routes/routes.dart';
 import '../../home/widgets/engament_row.dart';
+import '../../kpi/view/kpis_screen.dart';
 import '../controller/preview_profile_controller.dart';
 import '../widget/status_row.dart';
 
@@ -99,6 +102,7 @@ class PreviewProfileScreen extends StatelessWidget {
                                   fontSize: 16,
                                   color: AppColors.appColor),
                             ),
+
                             // Image.asset(
                             //   AppImages.share,
                             //   height: 25,
@@ -111,14 +115,17 @@ class PreviewProfileScreen extends StatelessWidget {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                          GestureDetector(
+                            GestureDetector(
                               onTap: () {
                                 controller.followUnfollowUser("follow");
                               },
                               child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8),
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: AppColors.textFieldHintColor, width: 0.4),
+                                  border: Border.all(
+                                      color: AppColors.textFieldHintColor,
+                                      width: 0.4),
                                   borderRadius: BorderRadius.circular(20),
                                   color: Colors.transparent,
                                 ),
@@ -141,15 +148,17 @@ class PreviewProfileScreen extends StatelessWidget {
                               ),
                             ),
                             SizedBox(width: 10), // Spacing between buttons
-                             GestureDetector(
-                              onTap: (){
+                            GestureDetector(
+                              onTap: () {
                                 controller.followUnfollowUser("unfollow");
-
                               },
                               child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8),
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: AppColors.textFieldHintColor, width: 0.4),
+                                  border: Border.all(
+                                      color: AppColors.textFieldHintColor,
+                                      width: 0.4),
                                   borderRadius: BorderRadius.circular(20),
                                   color: Colors.transparent,
                                 ),
@@ -198,19 +207,36 @@ class PreviewProfileScreen extends StatelessWidget {
                         //             color: AppColors.Slate_gray),
                         //       ),
                         //     )),
-                        if(controller.isFollow == true)
+                        if (controller.isFollow == true)
                           AppButton(
                             textColor: AppColors.white,
                             height: 20,
                             hasBorder: true,
                             radius: 32,
                             width: Get.width * 0.50,
-                            text: "Gift CPTs to followers", onPressed: () {
-
-                          },),
+                            text: "Gift CPTs to followers",
+                            onPressed: () {},
+                          ),
                       ],
                     ),
                   ),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: AppButton(
+                      height: 30,
+                      textColor: AppColors.white,
+                      text: "KPIs & Stats",
+                      onPressed: () {
+                        log("Uid is $id");
+                        Get.to(
+                            KpisScreen(
+                              userId: id,
+                            ),
+                            transition: Transition.zoom,
+                            duration: Duration(microseconds: 300));
+                      },
+                    ),
+                  )
                 ],
               ),
             )),
@@ -240,10 +266,10 @@ class PreviewProfileScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Get.to(FollowListScreen(isFollowing: false,userID:controller.id));
+                      Get.to(FollowListScreen(
+                          isFollowing: false, userID: controller.id));
                     },
                     child: StatItem(
-
                         title: 'Followers', value: controller.followers.value),
                   ),
                   VerticalDivider(
@@ -255,7 +281,10 @@ class PreviewProfileScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Get.to(FollowListScreen(isFollowing: true,userID: controller.id,));
+                      Get.to(FollowListScreen(
+                        isFollowing: true,
+                        userID: controller.id,
+                      ));
                     },
                     child: StatItem(
                         title: 'Following', value: controller.following.value),
@@ -268,13 +297,14 @@ class PreviewProfileScreen extends StatelessWidget {
         // Divider(),
         // SizedBox(height: 16),
         StatsRow(),
-        SizedBox(height: 16,),
+        SizedBox(
+          height: 16,
+        ),
 
         Obx(() {
-          if(controller.isLoading.value){
+          if (controller.isLoading.value) {
             return ProfileGridViewShimmer();
-          }
-          else{
+          } else {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: GridView.builder(
@@ -362,7 +392,8 @@ class GridItem extends StatelessWidget {
                       icon: Image.asset(
                         AppImages.view,
                         height: 25,
-                        color: post.views > 0 ? AppColors.green : AppColors.white,
+                        color:
+                            post.views > 0 ? AppColors.green : AppColors.white,
                       ),
                       label: post.views.toString(),
                       textColor: AppColors.white,

@@ -1,6 +1,5 @@
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 import '../model/notification_item.dart';
 
@@ -17,7 +16,8 @@ class NotificationsController extends GetxController {
       icon: Icons.check_circle,
     ),
     NotificationItem(
-      title: 'Lorem ipsum dolor sit amet consectetur. Nunc duis egestas cras feugiat.',
+      title:
+          'Lorem ipsum dolor sit amet consectetur. Nunc duis egestas cras feugiat.',
       icon: Icons.star,
       isHighlighted: true,
     ),
@@ -28,7 +28,8 @@ class NotificationsController extends GetxController {
     NotificationItem(title: 'Lorem ipsum dolor sit amet'),
     NotificationItem(title: 'Lorem ipsum dolor sit amet consectetur.'),
     NotificationItem(
-      title: 'Lorem ipsum dolor sit amet consectetur. Nunc duis egestas cras feugiat.',
+      title:
+          'Lorem ipsum dolor sit amet consectetur. Nunc duis egestas cras feugiat.',
     ),
     NotificationItem(title: 'Lorem ipsum dolor sit amet'),
   ].obs;

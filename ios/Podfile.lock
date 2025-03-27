@@ -5,9 +5,6 @@ PODS:
   - AppAuth/Core (1.7.6)
   - AppAuth/ExternalUserAgent (1.7.6):
     - AppAuth/Core
-  - awesome_notifications (0.10.0):
-    - Flutter
-    - IosAwnCore (~> 0.10.0)
   - camera_avfoundation (0.0.1):
     - Flutter
   - emoji_picker_flutter (0.0.1):
@@ -114,6 +111,8 @@ PODS:
   - flutter_inappwebview_ios/Core (0.0.1):
     - Flutter
     - OrderedSet (~> 6.0.3)
+  - flutter_local_notifications (0.0.1):
+    - Flutter
   - flutter_tts (0.0.1):
     - Flutter
   - fluttertoast (0.0.2):
@@ -192,7 +191,6 @@ PODS:
     - GTMSessionFetcher/Core
   - image_picker_ios (0.0.1):
     - Flutter
-  - IosAwnCore (0.10.0)
   - libwebp (1.5.0):
     - libwebp/demux (= 1.5.0)
     - libwebp/mux (= 1.5.0)
@@ -298,7 +296,6 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
-  - awesome_notifications (from `.symlinks/plugins/awesome_notifications/ios`)
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - emoji_picker_flutter (from `.symlinks/plugins/emoji_picker_flutter/ios`)
   - Firebase/Analytics
@@ -310,6 +307,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_image_compress_common (from `.symlinks/plugins/flutter_image_compress_common/ios`)
   - flutter_inappwebview_ios (from `.symlinks/plugins/flutter_inappwebview_ios/ios`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_tts (from `.symlinks/plugins/flutter_tts/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - geocoding_ios (from `.symlinks/plugins/geocoding_ios/ios`)
@@ -345,7 +343,6 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMAppAuth
     - GTMSessionFetcher
-    - IosAwnCore
     - libwebp
     - Mantle
     - nanopb
@@ -364,8 +361,6 @@ SPEC REPOS:
     - StripeUICore
 
 EXTERNAL SOURCES:
-  awesome_notifications:
-    :path: ".symlinks/plugins/awesome_notifications/ios"
   camera_avfoundation:
     :path: ".symlinks/plugins/camera_avfoundation/ios"
   emoji_picker_flutter:
@@ -384,6 +379,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_image_compress_common/ios"
   flutter_inappwebview_ios:
     :path: ".symlinks/plugins/flutter_inappwebview_ios/ios"
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_tts:
     :path: ".symlinks/plugins/flutter_tts/ios"
   fluttertoast:
@@ -415,7 +412,6 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
-  awesome_notifications: dd5518ff1c80be03d4f1c40f04da9d9cc2a37af5
   camera_avfoundation: dd002b0330f4981e1bbcb46ae9b62829237459a4
   emoji_picker_flutter: 8e50ec5caac456a23a78637e02c6293ea0ac8771
   Firebase: d80354ed7f6df5f9aca55e9eb47cc4b634735eaf
@@ -436,6 +432,7 @@ SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_image_compress_common: ec1d45c362c9d30a3f6a0426c297f47c52007e3e
   flutter_inappwebview_ios: 6f63631e2c62a7c350263b13fa5427aedefe81d4
+  flutter_local_notifications: ff50f8405aaa0ccdc7dcfb9022ca192e8ad9688f
   flutter_tts: 0f492aab6accf87059b72354fcb4ba934304771d
   fluttertoast: 21eecd6935e7064cc1fcb733a4c5a428f3f24f0f
   geocoding_ios: d7460f56e80e118d57678efe5c2cdc888739ff18
@@ -448,7 +445,6 @@ SPEC CHECKSUMS:
   GTMAppAuth: f69bd07d68cd3b766125f7e072c45d7340dea0de
   GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
   image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
-  IosAwnCore: 653786a911089012092ce831f2945cd339855a89
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   local_auth_darwin: 66e40372f1c29f383a314c738c7446e2f7fdadc3
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d

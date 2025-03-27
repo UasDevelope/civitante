@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
 import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/toast_util.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../../Models/Post.dart';
 import '../../../controller/controller_locate.dart';
 import '../../../shared/app_button.dart';
@@ -33,6 +35,7 @@ class PreviewProfileController extends GetxController {
 
   // Dependencies
   final String userId = PrefUtil.getString(PrefUtil.userId);
+  String myUid = "";
 
   @override
   void onInit() {
@@ -55,6 +58,7 @@ class PreviewProfileController extends GetxController {
       print('check token $response');
       final postsData = response['posts'] as List<dynamic>? ?? [];
       name.value = response['name']?.toString() ?? '';
+      myUid = response['_id']?.toString() ?? '';
 
       totalPosts.value = response['totalPosts'] is int
           ? response['totalPosts']
@@ -64,12 +68,16 @@ class PreviewProfileController extends GetxController {
 
       followers.value = response['followersCount'] is int
           ? response['followersCount']
-          : (response['followersCount'] is List ? response['followersCount'].length : 0);
+          : (response['followersCount'] is List
+              ? response['followersCount'].length
+              : 0);
       isFollow.value = response['isFollowing'] ?? true;
 
       following.value = response['followingCount'] is int
           ? response['followingCount']
-          : (response['followingCount'] is List ? response['followingCount'].length : 0);
+          : (response['followingCount'] is List
+              ? response['followingCount'].length
+              : 0);
 
       imageUrl.value = response['profileImage']?.toString() ?? '';
       posts.assignAll(_parsePosts(postsData));
@@ -85,9 +93,8 @@ class PreviewProfileController extends GetxController {
     try {
       CustomLoadingDialog.showCustomLoadingDialog("");
       log("id is $id");
-      var response = await HttpService.post('/followUnfollow/$id', {
-        "action":action
-      });
+      var response =
+          await HttpService.post('/followUnfollow/$id', {"action": action});
 
       if (response != null && response['error'] == null) {
         log("Response of follow is $response");
@@ -104,26 +111,28 @@ class PreviewProfileController extends GetxController {
         final errorMessage = _parseErrorMessage(response);
         print("Response of Pints is :$errorMessage");
 
-        if(errorMessage == "Not enough points to follow this user") {
+        if (errorMessage == "Not enough points to follow this user") {
           CustomLoadingDialog.closeLoadingDialog();
           Get.dialog(
             AlertDialog(
               backgroundColor: AppColors.light_gray,
-              title: AppText(text: "Dear User",fontWeight: FontWeight.w600),
-              content: AppText(text: errorMessage,fontSize: 14),
+              title: AppText(text: "Dear User", fontWeight: FontWeight.w600),
+              content: AppText(text: errorMessage, fontSize: 14),
               actions: [
                 AppButton(
                   textColor: AppColors.light_gray,
-                  text: "Buy Now!", onPressed: () {
-                  Get.to(WalletScreen());
-                },)
+                  text: "Buy Now!",
+                  onPressed: () {
+                    Get.to(WalletScreen());
+                  },
+                )
               ],
             ),
           );
-        }
-        else{
+        } else {
           CustomLoadingDialog.closeLoadingDialog();
-          ToastUtil.showToast(message: errorMessage,backgroundColor: Colors.red);
+          ToastUtil.showToast(
+              message: errorMessage, backgroundColor: Colors.red);
         }
 
         // ToastUtil.showToast(
@@ -139,6 +148,7 @@ class PreviewProfileController extends GetxController {
       );
     }
   }
+
   String _parseErrorMessage(dynamic response) {
     try {
       if (response == null) return "Unknown error occurred";
