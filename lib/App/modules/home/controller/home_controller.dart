@@ -2,12 +2,10 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:civitante/App/utilse/widgets.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import '../../../Models/Post.dart';
 import '../../../service/http_service.dart';
-import '../../../utilse/notifcation_utils.dart';
 import '../../../utilse/pref.dart';
 import '../../../utilse/toast_util.dart';
 
@@ -24,17 +22,17 @@ class HomeController extends GetxController
 
   RxBool isFollowing = true.obs;
   void toggleSwitchLane() {
-    NotificationUtil().showNotification(
-      RemoteMessage(
-        notification: RemoteNotification(
-          apple: AppleNotification(
-              sound: AppleNotificationSound(critical: true, name: "sound.caf")),
-          title: "Test Notification",
-          body: "This is a local test notification.",
-        ),
-        data: {"key": "value"},
-      ),
-    );
+    // NotificationUtil().showNotification(
+    //   RemoteMessage(
+    //     notification: RemoteNotification(
+    //       apple: AppleNotification(
+    //           sound: AppleNotificationSound(critical: true, name: "sound.caf")),
+    //       title: "Test Notification",
+    //       body: "This is a local test notification.",
+    //     ),
+    //     data: {"key": "value"},
+    //   ),
+    // );
     isFollowing.value = !isFollowing.value;
     fetchAndAssignPosts(followed: isFollowing.value);
   }

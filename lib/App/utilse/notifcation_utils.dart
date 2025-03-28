@@ -7,7 +7,6 @@ import 'package:civitante/App/utilse/pref.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class NotificationUtil {
   static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -156,7 +155,7 @@ class NotificationUtil {
 
     Future.delayed(Duration.zero, () {
       flutterLocalNotificationsPlugin.show(
-        1,
+        2,
         "New Message",
         message.notification!.body ?? "Tap to reply",
         notificationDetails,
@@ -188,8 +187,16 @@ class NotificationUtil {
 
   Future<String> getToken() async {
     try {
-      String? token = await firebaseMessaging.getToken();
-      log.log("Retrieved token: $token");
+      // await Future.delayed(Duration(seconds: 3)); // Delay for 3 seconds
+      //
+      // String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+      // if (apnsToken == null) {
+      //   log.log("APNS token not available yet.");
+      //   return "APNS token not set";
+      // }
+
+      String? token = await FirebaseMessaging.instance.getToken();
+      log.log("Retrieved FCM token: $token");
       return token ?? "123";
     } catch (error) {
       log.log("Error getting token: $error");
@@ -263,20 +270,21 @@ class NotificationUtil {
     log.log("Notifications: initialized");
   }
 
-  static Future<void> requestNotificationPermission() async {
-    Permission notificationPermission = Permission.notification;
-    bool isPermanentlyDenied = await notificationPermission.isPermanentlyDenied;
-    if (isPermanentlyDenied) {
-      log.log("Notification permission permanently denied");
-      await openAppSettings();
-    } else {
-      var requestNotification = await notificationPermission.request();
-      if (requestNotification.isGranted) {
-        log.log("Notification permission granted");
-      } else {
-        log.log(
-            "Notification permission denied ${requestNotification.isDenied}");
-      }
+  Future<void> requestNotificationPermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      log.log("Notification permission granted");
+    } else if (settings.authorizationStatus == AuthorizationStatus.denied) {
+      log.log("Notification permission denied");
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      log.log("Notification permission granted provisionally");
     }
   }
 }
