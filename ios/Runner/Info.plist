@@ -35,9 +35,9 @@
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>We need your location to provide location-based services.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>We need your location to provide location-based services.</string>
+	<string>We need access to your location to display locations in the app</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need your location to provide location-based services.</string>
+	<string>We need access to your location to display locations in the app</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need microphone access for voice recognition features.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
