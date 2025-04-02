@@ -29,7 +29,6 @@ class Post {
   final RxList<String> sharedBy; // Users who shared the post
   RxBool isShared; // Whether the post has been shared by the user
 
-
   Post({
     required this.id,
     required this.title,
@@ -57,7 +56,6 @@ class Post {
     required this.savedBy,
     required this.sharedBy,
     required this.isShared,
-
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -108,10 +106,15 @@ class Post {
       rate: RxInt(json['rate'] ?? 0),
 
       // New Fields
-      savedBy: RxList<String>((json['savedBy'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
-      sharedBy: RxList<String>((json['sharedBy'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? []),
+      savedBy: RxList<String>((json['savedBy'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          []),
+      sharedBy: RxList<String>((json['sharedBy'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          []),
       isShared: RxBool(json['isShared'] ?? false),
-
     );
   }
 }
@@ -160,10 +163,8 @@ class Comment {
   RxBool isCommentLikedByUser;
   RxBool? isReplyLikedByUser;
 
-  // New Fields
-  final RxInt repliesCount; // Number of replies
-  RxBool isEdited; // Whether the comment has been edited
-
+  final RxInt repliesCount;
+  RxBool isEdited;
 
   Comment({
     required this.id,
@@ -171,16 +172,16 @@ class Comment {
     required this.text,
     required this.createdAt,
     this.likesCount,
-
     this.likes,
     this.replyLikesCount,
-    RxList<Comment>? replies, // Now optional
-    required this.isCommentLikedByUser,
-     this.isReplyLikedByUser,
+    RxList<Comment>? replies,
+    RxBool? isCommentLikedByUser, // Nullable in constructor
+    this.isReplyLikedByUser,
     required this.repliesCount,
     required this.isEdited,
-  }) : replies = replies ?? RxList<Comment>(); // Ensuring replies is never null
-
+  })  : replies = replies ?? RxList<Comment>(),
+        isCommentLikedByUser =
+            isCommentLikedByUser ?? RxBool(false); // Ensure default value
 
   factory Comment.fromJson(Map<String, dynamic> json) {
     return Comment(
@@ -190,26 +191,19 @@ class Comment {
       text: json['text'] ?? '',
       createdAt:
           DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
-      likes: json['likes'] != null
-          ? RxList<String>((json['likes'] as List<dynamic>)
-              .map((e) => e.toString())
-              .toList())
-          : null, replyLikesCount: json['likes'] != null
-          ? RxList<String>((json['likes'] as List<dynamic>)
-              .map((e) => e.toString())
-              .toList())
-          : null,
-
-      replies: RxList<Comment>((json['replies'] as List<dynamic>? ?? []).map((x) => Comment.fromJson(x)).toList()), // Ensuring replies is never null
-
-      isCommentLikedByUser: RxBool(json['isCommentLikedByUser'] ?? false),
+      likes: RxList<dynamic>(json['likes'] ?? []), // Ensure non-null
+      replyLikesCount: RxList<dynamic>(json['replyLikesCount'] ?? []),
+      replies: RxList<Comment>((json['replies'] as List<dynamic>? ?? [])
+          .map((x) => Comment.fromJson(x))
+          .toList()),
+      isCommentLikedByUser:
+          RxBool(json['isCommentLikedByUser'] ?? false), // Ensure non-null
       isReplyLikedByUser: RxBool(json['isReplyLikedByUser'] ?? false),
       repliesCount: RxInt(json['repliesCount'] ?? 0),
       isEdited: RxBool(json['isEdited'] ?? false),
     );
   }
 }
-
 
 class User {
   final String id;
@@ -222,7 +216,7 @@ class User {
   final DateTime? lastSeen; // Last seen timestamp
 
   User({
-     this.id="",
+    this.id = "",
     required this.name,
     this.email,
     this.profileImage,
@@ -237,7 +231,8 @@ class User {
       email: json['email'],
       profileImage: json['profileImage'],
       status: json['status'] ?? '',
-      lastSeen: json['lastSeen'] != null ? DateTime.tryParse(json['lastSeen']) : null,
+      lastSeen:
+          json['lastSeen'] != null ? DateTime.tryParse(json['lastSeen']) : null,
     );
   }
 }

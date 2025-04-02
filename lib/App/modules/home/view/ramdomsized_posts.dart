@@ -858,8 +858,11 @@ class _CustomCard2State extends State<CustomCard2> {
                                           children: [
                                             CircleAvatar(
                                               radius: 26,
-                                              backgroundImage: user
-                                                      .profileImage!.isNotEmpty
+                                              backgroundImage: (user
+                                                              .profileImage !=
+                                                          null &&
+                                                      user.profileImage!
+                                                          .isNotEmpty)
                                                   ? NetworkImage(
                                                       user.profileImage!)
                                                   : AssetImage(AppImages.person)
@@ -944,7 +947,7 @@ class _CustomCard2State extends State<CustomCard2> {
                                                                       .appColor,
                                                             ),
                                                             Obx(() => Text(
-                                                                "${comment.likes!.length}")),
+                                                                "${comment.likes?.length ?? 0}")), // Handles null safety
                                                           ],
                                                         ),
                                                       ),
@@ -1121,7 +1124,7 @@ class _CustomCard2State extends State<CustomCard2> {
                                                                               ? Icons.thumb_up_alt
                                                                               : Icons.thumb_up_alt_outlined,
                                                                           size:
-                                                                              16,
+                                                                              20,
                                                                           color: commentData.isReplyLikedByUser!.value
                                                                               ? Colors.green
                                                                               : Colors.black,

@@ -56,6 +56,7 @@ class NotificationUtil {
 
     // Check notification type
     String? notificationType = message.data["notificationType"];
+    log.log("Notification type is $notificationType");
 
     if (notificationType != "message") {
       log.log("Displaying simple notification");
@@ -98,6 +99,7 @@ class NotificationUtil {
 
       return;
     }
+    log.log("Displaying message notification");
 
     // If notificationType is "message", show a rich notification
     AndroidNotificationChannel androidNotificationChannel =

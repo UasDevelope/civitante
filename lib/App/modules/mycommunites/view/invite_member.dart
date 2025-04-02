@@ -3,15 +3,7 @@ import 'package:civitante/App/modules/mycommunites/controller/my_community.dart'
 import 'package:civitante/App/modules/shimmer/my_community_model.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
-import '../../home/widgets/homeAppbar.dart';
-import '../../home/widgets/home_search.dart';
 
-import 'package:civitante/App/modules/loading/empty_data.dart';
-import 'package:civitante/App/modules/mycommunites/controller/my_community.dart';
-import 'package:civitante/App/modules/shimmer/my_community_model.dart';
-import 'package:civitante/App/utilse/widgets.dart';
-import 'package:flutter/material.dart';
-import '../../home/widgets/homeAppbar.dart';
 import '../../home/widgets/home_search.dart';
 
 class InviteMember extends StatelessWidget {
@@ -42,26 +34,26 @@ class InviteMember extends StatelessWidget {
 
             // Add Button
             Obx(
-                  () => controller.selectedIndexes.isNotEmpty
+              () => controller.selectedIndexes.isNotEmpty
                   ? ElevatedButton.icon(
-                onPressed: () => controller.addOrRemoveFromCommunity(
-                  communityId,
-                  selectedIndex: controller.selectedIndexes,
-                ),
-                icon: const Icon(Icons.person_add, size: 20),
-                label: const Text("Add Selected"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.appColor,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                ),
-              )
+                      onPressed: () => controller.addOrRemoveFromCommunity(
+                        communityId,
+                        selectedIndex: controller.selectedIndexes,
+                      ),
+                      icon: const Icon(Icons.person_add, size: 20),
+                      label: const Text("Invite Selected"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.appColor,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                      ),
+                    )
                   : const SizedBox.shrink(),
             ),
             const SizedBox(height: 16),
@@ -69,7 +61,7 @@ class InviteMember extends StatelessWidget {
             // Members List
             Expanded(
               child: Obx(
-                    () {
+                () {
                   if (controller.isNonMemberUserLoading.value) {
                     return const MyCommunityShimmer();
                   }
@@ -85,16 +77,21 @@ class InviteMember extends StatelessWidget {
 
                       return GestureDetector(
                         onTap: () => controller.toggleSelection(data.id),
-                        child: Obx((){
-                          final isSelected = controller.selectedIndexes.contains(data.id);
+                        child: Obx(() {
+                          final isSelected =
+                              controller.selectedIndexes.contains(data.id);
 
                           return Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: isSelected ? AppColors.light_gray : Colors.white,
+                              color: isSelected
+                                  ? AppColors.light_gray
+                                  : Colors.white,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: isSelected ? AppColors.appColor : AppColors.greyShade,
+                                color: isSelected
+                                    ? AppColors.appColor
+                                    : AppColors.greyShade,
                                 width: 1.5,
                               ),
                               boxShadow: [
@@ -116,7 +113,9 @@ class InviteMember extends StatelessWidget {
                                     width: 50,
                                     height: 50,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) => Container(
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Container(
                                       width: 50,
                                       height: 50,
                                       color: Colors.grey[300],
@@ -133,7 +132,8 @@ class InviteMember extends StatelessWidget {
                                 // User Info
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         data.name,
@@ -162,18 +162,22 @@ class InviteMember extends StatelessWidget {
                                   height: 24,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: isSelected ? AppColors.appColor : Colors.transparent,
+                                    color: isSelected
+                                        ? AppColors.appColor
+                                        : Colors.transparent,
                                     border: Border.all(
-                                      color: isSelected ? AppColors.appColor : AppColors.greyShade,
+                                      color: isSelected
+                                          ? AppColors.appColor
+                                          : AppColors.greyShade,
                                       width: 2,
                                     ),
                                   ),
                                   child: isSelected
                                       ? const Icon(
-                                    Icons.check,
-                                    size: 16,
-                                    color: Colors.white,
-                                  )
+                                          Icons.check,
+                                          size: 16,
+                                          color: Colors.white,
+                                        )
                                       : null,
                                 ),
                               ],
@@ -182,7 +186,8 @@ class InviteMember extends StatelessWidget {
                         }),
                       );
                     },
-                    separatorBuilder: (context, index) => const SizedBox(height: 12),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 12),
                   );
                 },
               ),

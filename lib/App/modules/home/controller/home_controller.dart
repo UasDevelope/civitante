@@ -30,7 +30,7 @@ class HomeController extends GetxController
     //       title: "Test Notification",
     //       body: "This is a local test notification.",
     //     ),
-    //     data: {"key": "value"},
+    //     data: {"key": "value", "notificationType": "message"},
     //   ),
     // );
     isFollowing.value = !isFollowing.value;

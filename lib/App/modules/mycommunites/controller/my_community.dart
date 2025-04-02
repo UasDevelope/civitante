@@ -204,8 +204,11 @@ class MyCommunityController extends GetxController
     try {
       CustomLoadingDialog.showCustomLoadingDialog(
           actionType == "add" ? "Inviting user...." : "Removing user....");
-      final response = await HttpService.post("/addOrRemoveUser/$communityId",
-          {"memberIds": selectedIndex, "action": actionType});
+      log("Selected index is $selectedIndex");
+      final response =
+          await HttpService.post("/inviteToCommunity/$communityId", {
+        "userIds": selectedIndex,
+      });
       log("Response for add and remove community is $response");
       fetchCommunities();
       CustomLoadingDialog.closeLoadingDialog();
