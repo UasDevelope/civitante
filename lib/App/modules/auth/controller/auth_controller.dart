@@ -111,6 +111,12 @@ class AuthController extends GetxController {
         locationController.userLocation["locationName"];
   }
 
+  var isAccepted = true.obs; // Observable variable for checkbox state
+
+  void toggleAcceptance() {
+    isAccepted.value = !isAccepted.value; // Toggle the state
+  }
+
 // Register Normal User
   void registerNormalUser() async {
     try {
