@@ -56,6 +56,7 @@ dependencies:
   fluttertoast:
   fl_chart: ^0.70.1
   flutter_stripe: ^11.4.0
+  in_app_purchase: ^3.2.1
   intl: ^0.20.1
   firebase_core: ^3.10.1
   firebase_storage: ^12.4.4

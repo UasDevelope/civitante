@@ -9,18 +9,24 @@ class KpisScreen extends StatelessWidget {
   final String userId;
   KpisScreen({this.userId = ""});
   final KPISController controller = Get.find<KPISController>();
+
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
     controller.fetchUserStats(userId: userId);
+
     return RefreshIndicator(
-      onRefresh: () {
-        return controller.fetchUserStats();
-      },
+      onRefresh: () => controller.fetchUserStats(),
       backgroundColor: AppColors.appColor,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('KPIs & Stats',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+          title: Text(
+            'KPIs & Stats',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: isTablet ? 24 : 20,
+            ),
+          ),
           backgroundColor: Colors.white,
           elevation: 0,
         ),
@@ -28,10 +34,11 @@ class KpisScreen extends StatelessWidget {
             ? KpisShimmer()
             : SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(isTablet ? 24.0 : 16.0),
                   child: Column(
                     children: controller.metrics
-                        .map((metric) => buildMetricSection(metric, controller))
+                        .map((metric) =>
+                            buildMetricSection(metric, controller, isTablet))
                         .toList(),
                   ),
                 ),
@@ -41,24 +48,26 @@ class KpisScreen extends StatelessWidget {
   }
 }
 
-Widget buildMetricSection(String metric, KPISController controller) {
+Widget buildMetricSection(
+    String metric, KPISController controller, bool isTablet) {
   return Obx(() => Container(
-        margin: EdgeInsets.only(bottom: customMargin()),
+        margin: EdgeInsets.only(bottom: isTablet ? 12.0 : 8.0),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-                color: Colors.grey.withValues(alpha: 0.2), blurRadius: 10),
+              color: Colors.grey.withValues(alpha: 0.2),
+              blurRadius: 10,
+            ),
           ],
         ),
         child: Column(
           children: [
-            // Section Header
             GestureDetector(
               onTap: () => controller.toggleSection(metric),
               child: Container(
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.all(isTablet ? 20 : 16),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [AppColors.appColor, AppColors.textFieldHintColor],
@@ -74,7 +83,7 @@ Widget buildMetricSection(String metric, KPISController controller) {
                       metric,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18,
+                        fontSize: isTablet ? 22 : 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -83,39 +92,21 @@ Widget buildMetricSection(String metric, KPISController controller) {
                           ? Icons.expand_less
                           : Icons.expand_more,
                       color: Colors.white,
+                      size: isTablet ? 30 : 24,
                     ),
                   ],
                 ),
               ),
             ),
-            // Expanded Content
             if (controller.expandedSections[metric]!) ...[
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(isTablet ? 20.0 : 16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Timeframe Selector
-                    // DropdownButton<String>(
-                    //   value: controller.selectedTimeframes[metric],
-                    //   items: controller.timeframes.map((timeframe) {
-                    //     return DropdownMenuItem(
-                    //       value: timeframe,
-                    //       child: Text(timeframe),
-                    //     );
-                    //   }).toList(),
-                    //   onChanged: (value) =>
-                    //       controller.changeTimeframe(metric, value!),
-                    //   underline: SizedBox(),
-                    //   isExpanded: true,
-                    //   style: TextStyle(color: Colors.black, fontSize: 14),
-                    // ),
-                    // SizedBox(height: 16),
-                    // Graph
-                    _buildGraph(metric, controller),
-                    SizedBox(height: 16),
-                    // Stats Table
-                    _buildStatsTable(metric, controller),
+                    _buildGraph(metric, controller, isTablet),
+                    SizedBox(height: isTablet ? 20 : 16),
+                    _buildStatsTable(metric, controller, isTablet),
                   ],
                 ),
               ),
@@ -125,7 +116,7 @@ Widget buildMetricSection(String metric, KPISController controller) {
       ));
 }
 
-Widget _buildGraph(String metric, KPISController controller) {
+Widget _buildGraph(String metric, KPISController controller, bool isTablet) {
   final List<FlSpot> spots = controller.graphData[metric]?.map((entry) {
         int index = controller.graphData[metric]!.indexOf(entry);
         return FlSpot(index.toDouble(), entry['value'].toDouble());
@@ -133,11 +124,10 @@ Widget _buildGraph(String metric, KPISController controller) {
       [];
 
   return Container(
-    // Use GetX for responsive dimensions
-    height: Get.height * 0.3, // 30% of screen height
-    width: Get.width * 0.9, // 90% of screen width
-    padding: EdgeInsets.all(Get.width * 0.04), // 4% of screen width as padding
-    margin: EdgeInsets.symmetric(horizontal: Get.width * 0.02), // 2% margin
+    height: isTablet ? Get.height * 0.35 : Get.height * 0.3,
+    width: Get.width * 0.9,
+    padding: EdgeInsets.all(isTablet ? Get.width * 0.05 : Get.width * 0.04),
+    margin: EdgeInsets.symmetric(horizontal: Get.width * 0.02),
     decoration: BoxDecoration(
       color: AppColors.white,
       borderRadius: BorderRadius.circular(12),
@@ -180,7 +170,7 @@ Widget _buildGraph(String metric, KPISController controller) {
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 40,
+              reservedSize: isTablet ? 50 : 40,
               interval: 1,
               getTitlesWidget: (value, meta) {
                 int index = value.toInt();
@@ -189,11 +179,12 @@ Widget _buildGraph(String metric, KPISController controller) {
                   final timestamp =
                       controller.graphData[metric]![index]['timestamp'];
                   return Padding(
-                    padding: EdgeInsets.only(top: 8),
+                    padding: EdgeInsets.only(top: isTablet ? 12 : 8),
                     child: Text(
                       timestamp,
                       style: TextStyle(
-                        fontSize: Get.width * 0.03, // Responsive font size
+                        fontSize:
+                            isTablet ? Get.width * 0.035 : Get.width * 0.03,
                         color: AppColors.Slate_gray,
                       ),
                       textAlign: TextAlign.center,
@@ -207,12 +198,12 @@ Widget _buildGraph(String metric, KPISController controller) {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 40,
+              reservedSize: isTablet ? 50 : 40,
               getTitlesWidget: (value, meta) {
                 return Text(
                   value.toInt().toString(),
                   style: TextStyle(
-                    fontSize: Get.width * 0.03, // Responsive font size
+                    fontSize: isTablet ? Get.width * 0.035 : Get.width * 0.03,
                     color: AppColors.Slate_gray,
                   ),
                 );
@@ -244,7 +235,7 @@ Widget _buildGraph(String metric, KPISController controller) {
               show: true,
               getDotPainter: (spot, percent, barData, index) =>
                   FlDotCirclePainter(
-                radius: Get.width * 0.01, // Responsive dot size
+                radius: isTablet ? Get.width * 0.015 : Get.width * 0.01,
                 color: AppColors.blue,
                 strokeWidth: 2,
                 strokeColor: AppColors.white,
@@ -257,14 +248,15 @@ Widget _buildGraph(String metric, KPISController controller) {
         lineTouchData: LineTouchData(
           enabled: true,
           touchTooltipData: LineTouchTooltipData(
-            tooltipPadding: EdgeInsets.all(Get.width * 0.02),
+            tooltipPadding:
+                EdgeInsets.all(isTablet ? Get.width * 0.025 : Get.width * 0.02),
             getTooltipItems: (List<LineBarSpot> touchedSpots) {
               return touchedSpots.map((spot) {
                 return LineTooltipItem(
                   '${spot.y}',
                   TextStyle(
                     color: AppColors.white,
-                    fontSize: Get.width * 0.035,
+                    fontSize: isTablet ? Get.width * 0.04 : Get.width * 0.035,
                   ),
                 );
               }).toList();
@@ -276,7 +268,8 @@ Widget _buildGraph(String metric, KPISController controller) {
   );
 }
 
-Widget _buildStatsTable(String metric, KPISController controller) {
+Widget _buildStatsTable(
+    String metric, KPISController controller, bool isTablet) {
   final data = controller.statsData[metric] ?? {};
   final List<String> labels = [
     'Daily',
@@ -290,7 +283,7 @@ Widget _buildStatsTable(String metric, KPISController controller) {
   return Container(
     width: Get.width * 0.95,
     margin: EdgeInsets.symmetric(
-      vertical: Get.height * 0.02,
+      vertical: isTablet ? Get.height * 0.025 : Get.height * 0.02,
       horizontal: Get.width * 0.02,
     ),
     decoration: BoxDecoration(
@@ -309,7 +302,6 @@ Widget _buildStatsTable(String metric, KPISController controller) {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Row
           Container(
             decoration: BoxDecoration(
               color: AppColors.greyShade.withOpacity(0.3),
@@ -321,20 +313,27 @@ Widget _buildStatsTable(String metric, KPISController controller) {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildCell('Metric', width: Get.width * 0.25, isHeader: true),
-                ...labels.map((label) =>
-                    _buildCell(label, width: Get.width * 0.2, isHeader: true)),
+                _buildCell('Metric',
+                    width: isTablet ? Get.width * 0.3 : Get.width * 0.25,
+                    isHeader: true,
+                    isTablet: isTablet),
+                ...labels.map((label) => _buildCell(label,
+                    width: isTablet ? Get.width * 0.25 : Get.width * 0.2,
+                    isHeader: true,
+                    isTablet: isTablet)),
               ],
             ),
           ),
-          // Data Row
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildCell(metric, width: Get.width * 0.25),
+              _buildCell(metric,
+                  width: isTablet ? Get.width * 0.3 : Get.width * 0.25,
+                  isTablet: isTablet),
               ...labels.map((label) => _buildCell(
                     data[label.toLowerCase()]?.toStringAsFixed(1) ?? "0",
-                    width: Get.width * 0.2,
+                    width: isTablet ? Get.width * 0.25 : Get.width * 0.2,
+                    isTablet: isTablet,
                   )),
             ],
           ),
@@ -344,10 +343,11 @@ Widget _buildStatsTable(String metric, KPISController controller) {
   );
 }
 
-Widget _buildCell(String text, {required double width, bool isHeader = false}) {
+Widget _buildCell(String text,
+    {required double width, bool isHeader = false, required bool isTablet}) {
   return Container(
     width: width,
-    padding: EdgeInsets.all(Get.width * 0.02),
+    padding: EdgeInsets.all(isTablet ? Get.width * 0.025 : Get.width * 0.02),
     decoration: BoxDecoration(
       border: Border(
         bottom: BorderSide(
@@ -361,11 +361,11 @@ Widget _buildCell(String text, {required double width, bool isHeader = false}) {
       ),
     ),
     child: SizedBox(
-      height: Get.height * 0.04,
+      height: isTablet ? Get.height * 0.05 : Get.height * 0.04,
       child: Text(
         text,
         style: TextStyle(
-          fontSize: Get.width * 0.035,
+          fontSize: isTablet ? Get.width * 0.04 : Get.width * 0.035,
           color: isHeader ? AppColors.Slate_gray : AppColors.blue,
           fontWeight: isHeader ? FontWeight.bold : FontWeight.w500,
         ),

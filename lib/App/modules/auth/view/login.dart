@@ -1,14 +1,11 @@
 import 'dart:developer';
-import 'package:auth_buttons/auth_buttons.dart';
-import 'package:civitante/App/shared/strings.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_easy_recaptcha_v2/flutter_easy_recaptcha_v2.dart';
-import 'package:loading_overlay/loading_overlay.dart';
-import '../../../shared/validators.dart';
-import '../../../utilse/widgets.dart';
 import 'dart:io';
 
-import '../widget/captcha_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_easy_recaptcha_v2/flutter_easy_recaptcha_v2.dart';
+
+import '../../../utilse/widgets.dart';
+
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
   GlobalKey<FormState> loginGlobalKey = GlobalKey<FormState>();
@@ -92,19 +89,24 @@ class LoginScreen extends StatelessWidget {
                             children: [
                               Obx(() => Checkbox(
                                   activeColor: AppColors.blue,
-                                  value: controller.isRememberMeChecked.value, onChanged: controller.toggleRememberMe)),
+                                  value: controller.isRememberMeChecked.value,
+                                  onChanged: controller.toggleRememberMe)),
                               AppText(text: "Remember me")
                             ],
                           ),
                           SizedBox(
-                            height: 80,
+                            height: 150,
                             child: RecaptchaV2(
-                              apiKey: "6LeXYfEqAAAAAOwhKVmaj4H_RXXmwdJCM7IS3MxL", // Site key
+                              key: UniqueKey(), // 👈 Force remount
+                              apiKey:
+                                  "6LeXYfEqAAAAAOwhKVmaj4H_RXXmwdJCM7IS3MxL", // Site key
                               onVerifiedSuccessfully: (String token) async {
                                 log("Recaptcha token: $token");
-                                final bool isTokenVerified = await verifyRecaptchaV2Token(
+                                final bool isTokenVerified =
+                                    await verifyRecaptchaV2Token(
                                   token: token,
-                                  apiSecret: "6LeXYfEqAAAAABzjex2n3FGDm1ONLesHBgT1kld1", // Secret key
+                                  apiSecret:
+                                      "6LeXYfEqAAAAABzjex2n3FGDm1ONLesHBgT1kld1", // Secret key
                                 );
                                 if (isTokenVerified) {
                                   log("Token verified successfully");
@@ -112,7 +114,6 @@ class LoginScreen extends StatelessWidget {
                                   log("Token verification failed");
                                 }
                               },
-
                             ),
                           ),
 
@@ -167,8 +168,8 @@ class LoginScreen extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Divider(
-                                  color:
-                                  AppColors.textFieldHintColor, // Divider color
+                                  color: AppColors
+                                      .textFieldHintColor, // Divider color
                                   thickness: 1.0, // Thickness of the divider
                                 ),
                               ),
@@ -179,8 +180,8 @@ class LoginScreen extends StatelessWidget {
                               ),
                               Expanded(
                                 child: Divider(
-                                  color:
-                                  AppColors.textFieldHintColor, // Divider color
+                                  color: AppColors
+                                      .textFieldHintColor, // Divider color
                                   thickness: 1.0, // Thickness of the divider
                                 ),
                               ),
@@ -214,7 +215,6 @@ class LoginScreen extends StatelessWidget {
                           //     controller.loginWithApple();
                           //   },
                           // )
-
                         ],
                       )),
                   // for (int i = 0; i < controller.tooltipMessages.length; i++)
@@ -245,7 +245,8 @@ class CustomTooltip extends StatelessWidget {
     required this.message,
     required this.child,
     this.isVisible = false,
-    this.onNext, this.onNSkip,
+    this.onNext,
+    this.onNSkip,
   }) : super(key: key);
 
   @override
@@ -258,48 +259,56 @@ class CustomTooltip extends StatelessWidget {
             color: Colors.transparent,
             child: Column(
               children: [
-                SizedBox(height: Get.height* 0.20),
+                SizedBox(height: Get.height * 0.20),
                 Container(
                   clipBehavior: Clip.antiAlias,
-                  padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   decoration: BoxDecoration(
                     color: AppColors.light_gray,
-                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),topLeft: Radius.circular(20),topRight: Radius.circular(20)),
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20)),
                   ),
-                  child: AppText(
-                      text: message,
-                      color: AppColors.Slate_gray
-                  ),
+                  child: AppText(text: message, color: AppColors.Slate_gray),
                 ),
-                SizedBox(height: 2,),
+                SizedBox(
+                  height: 2,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
                       onTap: onNSkip,
                       child: Container(
-                        padding:EdgeInsets.symmetric(vertical: 4,horizontal: 6),
-                        decoration:BoxDecoration(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+                        decoration: BoxDecoration(
                             color: AppColors.blue,
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(8),bottomLeft: Radius.circular(8),bottomRight: Radius.circular(8))
-
-                        ),
-                        child: AppText(text: "Skip",fontSize: 14,color: AppColors.white),
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(8),
+                                bottomLeft: Radius.circular(8),
+                                bottomRight: Radius.circular(8))),
+                        child: AppText(
+                            text: "Skip", fontSize: 14, color: AppColors.white),
                       ),
-
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(
+                      width: 10,
+                    ),
                     GestureDetector(
                       onTap: onNext,
                       child: Container(
-                        padding:EdgeInsets.symmetric(vertical: 4,horizontal: 6),
-                        decoration:BoxDecoration(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+                        decoration: BoxDecoration(
                             color: AppColors.blue,
-                            borderRadius: BorderRadius.only(topRight: Radius.circular(8),bottomLeft: Radius.circular(8),bottomRight: Radius.circular(8))
-
-
-                        ),
-                        child: AppText(text: "Next",fontSize: 14,color: AppColors.white),
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(8),
+                                bottomLeft: Radius.circular(8),
+                                bottomRight: Radius.circular(8))),
+                        child: AppText(
+                            text: "Next", fontSize: 14, color: AppColors.white),
                       ),
                     ),
                   ],
@@ -308,9 +317,7 @@ class CustomTooltip extends StatelessWidget {
             ),
           ),
         child,
-
       ],
     );
   }
 }
-

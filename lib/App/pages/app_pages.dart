@@ -1,4 +1,3 @@
-import 'package:civitante/App/modules/auth/view/face_id_screen.dart';
 import 'package:civitante/App/modules/auth/view/login.dart';
 import 'package:civitante/App/modules/auth/view/otp_screen.dart';
 import 'package:civitante/App/modules/auth/view/pro_account.dart';
@@ -12,18 +11,22 @@ import 'package:civitante/App/modules/forget/view/send_otp.dart';
 import 'package:civitante/App/modules/forget/view/verify_otp.dart';
 import 'package:civitante/App/modules/mycommunites/view/my_communities.dart';
 import 'package:civitante/App/modules/setting/view/setting.dart';
-import 'package:civitante/App/modules/splash/view/splash.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 
 import '../modules/AddCommunity/view/addCommunity.dart';
 import '../modules/AllCommunities/view/Allcommunities.dart';
 import '../modules/PostsDetails/view/posts_details_screen.dart';
 import '../modules/fqas/view/fqa.dart';
+import '../modules/splash/view/splash.dart';
 import '../modules/started/started.dart';
 import '../testing.dart';
 
 class AppPages {
   static final pages = [
+    // GetPage(
+    //     name: AppRoutes.splash,
+    //     page: () => InAppPurchaseScreen(),
+    //     binding: InitialBinding()),
     GetPage(
         name: AppRoutes.splash,
         page: () => SplashScreen(),

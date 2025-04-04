@@ -1,10 +1,6 @@
-import 'package:civitante/App/shared/color.dart';
-import 'package:civitante/App/shared/image.dart';
-import 'package:civitante/App/shared/strings.dart';
 import 'package:civitante/App/utilse/uploadImage.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class EditProfileScreen extends StatelessWidget {
   const EditProfileScreen({super.key});
@@ -12,45 +8,46 @@ class EditProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = LocateController.profileController;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Get.back();
-          },
+          icon: Icon(Icons.arrow_back,
+              color: Colors.black, size: isTablet ? 30 : 24),
+          onPressed: () => Get.back(),
         ),
         title: AppText(
-            text: AppStrings.Edit_Profile,
-            fontWeight: FontWeight.w500,
-            color: AppColors.appColor,
-            fontSize: 14),
+          text: AppStrings.Edit_Profile,
+          fontWeight: FontWeight.w500,
+          color: AppColors.appColor,
+          fontSize: isTablet ? 20 : 14,
+        ),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(isTablet ? 32.0 : 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Profile Picture with Camera Icon
+              // Profile Picture
               Stack(
                 alignment: Alignment.center,
                 children: [
                   Obx(
                     () => InkWell(
-                      onTap: () {
-                        ImageUtils.pickAndUpdateImage(controller.imageUrl);
-                      },
+                      onTap: () =>
+                          ImageUtils.pickAndUpdateImage(controller.imageUrl),
                       child: CircleAvatar(
-                        radius: 50,
+                        radius: isTablet ? 70 : 50,
                         backgroundImage: controller.imageUrl.isEmpty
                             ? AssetImage(AppImages.person)
-                            : NetworkImage(controller
-                                .imageUrl.value), // Replace with actual image
+                            : NetworkImage(controller.imageUrl.value)
+                                as ImageProvider,
                       ),
                     ),
                   ),
@@ -58,71 +55,121 @@ class EditProfileScreen extends StatelessWidget {
                     bottom: 0,
                     right: 0,
                     child: CircleAvatar(
-                      radius: 20,
+                      radius: isTablet ? 25 : 20,
                       backgroundColor: Colors.white,
                       child: Icon(
                         Icons.camera_alt,
                         color: Colors.black,
+                        size: isTablet ? 28 : 20,
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 24),
-              // Username/Email Text Field
-              customTextFormField(
-                  width: Get.width / 2,
-                  borderRadius: 25,
-                  hintText: "Enter your name",
-                  borderColor: AppColors.textFieldHintColor,
-                  controller: controller.nameController),
-              SizedBox(height: 16),
-              // Location Text Field
-        
-              // customTextFormField(
-              //     validatore: (value) {
-              //       return Validators.locationValidator(value!);
-              //     },
-              //     width: Get.width / 2,
-              //     borderRadius: 25,
-              //     hintText: AppStrings.location,
-              //     borderColor: AppColors.textFieldHintColor,
-              //     controller: TextEditingController()),
-              SizedBox(height: 16),
-              // Info Text
-              Align(
-                alignment: Alignment.centerLeft,
-                child: AppText(
-                    text: "Points for the deduction if someone wants to follow",
-                    color: AppColors.Slate_gray,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14),
-              ),
-              SizedBox(height: 20),
-              // Follow Cost Text Field
-              customTextFormField(
-                  keyboardType: TextInputType.number,
-                  validatore: (value) {},
-                  width: Get.width / 2,
-                  borderRadius: 25,
-                  hintText: AppStrings.Follow_cost,
-                  borderColor: AppColors.textFieldHintColor,
-                  controller: controller.costController),
-             SizedBox(height: Get.height /3.2,),
-              // Save Changes Button
-              Obx(
-                () =>  AppButton(
-                    textColor: AppColors.white,
-                    radius: 20,
+              SizedBox(height: isTablet ? 32 : 24),
 
-                    text: controller.isLoading.value?"Updating..." :AppStrings.Save_Changes,
-                    onPressed: () {
-                      controller.editProfile();
-                    }),
+              // Form Section
+              Container(
+                width: isTablet ? Get.width * 0.6 : Get.width,
+                padding: EdgeInsets.all(isTablet ? 24 : 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Name Field
+                    AppText(
+                      text: "Name",
+                      fontSize: isTablet ? 18 : 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.appColor,
+                    ),
+                    SizedBox(height: 8),
+                    customTextFormField(
+                      width: double.infinity,
+                      borderRadius: 25,
+                      hintText: "Enter your name",
+                      borderColor: AppColors.textFieldHintColor,
+                      controller: controller.nameController,
+                    ),
+                    SizedBox(height: isTablet ? 24 : 16),
+
+                    // Info Section
+                    Container(
+                      padding: EdgeInsets.all(isTablet ? 16 : 12),
+                      decoration: BoxDecoration(
+                        color: AppColors.light_gray.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppText(
+                            text: "Profile Info",
+                            fontSize: isTablet ? 18 : 14,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.appColor,
+                          ),
+                          SizedBox(height: 8),
+                          AppText(
+                            text:
+                                "Set the number of points users must deduct to follow you. This helps control your audience and rewards engagement.",
+                            fontSize: isTablet ? 16 : 12,
+                            color: AppColors.Slate_gray,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: isTablet ? 24 : 16),
+
+                    // Follow Cost Field
+                    AppText(
+                      text: "Follow Cost (Points)",
+                      fontSize: isTablet ? 18 : 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.appColor,
+                    ),
+                    SizedBox(height: 8),
+                    customTextFormField(
+                      keyboardType: TextInputType.number,
+                      validatore: (value) {},
+                      width: double.infinity,
+                      borderRadius: 25,
+                      hintText: AppStrings.Follow_cost,
+                      borderColor: AppColors.textFieldHintColor,
+                      controller: controller.costController,
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(
-                height: 20,
+
+              SizedBox(height: isTablet ? 40 : 32),
+
+              // Save Button
+              Obx(
+                () => AppButton(
+                  textColor: AppColors.white,
+                  radius: 20,
+                  width: isTablet ? Get.width * 0.4 : Get.width * 0.8,
+                  height: isTablet ? 60 : 50,
+                  color: AppColors.appColor,
+                  text: controller.isLoading.value
+                      ? "Updating..."
+                      : AppStrings.Save_Changes,
+                  onPressed: () => controller.editProfile(),
+                ),
               ),
+              SizedBox(height: isTablet ? 40 : 20),
             ],
           ),
         ),

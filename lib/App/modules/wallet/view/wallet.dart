@@ -3,7 +3,6 @@ import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../service/payment_service.dart';
 import '../../kpi/controller/kpis_controller.dart';
 import '../../kpi/view/kpis_screen.dart';
 import '../../shimmer/kpis_shimmer.dart';
@@ -15,7 +14,6 @@ class AppColor {
   static const Color green = Color(0xFF43A047);
   static const Color blue = Color(0xFF1976D2);
   static const Color black = Color(0xFF000000);
-// ... other colors
 }
 
 class WalletScreen extends StatelessWidget {
@@ -26,26 +24,31 @@ class WalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
     kpisController.fetchUserStats();
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.white,
         appBar: AppBar(
           automaticallyImplyLeading: true,
           backgroundColor: AppColors.white,
-          title: AppText(text: "My Wallet", fontWeight: FontWeight.w500),
+          title: AppText(
+            text: "My Wallet",
+            fontWeight: FontWeight.w500,
+            fontSize: isTablet ? 24 : 20,
+          ),
           actions: [
             GestureDetector(
-                onTap: () {
-                  Get.to(TransactionHistoryScreen());
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 18),
-                  child: Image.asset(
-                    AppImages.history,
-                    height: 30,
-                  ),
-                ))
+              onTap: () => Get.to(TransactionHistoryScreen()),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: isTablet ? 24 : 18),
+                child: Image.asset(
+                  AppImages.history,
+                  height: isTablet ? 40 : 30,
+                ),
+              ),
+            ),
           ],
         ),
         body: Obx(() {
@@ -54,7 +57,12 @@ class WalletScreen extends StatelessWidget {
           }
 
           if (controller.errorMessage.isNotEmpty) {
-            return Center(child: Text(controller.errorMessage.value));
+            return Center(
+              child: Text(
+                controller.errorMessage.value,
+                style: TextStyle(fontSize: isTablet ? 20 : 16),
+              ),
+            );
           }
 
           return RefreshIndicator(
@@ -62,31 +70,27 @@ class WalletScreen extends StatelessWidget {
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                padding: EdgeInsets.symmetric(
+                  vertical: isTablet ? 24 : 16,
+                  horizontal: isTablet ? 32 : 24,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Obx(() => controller.isLoading.value
-                        ? KpisShimmer(
-                            itemCount: 2,
-                          )
+                        ? KpisShimmer(itemCount: 2)
                         : Column(
                             children: ["Posts", "Followers"]
-                                .map((metric) =>
-                                    buildMetricSection(metric, kpisController))
+                                .map((metric) => buildMetricSection(
+                                    metric, kpisController, true))
                                 .toList(),
                           )),
-
-                    _buildPointsCard(),
-                    const SizedBox(height: 23),
-
-                    // Action Buttons
-                    _buildActionButtons(context),
-                    const SizedBox(height: 24),
-
-                    // Transaction History
-                    // _buildHistorySection(),
+                    SizedBox(height: isTablet ? 32 : 23),
+                    _buildPointsCard(isTablet),
+                    SizedBox(height: isTablet ? 32 : 23),
+                    _buildActionButtons(context, isTablet),
+                    SizedBox(height: isTablet ? 32 : 24),
+                    // _buildHistorySection(isTablet),
                   ],
                 ),
               ),
@@ -97,7 +101,7 @@ class WalletScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPointsCard() {
+  Widget _buildPointsCard(bool isTablet) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -110,7 +114,10 @@ class WalletScreen extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(12),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(
+        horizontal: isTablet ? 24 : 16,
+        vertical: isTablet ? 20 : 12,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -118,21 +125,20 @@ class WalletScreen extends StatelessWidget {
             text: AppStrings.Current_Points,
             color: AppColors.appColor,
             fontWeight: FontWeight.w400,
-            fontSize: 16,
+            fontSize: isTablet ? 20 : 16,
           ),
-          SizedBox(height: 8),
+          SizedBox(height: isTablet ? 12 : 8),
           Row(
             children: [
               Obx(() => AppText(
                     text: NumberFormat.decimalPattern().format(
                       controller.pointsData.value?.availablePoints ?? 0,
                     ),
-                    fontSize: 24,
+                    fontSize: isTablet ? 32 : 24,
                     fontWeight: FontWeight.w700,
                     color: AppColors.appColor,
                   )),
-              SizedBox(width: 15),
-              // Add percentage change UI if needed
+              SizedBox(width: isTablet ? 20 : 15),
             ],
           ),
         ],
@@ -140,30 +146,26 @@ class WalletScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
+  Widget _buildActionButtons(BuildContext context, bool isTablet) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         AppButton(
-          height: 50,
+          height: isTablet ? 60 : 50,
           textColor: AppColors.white,
           radius: 35,
-          width: Get.width,
+          width: isTablet ? Get.width * 0.4 : Get.width * 0.45,
           color: AppColors.appColor,
           text: AppStrings.Buy_Points_with_USD,
           onPressed: () => _handleBuyPoints(context),
         ),
-        SizedBox(
-          height: 18,
-        ),
         AppButton(
-          height: 50,
+          height: isTablet ? 60 : 50,
           borderColor: AppColors.appColor,
           borderWidht: 1,
           textColor: AppColors.appColor,
           radius: 35,
-          // width: Get.width / 2.4,
-          width: Get.width,
+          width: isTablet ? Get.width * 0.4 : Get.width * 0.45,
           color: AppColors.white,
           text: AppStrings.Withdraw,
           onPressed: () {},
@@ -172,7 +174,7 @@ class WalletScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHistorySection() {
+  Widget _buildHistorySection(bool isTablet) {
     return Obx(() => HistorySection(
           title: 'Transaction History',
           items: controller.pointsData.value?.transactionHistory
@@ -187,32 +189,26 @@ class WalletScreen extends StatelessWidget {
                   .toList() ??
               [],
           onSeeAll: controller.toggleHistory,
+          isTablet: isTablet,
         ));
   }
 
   void _handleBuyPoints(BuildContext context) async {
-    if (controller.pointsData.value?.paymentId == true) {
-      Get.to(() => BuyPointsScreen());
-    } else {
-      final success = await PaymentService().makePayment(context);
-      if (success) {
-        controller.pointsData.value?.paymentId = true;
-        Get.to(() => BuyPointsScreen());
-      }
-    }
+    Get.to(() => BuyPointsScreen());
   }
 }
 
-// History Section Widget
 class HistorySection extends StatelessWidget {
   final String title;
   final List<HistoryItem> items;
   final VoidCallback onSeeAll;
+  final bool isTablet;
 
   const HistorySection({
     required this.title,
     required this.items,
     required this.onSeeAll,
+    this.isTablet = false,
   });
 
   @override
@@ -221,13 +217,13 @@ class HistorySection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
+          padding: EdgeInsets.symmetric(vertical: isTablet ? 12 : 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               AppText(
                 text: title,
-                fontSize: 18,
+                fontSize: isTablet ? 22 : 18,
                 fontWeight: FontWeight.w600,
               ),
             ],
@@ -240,8 +236,6 @@ class HistorySection extends StatelessWidget {
     );
   }
 }
-
-// History Item Widget
 
 class HistoryItem extends StatelessWidget {
   final String title;
@@ -260,6 +254,7 @@ class HistoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
     Color pointsColor = AppColor.black;
     Color dateColor = AppColors.greyShade;
 
@@ -275,7 +270,7 @@ class HistoryItem extends StatelessWidget {
     }
 
     return Container(
-      margin: EdgeInsets.only(bottom: 12),
+      margin: EdgeInsets.only(bottom: isTablet ? 16 : 12),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(8),
@@ -288,16 +283,20 @@ class HistoryItem extends StatelessWidget {
         ],
       ),
       child: ListTile(
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: isTablet ? 24 : 16,
+          vertical: isTablet ? 12 : 8,
+        ),
         title: AppText(
           text: title.isNotEmpty
               ? title[0].toUpperCase() + title.substring(1)
               : '',
           fontWeight: FontWeight.w500,
+          fontSize: isTablet ? 18 : 16,
         ),
         subtitle: AppText(
           text: subtitle,
-          fontSize: 14,
+          fontSize: isTablet ? 16 : 14,
           color: AppColors.Slate_gray,
         ),
         trailing: Column(
@@ -308,11 +307,12 @@ class HistoryItem extends StatelessWidget {
               text: points,
               fontWeight: FontWeight.w600,
               color: pointsColor,
+              fontSize: isTablet ? 18 : 16,
             ),
-            SizedBox(height: 4),
+            SizedBox(height: isTablet ? 6 : 4),
             AppText(
               text: date,
-              fontSize: 12,
+              fontSize: isTablet ? 14 : 12,
               color: dateColor,
             ),
           ],
