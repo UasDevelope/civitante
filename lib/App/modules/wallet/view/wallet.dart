@@ -27,77 +27,74 @@ class WalletScreen extends StatelessWidget {
     final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
     kpisController.fetchUserStats();
 
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: AppColors.white,
+      appBar: AppBar(
         backgroundColor: AppColors.white,
-        appBar: AppBar(
-          automaticallyImplyLeading: true,
-          backgroundColor: AppColors.white,
-          title: AppText(
-            text: "My Wallet",
-            fontWeight: FontWeight.w500,
-            fontSize: isTablet ? 24 : 20,
-          ),
-          actions: [
-            GestureDetector(
-              onTap: () => Get.to(TransactionHistoryScreen()),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: isTablet ? 24 : 18),
-                child: Image.asset(
-                  AppImages.history,
-                  height: isTablet ? 40 : 30,
-                ),
+        title: AppText(
+          text: "My Wallet",
+          fontWeight: FontWeight.w500,
+          fontSize: isTablet ? 24 : 20,
+        ),
+        actions: [
+          GestureDetector(
+            onTap: () => Get.to(TransactionHistoryScreen()),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: isTablet ? 24 : 18),
+              child: Image.asset(
+                AppImages.history,
+                height: isTablet ? 40 : 30,
               ),
             ),
-          ],
-        ),
-        body: Obx(() {
-          if (controller.isLoading.value) {
-            return Center(child: CircularProgressIndicator());
-          }
+          ),
+        ],
+      ),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return Center(child: CircularProgressIndicator());
+        }
 
-          if (controller.errorMessage.isNotEmpty) {
-            return Center(
-              child: Text(
-                controller.errorMessage.value,
-                style: TextStyle(fontSize: isTablet ? 20 : 16),
-              ),
-            );
-          }
-
-          return RefreshIndicator(
-            onRefresh: () async => await controller.loadPoints(),
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: isTablet ? 24 : 16,
-                  horizontal: isTablet ? 32 : 24,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Obx(() => controller.isLoading.value
-                        ? KpisShimmer(itemCount: 2)
-                        : Column(
-                            children: ["Posts", "Followers"]
-                                .map((metric) => buildMetricSection(
-                                    metric, kpisController, true))
-                                .toList(),
-                          )),
-                    SizedBox(height: isTablet ? 32 : 23),
-                    _buildPointsCard(isTablet),
-                    SizedBox(height: isTablet ? 32 : 23),
-                    _buildActionButtons(context, isTablet),
-                    SizedBox(height: isTablet ? 32 : 24),
-                    // _buildHistorySection(isTablet),
-                  ],
-                ),
-              ),
+        if (controller.errorMessage.isNotEmpty) {
+          return Center(
+            child: Text(
+              controller.errorMessage.value,
+              style: TextStyle(fontSize: isTablet ? 20 : 16),
             ),
           );
-        }),
-      ),
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async => await controller.loadPoints(),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: isTablet ? 24 : 16,
+                horizontal: isTablet ? 32 : 24,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Obx(() => controller.isLoading.value
+                      ? KpisShimmer(itemCount: 2)
+                      : Column(
+                          children: ["Posts", "Followers"]
+                              .map((metric) => buildMetricSection(
+                                  metric, kpisController, true))
+                              .toList(),
+                        )),
+                  SizedBox(height: isTablet ? 32 : 23),
+                  _buildPointsCard(isTablet),
+                  SizedBox(height: isTablet ? 32 : 23),
+                  _buildActionButtons(context, isTablet),
+                  SizedBox(height: isTablet ? 32 : 24),
+                  // _buildHistorySection(isTablet),
+                ],
+              ),
+            ),
+          ),
+        );
+      }),
     );
   }
 
