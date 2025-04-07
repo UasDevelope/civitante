@@ -32,7 +32,7 @@ class WalletScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.white,
         title: AppText(
-          text: "My Wallet",
+          text: "Points",
           fontWeight: FontWeight.w500,
           fontSize: isTablet ? 24 : 20,
         ),
@@ -156,17 +156,17 @@ class WalletScreen extends StatelessWidget {
           text: AppStrings.Buy_Points_with_USD,
           onPressed: () => _handleBuyPoints(context),
         ),
-        AppButton(
-          height: isTablet ? 60 : 50,
-          borderColor: AppColors.appColor,
-          borderWidht: 1,
-          textColor: AppColors.appColor,
-          radius: 35,
-          width: isTablet ? Get.width * 0.4 : Get.width * 0.45,
-          color: AppColors.white,
-          text: AppStrings.Withdraw,
-          onPressed: () {},
-        ),
+        // AppButton(
+        //   height: isTablet ? 60 : 50,
+        //   borderColor: AppColors.appColor,
+        //   borderWidht: 1,
+        //   textColor: AppColors.appColor,
+        //   radius: 35,
+        //   width: isTablet ? Get.width * 0.4 : Get.width * 0.45,
+        //   color: AppColors.white,
+        //   text: AppStrings.Withdraw,
+        //   onPressed: () {},
+        // ),
       ],
     );
   }

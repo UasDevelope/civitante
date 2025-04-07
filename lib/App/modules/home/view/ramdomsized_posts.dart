@@ -288,25 +288,27 @@ class _RandomSizedPostsScreenState extends State<RandomSizedPostsScreen> {
                 SizedBox(height: 8),
                 LayoutBuilder(
                   builder: (context, constraints) {
-                    // Adjust height based on estimated row height * 3 (max 3 rows)
-                    double maxHeight =
-                        38 * 3 + 16; // row height + vertical spacing
+                    // Set a fixed height for the horizontal ListView
+                    double height = 38.0; // Adjust based on your item height
 
-                    return ConstrainedBox(
-                      constraints: BoxConstraints(maxHeight: maxHeight),
-                      child: SingleChildScrollView(
+                    return SizedBox(
+                      height: height, // Fixed height for horizontal scrolling
+                      child: ListView.builder(
+                        scrollDirection:
+                            Axis.horizontal, // Enable horizontal scrolling
                         physics: BouncingScrollPhysics(),
-                        child: Wrap(
-                          spacing: 8.0,
-                          runSpacing: 8.0,
-                          children:
-                              homeController.categoriesList.map((category) {
-                            return Obx(() {
-                              final isSelected =
-                                  homeController.selectedCategory.value ==
-                                      category;
+                        itemCount: homeController.categoriesList.length,
+                        itemBuilder: (context, index) {
+                          final category = homeController.categoriesList[index];
+                          return Obx(() {
+                            final isSelected =
+                                homeController.selectedCategory.value ==
+                                    category;
 
-                              return InkWell(
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                  right: 8.0), // Horizontal spacing
+                              child: InkWell(
                                 onTap: () {
                                   homeController.selectedCategory.value =
                                       category;
@@ -330,10 +332,10 @@ class _RandomSizedPostsScreenState extends State<RandomSizedPostsScreen> {
                                         : Colors.black,
                                   ),
                                 ),
-                              );
-                            });
-                          }).toList(),
-                        ), //
+                              ),
+                            );
+                          });
+                        },
                       ),
                     );
                   },

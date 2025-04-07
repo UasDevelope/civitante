@@ -5,7 +5,7 @@ class AppImages {
   static String get dotted => 'dotted'.png;
   static String get home => 'home'.png;
   static String get search => 'search'.png;
-  static String get wallet => 'wallet'.png;
+  static String get wallet => 'coin'.png;
   static String get profile => 'profile'.png;
   static String get add => 'add'.png;
   static String get driving => 'driving'.png;

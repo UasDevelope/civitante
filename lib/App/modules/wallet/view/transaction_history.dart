@@ -1,10 +1,8 @@
-import 'package:civitante/App/modules/notification/view/notification.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:civitante/App/utilse/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import '../../../service/payment_service.dart';
-import '../../../shared/strings.dart';
 import '../../previewUserProfile/widget/status_row.dart';
 import '../controller/wallet_controller.dart';
 import 'BuyPointsScreen.dart';
@@ -28,7 +26,8 @@ class TransactionHistoryScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.white,
         elevation: 0,
-        title: AppText(text: "Transaction History",fontWeight: FontWeight.w600),
+        title:
+            AppText(text: "Transaction History", fontWeight: FontWeight.w600),
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -58,7 +57,9 @@ class TransactionHistoryScreen extends StatelessWidget {
 
                   // Transaction History
                   StatsRow(),
-                  SizedBox(height: 16,),
+                  SizedBox(
+                    height: 16,
+                  ),
                   _buildHistorySection(),
                 ],
               ),
@@ -96,13 +97,13 @@ class TransactionHistoryScreen extends StatelessWidget {
           Row(
             children: [
               Obx(() => AppText(
-                text: NumberFormat.decimalPattern().format(
-                  controller.pointsData.value?.availablePoints ?? 0,
-                ),
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                color: AppColors.appColor,
-              )),
+                    text: NumberFormat.decimalPattern().format(
+                      controller.pointsData.value?.availablePoints ?? 0,
+                    ),
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.appColor,
+                  )),
               SizedBox(width: 15),
               // Add percentage change UI if needed
             ],
@@ -125,42 +126,42 @@ class TransactionHistoryScreen extends StatelessWidget {
           text: AppStrings.Buy_Points_with_USD,
           onPressed: () => _handleBuyPoints(context),
         ),
-        AppButton(
-          height: 50,
-          borderColor: AppColors.appColor,
-          borderWidht: 1,
-          textColor: AppColors.appColor,
-          radius: 35,
-          width: Get.width / 2.4,
-          color: AppColors.white,
-          text: AppStrings.Withdraw,
-          onPressed: () {},
-        ),
+        // AppButton(
+        //   height: 50,
+        //   borderColor: AppColors.appColor,
+        //   borderWidht: 1,
+        //   textColor: AppColors.appColor,
+        //   radius: 35,
+        //   width: Get.width / 2.4,
+        //   color: AppColors.white,
+        //   text: AppStrings.Withdraw,
+        //   onPressed: () {},
+        // ),
       ],
     );
   }
 
   Widget _buildHistorySection() {
     return Obx(() => HistorySection(
-      title: 'Transaction History',
-      items: controller.pointsData.value?.transactionHistory
-          .map((transaction) => HistoryItem(
-        type: transaction.type,
-        title: transaction.type,
-        subtitle: transaction.reason ?? 'No description',
-        points: '${transaction.points} PTS',
-        date: DateFormat('MMM dd, yyyy – HH:mm')
-            .format(transaction.createdAt),
-      ))
-          .toList() ??
-          [],
-      onSeeAll: controller.toggleHistory,
-    ));
+          title: 'Transaction History',
+          items: controller.pointsData.value?.transactionHistory
+                  .map((transaction) => HistoryItem(
+                        type: transaction.type,
+                        title: transaction.type,
+                        subtitle: transaction.reason ?? 'No description',
+                        points: '${transaction.points} PTS',
+                        date: DateFormat('MMM dd, yyyy – HH:mm')
+                            .format(transaction.createdAt),
+                      ))
+                  .toList() ??
+              [],
+          onSeeAll: controller.toggleHistory,
+        ));
   }
 
   void _handleBuyPoints(BuildContext context) async {
-    print('value here is ${controller.pointsData.value?.paymentId }');
-    if (controller.pointsData.value?.paymentId ==false) {
+    print('value here is ${controller.pointsData.value?.paymentId}');
+    if (controller.pointsData.value?.paymentId == false) {
       Get.to(() => BuyPointsScreen());
     } else {
       final success = await PaymentService().makePayment(context);
