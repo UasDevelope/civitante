@@ -47,367 +47,360 @@ class _RandomSizedPostsScreenState extends State<RandomSizedPostsScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.only(left: 15, right: 15),
-          child: Column(
-            children: [
-              SizedBox(height: 10),
-              if (widget.explore == true)
-                Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 15),
-                  child: HomeSerchField(
-                    hintText: "Search here...", // Custom hint text
-                    onChanged: (value) {
-                      homeController.changeSearchValue(value);
-                    },
-                  ),
+      body: Padding(
+        padding: EdgeInsets.only(left: 15, right: 15),
+        child: Column(
+          children: [
+            SizedBox(height: 10),
+            if (widget.explore == true)
+              Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15),
+                child: HomeSerchField(
+                  hintText: "Search here...", // Custom hint text
+                  onChanged: (value) {
+                    homeController.changeSearchValue(value);
+                  },
                 ),
-              if (widget.explore == false)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // Container(
-                    //   padding: const EdgeInsets.only(left: 10, right: 10),
-                    //   decoration: BoxDecoration(
-                    //     border: Border.all(
-                    //         color: Colors.grey, width: 1), // Border
-                    //     borderRadius:
-                    //     BorderRadius.circular(15), // Rounded corners
-                    //   ),
-                    //   child: DropdownButton<String>(
-                    //     hint: const Text(
-                    //         "Select a category"), // Display hint text when no value is selected
-                    //     value: homeController.selectCatagory
-                    //         .value, // Bind this to a variable in your state
-                    //     items: homeController.categories.map((String value) {
-                    //       return DropdownMenuItem<String>(
-                    //         value: value,
-                    //         child: Text(value),
-                    //       );
-                    //     }).toList(),
-                    //     onChanged: (String? value) {
-                    //       if (value != null) {
-                    //         homeController.selectCatagory.value = value;
-                    //         homeController.filterPostsByCategory();
-                    //       }
-                    //     },
-                    //   ),
-                    // ),
-                    // SizedBox(height: 10,),
-                    if (widget.isShowFilter)
-                      HomeFilterMenues(
-                        onSelected: (value) {
-                          if (value == 'Comments') {
-                            homeController.sortByComments();
-                          } else {
-                            homeController.sortPosts();
-                          }
-                          print("selected=>$value");
-                        },
-                      ),
-                  ],
-                ),
-              if (widget.explore == false)
-                Expanded(
-                  child: RefreshIndicator(
-                      color: AppColors.appColor,
-                      onRefresh: () async {
-                        await homeController.fetchAndAssignPosts(
-                            communityId: widget.communityId,
-                            randomized: widget.randomized,
-                            followed: widget.followed);
-                      },
-                      child: Obx(() {
-                        if (homeController.isPostLoading.value) {
-                          return RandomizedShimmerPost(
-                            count: 1,
-                          );
-                        } else if (homeController.filteredPosts.isEmpty) {
-                          return LottieAnimationWidget();
+              ),
+            if (widget.explore == false)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Container(
+                  //   padding: const EdgeInsets.only(left: 10, right: 10),
+                  //   decoration: BoxDecoration(
+                  //     border: Border.all(
+                  //         color: Colors.grey, width: 1), // Border
+                  //     borderRadius:
+                  //     BorderRadius.circular(15), // Rounded corners
+                  //   ),
+                  //   child: DropdownButton<String>(
+                  //     hint: const Text(
+                  //         "Select a category"), // Display hint text when no value is selected
+                  //     value: homeController.selectCatagory
+                  //         .value, // Bind this to a variable in your state
+                  //     items: homeController.categories.map((String value) {
+                  //       return DropdownMenuItem<String>(
+                  //         value: value,
+                  //         child: Text(value),
+                  //       );
+                  //     }).toList(),
+                  //     onChanged: (String? value) {
+                  //       if (value != null) {
+                  //         homeController.selectCatagory.value = value;
+                  //         homeController.filterPostsByCategory();
+                  //       }
+                  //     },
+                  //   ),
+                  // ),
+                  // SizedBox(height: 10,),
+                  if (widget.isShowFilter)
+                    HomeFilterMenues(
+                      onSelected: (value) {
+                        if (value == 'Comments') {
+                          homeController.sortByComments();
                         } else {
-                          return CardSwiper(
-                              padding: EdgeInsets.only(bottom: 14),
-                              cardsCount: homeController.filteredPosts.length,
-                              numberOfCardsDisplayed: 1,
-                              threshold:
-                                  20, // Increased threshold to reduce accidental swipes
-                              duration: const Duration(milliseconds: 300),
-                              isLoop: false,
-                              onSwipe:
-                                  (previousIndex, currentIndex, direction) {
-                                int lastIndex =
-                                    homeController.filteredPosts.length - 1;
-
-                                print(
-                                    "🔄 Swipe detected. Previous index: $previousIndex, Current index: $currentIndex, Last index: $lastIndex");
-                                print("➡️ Swipe direction: $direction");
-
-                                if (direction == CardSwiperDirection.left) {
-                                  if (previousIndex > 0) {
-                                    int targetIndex =
-                                        homeController.currentIndex.value - 1;
-                                    homeController.changeIndex(targetIndex);
-                                    final previousPost = homeController
-                                        .filteredPosts[targetIndex];
-                                    // Call viewPostById but don't expect it to return anything
-                                    homeController.viewPostById(
-                                        previousPost.id, targetIndex);
-
-                                    print(
-                                        "✅ Swiped left: Navigated to previous post ID: ${previousPost.id}, New index: $targetIndex ad current index is $currentIndex");
-                                    return true;
-                                  } else {
-                                    print("❌ Already at the first post.");
-                                    return false;
-                                  }
-                                }
-
-                                if (direction == CardSwiperDirection.right) {
-                                  if (previousIndex < lastIndex) {
-                                    int targetIndex =
-                                        homeController.currentIndex.value + 1;
-                                    homeController.changeIndex(targetIndex);
-                                    final nextPost = homeController
-                                        .filteredPosts[targetIndex];
-
-                                    // Call viewPostById but don't expect it to return anything
-                                    homeController.viewPostById(
-                                        nextPost.id, targetIndex);
-
-                                    print(
-                                        "✅ Swiped right: Navigated to next post ID: ${nextPost.id}, New index: $targetIndex ad current index is $currentIndex");
-                                    return true;
-                                  } else {
-                                    print("🔄 Looping back to first post.");
-                                    homeController.fetchAndAssignPosts(
-                                        followed:
-                                            homeController.isFollowing.value,
-                                        randomized:
-                                            !homeController.isFollowing.value);
-                                    return true;
-                                  }
-                                }
-
-                                return false;
-                              },
-                              cardBuilder: (context, index, percentThresholdX,
-                                  percentThresholdY) {
-                                print("🛠️ Building card for index: $index");
-
-                                // Validate index to prevent out-of-range errors
-                                if (index < 0 ||
-                                    index >=
-                                        homeController.filteredPosts.length) {
-                                  print("⚠️ Index out of range: $index");
-                                  return const SizedBox.shrink();
-                                }
-
-                                // Ensure correct post is being displayed
-
-                                return Obx(() {
-                                  final post = homeController.filteredPosts[
-                                      homeController.currentIndex.value];
-                                  print(
-                                      "📄 Correcting Post Display: Expected Index: ${index} Actual Index: ${homeController.currentIndex.value}, Post ID: ${post.id}, Title: ${post.title}");
-                                  return GestureDetector(
-                                    onTap: () {
-                                      homeController.viewPostById(
-                                          post.id, index);
-
-                                      Get.toNamed(AppRoutes.postDetail,
-                                          arguments: {
-                                            "data": post,
-                                            "currentUser": false,
-                                          });
-                                    },
-                                    child: AnimatedSwitcher(
-                                      duration:
-                                          const Duration(milliseconds: 300),
-                                      child: CustomCard2(
-                                        key: ValueKey(post.id),
-                                        isCommunityDetails:
-                                            widget.isCommunityDetails,
-                                        haveDescAndTags: false,
-                                        post: post,
-                                        index: index,
-                                      ),
-                                    ),
-                                  );
-                                });
-                              });
+                          homeController.sortPosts();
                         }
-                      })
-                      // child: Obx(() {
-                      //   if (homeController.isPostLoading.value) {
-                      //     return RandomizedShimmerPost(); // Show shimmer loading effect
-                      //   }
-                      //   // For empty posts
-                      //   else if (homeController.filteredPosts.isEmpty) {
-                      //     return LottieAnimationWidget(); // Show empty state animation
-                      //   } else {
-                      //     return PageView.builder(
-                      //       scrollDirection: Axis.vertical,
-                      //       itemCount: homeController.filteredPosts.length,
-                      //       controller: PageController(viewportFraction: 1), // Adjust viewport fraction as needed
-                      //       onPageChanged: (index) {
-                      //         // Handle page change (e.g., update the current post)
-                      //         if (index >= homeController.filteredPosts.length) {
-                      //           return; // Prevent out-of-bounds access
-                      //         }
-                      //         final post = homeController.filteredPosts[index];
-                      //         homeController.viewPostById(post.id, index);
-                      //         print('Swiped to Post: ${post.id} at index: $index');
-                      //       },
-                      //       itemBuilder: (context, index) {
-                      //         if (index >= homeController.filteredPosts.length) {
-                      //           return const SizedBox.shrink(); // Return an empty widget if the index is out of bounds
-                      //         }
-                      //         final post = homeController.filteredPosts[index];
-                      //         return GestureDetector(
-                      //           onTap: () {
-                      //             Get.toNamed(AppRoutes.postDetail, arguments: {
-                      //               "data": post,
-                      //               "currentUser": false,
-                      //             });
-                      //           },
-                      //           child: CustomCard2(
-                      //             haveDescAndTags: false,
-                      //             post: post,
-                      //             index: index,
-                      //           ),
-                      //         );
-                      //       },
-                      //     );
-                      //   }
-                      // }),
-                      ),
-                ),
-              if (widget.explore == true) ...[
-                SizedBox(height: 8),
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    // Set a fixed height for the horizontal ListView
-                    double height = 38.0; // Adjust based on your item height
+                        print("selected=>$value");
+                      },
+                    ),
+                ],
+              ),
+            if (widget.explore == false)
+              Expanded(
+                child: RefreshIndicator(
+                    color: AppColors.appColor,
+                    onRefresh: () async {
+                      await homeController.fetchAndAssignPosts(
+                          communityId: widget.communityId,
+                          randomized: widget.randomized,
+                          followed: widget.followed);
+                    },
+                    child: Obx(() {
+                      if (homeController.isPostLoading.value) {
+                        return RandomizedShimmerPost(
+                          count: 1,
+                        );
+                      } else if (homeController.filteredPosts.isEmpty) {
+                        return LottieAnimationWidget();
+                      } else {
+                        return CardSwiper(
+                            padding: EdgeInsets.only(bottom: 14),
+                            cardsCount: homeController.filteredPosts.length,
+                            numberOfCardsDisplayed: 1,
+                            threshold:
+                                20, // Increased threshold to reduce accidental swipes
+                            duration: const Duration(milliseconds: 300),
+                            isLoop: false,
+                            onSwipe: (previousIndex, currentIndex, direction) {
+                              int lastIndex =
+                                  homeController.filteredPosts.length - 1;
 
-                    return SizedBox(
-                      height: height, // Fixed height for horizontal scrolling
-                      child: ListView.builder(
-                        scrollDirection:
-                            Axis.horizontal, // Enable horizontal scrolling
-                        physics: BouncingScrollPhysics(),
-                        itemCount: homeController.categoriesList.length,
-                        itemBuilder: (context, index) {
-                          final category = homeController.categoriesList[index];
-                          return Obx(() {
-                            final isSelected =
-                                homeController.selectedCategory.value ==
+                              print(
+                                  "🔄 Swipe detected. Previous index: $previousIndex, Current index: $currentIndex, Last index: $lastIndex");
+                              print("➡️ Swipe direction: $direction");
+
+                              if (direction == CardSwiperDirection.left) {
+                                if (previousIndex > 0) {
+                                  int targetIndex =
+                                      homeController.currentIndex.value - 1;
+                                  homeController.changeIndex(targetIndex);
+                                  final previousPost =
+                                      homeController.filteredPosts[targetIndex];
+                                  // Call viewPostById but don't expect it to return anything
+                                  homeController.viewPostById(
+                                      previousPost.id, targetIndex);
+
+                                  print(
+                                      "✅ Swiped left: Navigated to previous post ID: ${previousPost.id}, New index: $targetIndex ad current index is $currentIndex");
+                                  return true;
+                                } else {
+                                  print("❌ Already at the first post.");
+                                  return false;
+                                }
+                              }
+
+                              if (direction == CardSwiperDirection.right) {
+                                if (previousIndex < lastIndex) {
+                                  int targetIndex =
+                                      homeController.currentIndex.value + 1;
+                                  homeController.changeIndex(targetIndex);
+                                  final nextPost =
+                                      homeController.filteredPosts[targetIndex];
+
+                                  // Call viewPostById but don't expect it to return anything
+                                  homeController.viewPostById(
+                                      nextPost.id, targetIndex);
+
+                                  print(
+                                      "✅ Swiped right: Navigated to next post ID: ${nextPost.id}, New index: $targetIndex ad current index is $currentIndex");
+                                  return true;
+                                } else {
+                                  print("🔄 Looping back to first post.");
+                                  homeController.fetchAndAssignPosts(
+                                      followed:
+                                          homeController.isFollowing.value,
+                                      randomized:
+                                          !homeController.isFollowing.value);
+                                  return true;
+                                }
+                              }
+
+                              return false;
+                            },
+                            cardBuilder: (context, index, percentThresholdX,
+                                percentThresholdY) {
+                              print("🛠️ Building card for index: $index");
+
+                              // Validate index to prevent out-of-range errors
+                              if (index < 0 ||
+                                  index >=
+                                      homeController.filteredPosts.length) {
+                                print("⚠️ Index out of range: $index");
+                                return const SizedBox.shrink();
+                              }
+
+                              // Ensure correct post is being displayed
+
+                              return Obx(() {
+                                final post = homeController.filteredPosts[
+                                    homeController.currentIndex.value];
+                                print(
+                                    "📄 Correcting Post Display: Expected Index: ${index} Actual Index: ${homeController.currentIndex.value}, Post ID: ${post.id}, Title: ${post.title}");
+                                return GestureDetector(
+                                  onTap: () {
+                                    homeController.viewPostById(post.id, index);
+
+                                    Get.toNamed(AppRoutes.postDetail,
+                                        arguments: {
+                                          "data": post,
+                                          "currentUser": false,
+                                        });
+                                  },
+                                  child: AnimatedSwitcher(
+                                    duration: const Duration(milliseconds: 300),
+                                    child: CustomCard2(
+                                      key: ValueKey(post.id),
+                                      isCommunityDetails:
+                                          widget.isCommunityDetails,
+                                      haveDescAndTags: false,
+                                      post: post,
+                                      index: index,
+                                    ),
+                                  ),
+                                );
+                              });
+                            });
+                      }
+                    })
+                    // child: Obx(() {
+                    //   if (homeController.isPostLoading.value) {
+                    //     return RandomizedShimmerPost(); // Show shimmer loading effect
+                    //   }
+                    //   // For empty posts
+                    //   else if (homeController.filteredPosts.isEmpty) {
+                    //     return LottieAnimationWidget(); // Show empty state animation
+                    //   } else {
+                    //     return PageView.builder(
+                    //       scrollDirection: Axis.vertical,
+                    //       itemCount: homeController.filteredPosts.length,
+                    //       controller: PageController(viewportFraction: 1), // Adjust viewport fraction as needed
+                    //       onPageChanged: (index) {
+                    //         // Handle page change (e.g., update the current post)
+                    //         if (index >= homeController.filteredPosts.length) {
+                    //           return; // Prevent out-of-bounds access
+                    //         }
+                    //         final post = homeController.filteredPosts[index];
+                    //         homeController.viewPostById(post.id, index);
+                    //         print('Swiped to Post: ${post.id} at index: $index');
+                    //       },
+                    //       itemBuilder: (context, index) {
+                    //         if (index >= homeController.filteredPosts.length) {
+                    //           return const SizedBox.shrink(); // Return an empty widget if the index is out of bounds
+                    //         }
+                    //         final post = homeController.filteredPosts[index];
+                    //         return GestureDetector(
+                    //           onTap: () {
+                    //             Get.toNamed(AppRoutes.postDetail, arguments: {
+                    //               "data": post,
+                    //               "currentUser": false,
+                    //             });
+                    //           },
+                    //           child: CustomCard2(
+                    //             haveDescAndTags: false,
+                    //             post: post,
+                    //             index: index,
+                    //           ),
+                    //         );
+                    //       },
+                    //     );
+                    //   }
+                    // }),
+                    ),
+              ),
+            if (widget.explore == true) ...[
+              SizedBox(height: 8),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  // Set a fixed height for the horizontal ListView
+                  double height = 38.0; // Adjust based on your item height
+
+                  return SizedBox(
+                    height: height, // Fixed height for horizontal scrolling
+                    child: ListView.builder(
+                      scrollDirection:
+                          Axis.horizontal, // Enable horizontal scrolling
+                      physics: BouncingScrollPhysics(),
+                      itemCount: homeController.categoriesList.length,
+                      itemBuilder: (context, index) {
+                        final category = homeController.categoriesList[index];
+                        return Obx(() {
+                          final isSelected =
+                              homeController.selectedCategory.value == category;
+
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                                right: 8.0), // Horizontal spacing
+                            child: InkWell(
+                              onTap: () {
+                                homeController.selectedCategory.value =
                                     category;
-
-                            return Padding(
-                              padding: const EdgeInsets.only(
-                                  right: 8.0), // Horizontal spacing
-                              child: InkWell(
-                                onTap: () {
-                                  homeController.selectedCategory.value =
-                                      category;
-                                  print("Selected Category: $category");
-                                },
-                                borderRadius: BorderRadius.circular(20),
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 6),
-                                  decoration: BoxDecoration(
-                                    color: isSelected
-                                        ? AppColors.Slate_gray
-                                        : AppColors.light_gray,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: AppText(
-                                    text: category,
-                                    fontSize: 13,
-                                    color: isSelected
-                                        ? Colors.white
-                                        : Colors.black,
-                                  ),
+                                print("Selected Category: $category");
+                              },
+                              borderRadius: BorderRadius.circular(20),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? AppColors.Slate_gray
+                                      : AppColors.light_gray,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: AppText(
+                                  text: category,
+                                  fontSize: 13,
+                                  color:
+                                      isSelected ? Colors.white : Colors.black,
                                 ),
                               ),
-                            );
-                          });
-                        },
-                      ),
+                            ),
+                          );
+                        });
+                      },
+                    ),
+                  );
+                },
+              ),
+              SizedBox(height: 8),
+            ],
+            if (widget.explore == true)
+              RefreshIndicator(
+                color: AppColors.appColor,
+                onRefresh: () async {
+                  // Call your refresh method from the controller
+                  await homeController.fetchAndAssignPosts(
+                      communityId: widget.communityId,
+                      randomized: widget.randomized,
+                      followed: widget.followed);
+                },
+                child: Obx(() {
+                  if (homeController.isPostLoading.value) {
+                    return RandomizedShimmerPost(
+                      count: 3,
                     );
-                  },
-                ),
-                SizedBox(height: 8),
-              ],
-              if (widget.explore == true)
-                RefreshIndicator(
-                  color: AppColors.appColor,
-                  onRefresh: () async {
-                    // Call your refresh method from the controller
-                    await homeController.fetchAndAssignPosts(
-                        communityId: widget.communityId,
-                        randomized: widget.randomized,
-                        followed: widget.followed);
-                  },
-                  child: Obx(() {
-                    if (homeController.isPostLoading.value) {
-                      return RandomizedShimmerPost(
-                        count: 3,
-                      );
-                    }
-                    //For the empty post
-                    else if (homeController.filteredPosts.isEmpty) {
-                      return LottieAnimationWidget();
-                    } else {
-                      return Obx(
-                        () => ListView.builder(
-                          shrinkWrap: true,
-                          physics: ScrollPhysics(),
-                          padding: EdgeInsets.zero,
-                          itemCount: homeController.filteredPosts
+                  }
+                  //For the empty post
+                  else if (homeController.filteredPosts.isEmpty) {
+                    return LottieAnimationWidget();
+                  } else {
+                    return Obx(
+                      () => ListView.builder(
+                        shrinkWrap: true,
+                        physics: ScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        itemCount: homeController.filteredPosts
+                            .where((post) =>
+                                post.category ==
+                                homeController.selectedCategory.value)
+                            .length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final filteredPosts = homeController.filteredPosts
                               .where((post) =>
                                   post.category ==
                                   homeController.selectedCategory.value)
-                              .length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final filteredPosts = homeController.filteredPosts
-                                .where((post) =>
-                                    post.category ==
-                                    homeController.selectedCategory.value)
-                                .toList();
+                              .toList();
 
-                            final post = filteredPosts[index];
+                          final post = filteredPosts[index];
 
-                            return GestureDetector(
-                              onTap: () {
-                                var response =
-                                    homeController.viewPostById(post.id, index);
-                                print('Here is value: ${response}');
-                                log("hhhjjknnk...");
+                          return GestureDetector(
+                            onTap: () {
+                              var response =
+                                  homeController.viewPostById(post.id, index);
+                              print('Here is value: ${response}');
+                              log("hhhjjknnk...");
 
-                                Get.toNamed(AppRoutes.postDetail, arguments: {
-                                  "data": post,
-                                  "currentUser": false
-                                });
-                              },
-                              child: CustomCard2(
-                                isCommunityDetails: widget.isCommunityDetails,
-                                haveDescAndTags: false,
-                                post: post,
-                                index: index,
-                              ),
-                            );
-                          },
-                        ),
-                      );
-                    }
-                  }),
-                ),
-            ],
-          ),
+                              Get.toNamed(AppRoutes.postDetail, arguments: {
+                                "data": post,
+                                "currentUser": false
+                              });
+                            },
+                            child: CustomCard2(
+                              isCommunityDetails: widget.isCommunityDetails,
+                              haveDescAndTags: false,
+                              post: post,
+                              index: index,
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                }),
+              ),
+          ],
         ),
       ),
     );
