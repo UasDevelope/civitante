@@ -150,8 +150,11 @@ class WalletController extends GetxController {
   }
 
   int _getPointsFromProductId(String productId) {
-    if (productId == 'point_50') return 50;
-    if (productId == 'point_100') return 100;
+    if (productId == 'point50') return 50;
+    if (productId == 'point100') return 100;
+    if (productId == 'point200') return 200;
+    if (productId == 'point500') return 500;
+    if (productId == 'point1000') return 1000;
     return 0;
   }
 
