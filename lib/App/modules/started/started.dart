@@ -9,52 +9,49 @@ class StartedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      body: Container(
-        width: Get.width + 20,
-        decoration: BoxDecoration(
+      body: SafeArea(
+        child: Container(
+          width: screenWidth,
+          height: screenHeight,
+          decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage(
-                  AppImages.splash,
-                ),
-                fit: BoxFit.cover)),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: Get.height * 0.6),
-            AppText(
+              image: AssetImage(AppImages.splash),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Column(
+            children: [
+              const Spacer(flex: 4),
+              AppText(
                 text: AppStrings.started,
                 color: AppColors.white,
                 fontSize: 30,
                 fontWeight: FontWeight.w400,
-                textAlign: TextAlign.center),
-            SizedBox(
-              height: Get.height / 7,
-            ),
-            Center(
-              child: AppButton(
-                useGradient: true,
-                text: AppStrings.getStarted,
-                height: 60.0,
-                width: Get.width / 1.2,
-                color: Colors.blue,
-                radius: 30,
-                onPressed: () {
-                  // NotificationUtil().showNotification(
-                  //   RemoteMessage(
-                  //     notification: RemoteNotification(
-                  //       title: "Test Notification",
-                  //       body: "This is a local test notification.",
-                  //     ),
-                  //   ),
-                  // );
-                  // NotificationUtil().triggerLocalNotification();
-                  log('==============Redirecting to LoginScreen================>Routes-------->${AppRoutes.login}');
-                  Get.toNamed(AppRoutes.login);
-                },
+                textAlign: TextAlign.center,
               ),
-            ),
-          ],
+              const Spacer(flex: 2),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: AppButton(
+                  useGradient: true,
+                  text: AppStrings.getStarted,
+                  height: 60.0,
+                  width: double.infinity,
+                  color: Colors.blue,
+                  radius: 30,
+                  onPressed: () {
+                    log('Redirecting to LoginScreen --> ${AppRoutes.login}');
+                    Get.toNamed(AppRoutes.login);
+                  },
+                ),
+              ),
+              const Spacer(flex: 1),
+            ],
+          ),
         ),
       ),
     );
