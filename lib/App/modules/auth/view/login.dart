@@ -1,8 +1,6 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_recaptcha_v2/flutter_easy_recaptcha_v2.dart';
 
 import '../../../utilse/widgets.dart';
 
@@ -94,28 +92,28 @@ class LoginScreen extends StatelessWidget {
                               AppText(text: "Remember me")
                             ],
                           ),
-                          SizedBox(
-                            height: 150,
-                            child: RecaptchaV2(
-                              key: UniqueKey(), // 👈 Force remount
-                              apiKey:
-                                  "6LeXYfEqAAAAAOwhKVmaj4H_RXXmwdJCM7IS3MxL", // Site key
-                              onVerifiedSuccessfully: (String token) async {
-                                log("Recaptcha token: $token");
-                                final bool isTokenVerified =
-                                    await verifyRecaptchaV2Token(
-                                  token: token,
-                                  apiSecret:
-                                      "6LeXYfEqAAAAABzjex2n3FGDm1ONLesHBgT1kld1", // Secret key
-                                );
-                                if (isTokenVerified) {
-                                  log("Token verified successfully");
-                                } else {
-                                  log("Token verification failed");
-                                }
-                              },
-                            ),
-                          ),
+                          // SizedBox(
+                          //   height: 150,
+                          //   child: RecaptchaV2(
+                          //     key: UniqueKey(), // 👈 Force remount
+                          //     apiKey:
+                          //         "6LeXYfEqAAAAAOwhKVmaj4H_RXXmwdJCM7IS3MxL", // Site key
+                          //     onVerifiedSuccessfully: (String token) async {
+                          //       log("Recaptcha token: $token");
+                          //       final bool isTokenVerified =
+                          //           await verifyRecaptchaV2Token(
+                          //         token: token,
+                          //         apiSecret:
+                          //             "6LeXYfEqAAAAABzjex2n3FGDm1ONLesHBgT1kld1", // Secret key
+                          //       );
+                          //       if (isTokenVerified) {
+                          //         log("Token verified successfully");
+                          //       } else {
+                          //         log("Token verification failed");
+                          //       }
+                          //     },
+                          //   ),
+                          // ),
 
                           // RecaptchaWidget(
                           //   onVerified: (String token) async {
