@@ -3,7 +3,6 @@ import 'package:civitante/App/utilse/widgets.dart';
 class BottomNaveController extends GetxController {
   RxInt currentIndex = RxInt(0);
   RxBool showloading = RxBool(false);
-  //
   final RxList<Widget> _pages = [
     HomeScreen(),
     ExplorerScreen(),
