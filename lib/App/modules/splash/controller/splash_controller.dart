@@ -1,12 +1,7 @@
-import 'dart:async';
-import 'dart:developer';
-import 'package:civitante/App/service/auth_services.dart';
-import 'package:civitante/App/service/local_auth_service.dart';
+import 'package:civitante/App/service/jwt_decoder.dart';
 import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/widgets.dart';
-import 'package:get/get.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-import '../../../utilse/SharedPreferencesHelper.dart';
+
 import '../../../utilse/constant.dart';
 
 class SplashController extends GetxController {
@@ -32,8 +27,8 @@ class SplashController extends GetxController {
       final isUserAuth = PrefUtil.getString(PrefUtil.isUserFaceAuthCompleted);
 
       if (token.isNotEmpty) {
-        bool isExpired = JwtDecoder.isExpired(token);
-        DateTime expirationDate = JwtDecoder.getExpirationDate(token);
+        bool isExpired = CustomJwtDecoder.isExpired(token);
+        DateTime expirationDate = CustomJwtDecoder.getExpirationDate(token);
         print("Token Expiration Date: $expirationDate");
 
         if (isExpired) {
@@ -44,9 +39,9 @@ class SplashController extends GetxController {
           //   print("User is not authenticated with FaceAuth, redirecting...");
           //   Get.offAllNamed(AppRoutes.faceIDScreen);
           // } else {
-            print("Token is valid, FaceAuth completed, redirecting to home...");
-            AppConstant().userID = token;
-            Get.offAllNamed(AppRoutes.bottomNav);
+          print("Token is valid, FaceAuth completed, redirecting to home...");
+          AppConstant().userID = token;
+          Get.offAllNamed(AppRoutes.bottomNav);
           // }
         }
       } else {

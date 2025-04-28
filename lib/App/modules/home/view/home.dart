@@ -4,7 +4,6 @@ import '../../../utilse/location_controller.dart';
 import '../../../utilse/widgets.dart';
 import '../../notification/view/notification.dart';
 import '../controller/home_controller.dart';
-
 import '../widgets/tab_bar.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -28,19 +27,22 @@ class HomeScreen extends StatelessWidget {
         },
       ),
       drawer: CustomDrawer(),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 20,
-          ),
-          Center(
-            child: Container(
-              padding: EdgeInsets.zero,
-                height: Get.height / 1.37, child: Center(child: HomeTabBar())),
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 20,
+            ),
+            Center(
+              child: Container(
+                  padding: EdgeInsets.zero,
+                  height: Get.height / 1.37,
+                  child: Center(child: HomeTabBar())),
+            ),
+          ],
+        ),
       ),
     );
   }

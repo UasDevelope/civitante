@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
 import 'package:civitante/App/modules/profile/controller/profile_controller.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:get_thumbnail_video/index.dart';
+import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../../service/http_service.dart';
 import '../../../utilse/constant.dart';
@@ -35,11 +37,15 @@ class PostController extends GetxController {
     'Relationships & Social Life',
     'Animals & Nature'
   ].obs;
+  RxString visibility = ''.obs;
 
   final TextEditingController tagController = TextEditingController();
   final titleController = TextEditingController();
   final descController = TextEditingController();
   RxBool isloading = false.obs;
+  RxList<String> videos = <String>[].obs; // Observable list for video URLs
+  RxString selectedVideo = ''.obs; // For single video preview
+  VideoPlayerController? videoPlayerController; // For video preview
 
   RxList<String> tags = <String>[].obs;
   var images = <String>[].obs; // Observable list of image paths
@@ -55,6 +61,90 @@ class PostController extends GetxController {
     }
   }
 
+  Future<void> _checkVideoPermissions() async {
+    final status = await Permission.storage.request();
+    if (status.isGranted) {
+      await pickVideo();
+    } else {
+      ToastUtil.showToast(
+        message: "Storage permission denied",
+        backgroundColor: Colors.red,
+      );
+    }
+  }
+
+  Future<void> pickVideo() async {
+    isloading.value = true;
+    try {
+      // Ensure user is authenticated
+      if (AppConstant().userID == null || AppConstant().userID!.isEmpty) {
+        ToastUtil.showToast(
+          message: "Please sign in to upload videos",
+          backgroundColor: Colors.red,
+        );
+        isloading.value = false;
+        return;
+      }
+
+      final ImagePicker picker = ImagePicker();
+      final XFile? pickedFile = await picker.pickVideo(
+        source: ImageSource.gallery,
+        maxDuration: const Duration(seconds: 10), // Limit video duration
+      );
+
+      if (pickedFile != null) {
+        // Generate thumbnail for the video
+        final thumbnailXFile = await VideoThumbnail.thumbnailFile(
+          video: pickedFile.path,
+          imageFormat: ImageFormat.JPEG,
+          maxWidth: 1280,
+          quality: 75,
+        );
+
+        if (thumbnailXFile.path.isNotEmpty &&
+            await File(thumbnailXFile.path).exists()) {
+          // Upload video and thumbnail to Cloudinary
+          String mediaUrl = await ImageUtils.uploadMediaWithThumbnail(
+            thumbnailXFile.path, // Thumbnail path
+            pickedFile.path, // Video path
+            'HereNow/Videos', // Folder name
+          );
+
+          if (mediaUrl.isNotEmpty) {
+            videos.add(mediaUrl); // Add combined URL to video list
+            selectedVideo.value = mediaUrl; // For preview
+            log("Video and thumbnail uploaded! URL: $mediaUrl");
+          } else {
+            log("Video and thumbnail upload failed.");
+            ToastUtil.showToast(
+              message: "Failed to upload video and thumbnail",
+              backgroundColor: Colors.red,
+            );
+          }
+        } else {
+          log("Failed to generate video thumbnail.");
+          ToastUtil.showToast(
+            message: "Failed to generate video thumbnail",
+            backgroundColor: Colors.red,
+          );
+        }
+      } else {
+        log("No video selected.");
+        ToastUtil.showToast(
+          message: "No video selected",
+          backgroundColor: Colors.red,
+        );
+      }
+    } catch (e) {
+      log("Error during video pick/upload: $e");
+      ToastUtil.showToast(
+        message: "Failed to upload video: $e",
+        backgroundColor: Colors.red,
+      );
+    } finally {
+      isloading.value = false;
+    }
+  }
   // Reactive list to hold image URLs (e.g., using GetX, Provider, etc.)
 
   Future<void> pickImage() async {
@@ -98,12 +188,12 @@ class PostController extends GetxController {
       final ImagePicker picker = ImagePicker();
       // Pick image from gallery
       final XFile? pickedFile =
-      await picker.pickImage(source: ImageSource.gallery);
+          await picker.pickImage(source: ImageSource.gallery);
 
       if (pickedFile != null) {
         // Compress the image
         final XFile? compressedImage =
-        await ImageUtils.compressImage(pickedFile);
+            await ImageUtils.compressImage(pickedFile);
 
         if (compressedImage != null) {
           // Upload to Firebase Storage
@@ -126,7 +216,6 @@ class PostController extends GetxController {
     isloading.value = false;
   }
 
-
   // Method to trigger permission check and image pick
   Future<void> pickImageWithPermission() async {
     await _checkPermissions();
@@ -134,7 +223,7 @@ class PostController extends GetxController {
 
   void addPost({String communityId = ""}) async {
     try {
-      final profileController=ProfileController(true);
+      final profileController = ProfileController(true);
       isloading.value = true;
       // 1. Validate User ID
       final userID = AppConstant().userID;
@@ -146,13 +235,9 @@ class PostController extends GetxController {
         return;
       }
 
-
-
-
-
-      if (images.isEmpty) {
+      if (images.isEmpty && videos.isEmpty) {
         ToastUtil.showToast(
-          message: "Please add at least one image",
+          message: "Please add at least one image or video",
           backgroundColor: Colors.orange,
         );
         return;
@@ -167,8 +252,12 @@ class PostController extends GetxController {
         "description": descController.text.trim(),
         "tags": tags.whereType<String>().toList(), // Ensure valid tags
         "category": selectCatagory.value,
-        "media": ["image"],
-        "mediaUrls":  images,
+        "media": [
+          if (images.isNotEmpty) "image",
+          if (videos.isNotEmpty) "video"
+        ],
+        "visibility": visibility.value.toLowerCase(),
+        "mediaUrls": [...images, ...videos],
         "createdBy": userID,
       };
 
@@ -178,19 +267,19 @@ class PostController extends GetxController {
       final response = await HttpService.post(
           communityId == "" ? '/addPosts' : '/postInCommunity/$communityId',
           data);
+      print("Response data ==>$response");
 
       // 5. Handle Response
       if (response != null && response['error'] == null) {
         final homeController = Get.find<HomeController>();
 
-        if(communityId==""){
+        if (communityId == "") {
           log("Fetching random posts...");
           profileController.fetchAndAssignPosts();
           homeController.fetchAndAssignPosts();
-          final bottomNavController=LocateController.bottomNaveController;
-          bottomNavController.currentIndex.value=4;
-        }
-        else{
+          final bottomNavController = LocateController.bottomNaveController;
+          bottomNavController.currentIndex.value = 4;
+        } else {
           log("Fetching community post");
           homeController.fetchAndAssignPosts(communityId: communityId);
         }
@@ -200,7 +289,7 @@ class PostController extends GetxController {
         );
 
         isloading.value = false;
-      //  CustomLoadingDialog.closeLoadingDialog();
+        //  CustomLoadingDialog.closeLoadingDialog();
         _clearForm();
         Get.back();
       } else {
@@ -208,21 +297,23 @@ class PostController extends GetxController {
         log("Response is $response");
         final errorMessage = _parseErrorMessage(response);
         print("Response of Pints is :$errorMessage");
-        if(errorMessage == "Not enough points to create a post") {
+        if (errorMessage == "Not enough points to create a post") {
           Get.dialog(
-          AlertDialog(
-            backgroundColor: AppColors.light_gray,
-            title: AppText(text: "Dear User",fontWeight: FontWeight.w600),
-            content: AppText(text: errorMessage,fontSize: 14),
-            actions: [
-              AppButton(
-                textColor: AppColors.light_gray,
-                text: "Buy Now!", onPressed: () {
-                Get.to(WalletScreen());
-              },)
-            ],
-          ),
-        );
+            AlertDialog(
+              backgroundColor: AppColors.light_gray,
+              title: AppText(text: "Dear User", fontWeight: FontWeight.w600),
+              content: AppText(text: errorMessage, fontSize: 14),
+              actions: [
+                AppButton(
+                  textColor: AppColors.light_gray,
+                  text: "Buy Now!",
+                  onPressed: () {
+                    Get.to(WalletScreen());
+                  },
+                )
+              ],
+            ),
+          );
         }
 
         // ToastUtil.showToast(
@@ -230,7 +321,7 @@ class PostController extends GetxController {
         //   backgroundColor: Colors.red,
         // );
 
-      //  CustomLoadingDialog.closeLoadingDialog();
+        //  CustomLoadingDialog.closeLoadingDialog();
       }
     } catch (e) {
       isloading.value = false;

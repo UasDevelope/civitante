@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:civitante/App/modules/followlist/view/followlist_screen.dart';
 import 'package:civitante/App/modules/home/widgets/homeAppbar.dart';
 import 'package:civitante/App/modules/kpi/view/kpis_screen.dart';
@@ -8,16 +10,14 @@ import 'package:civitante/App/shared/color.dart';
 import 'package:civitante/App/shared/image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../../Models/Post.dart';
 import '../../../routes/routes.dart';
-import '../../../utilse/constant.dart';
-import '../../../utilse/pref.dart';
 import '../../../utilse/toast_util.dart';
 import '../../home/widgets/engament_row.dart';
-import '../../loading/custom_loading_dialogue.dart';
 import '../../shimmer/profile_gridview_shimmer.dart';
 import '../controller/profile_controller.dart';
-import '../widget/status_row.dart';
+import '../widget/profile_tabbar.dart';
 
 class ProfileScreen extends StatelessWidget {
   final bool currentUser;
@@ -37,7 +37,9 @@ class ProfileScreen extends StatelessWidget {
         imagePath: AppImages.location,
         rightIcon: AppImages.setting,
         onRightIconPressed1: () {
-          Get.toNamed(AppRoutes.setting,);
+          Get.toNamed(
+            AppRoutes.setting,
+          );
         },
       ),
       backgroundColor: Colors.white,
@@ -52,6 +54,7 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _buildContent(ProfileController controller) {
+    log("Image url is ${controller.imageUrl.value}");
     // if (controller.isLoading.value) {
     //   return SizedBox(
     //     height: Get.height * 0.8,
@@ -91,7 +94,10 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 40,
-                    backgroundImage: controller.imageUrl.value == null || controller.imageUrl.value == ''?AssetImage(AppImages.person):NetworkImage(controller.imageUrl.value),
+                    backgroundImage: controller.imageUrl.value == null ||
+                            controller.imageUrl.value == ''
+                        ? AssetImage(AppImages.person)
+                        : NetworkImage(controller.imageUrl.value),
                   ),
                   SizedBox(width: 16),
                   Expanded(
@@ -122,8 +128,8 @@ class ProfileScreen extends StatelessWidget {
                         SizedBox(height: 8),
                         currentUser == false
                             ? Column(
-                              children: [
-                                ElevatedButton(
+                                children: [
+                                  ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.transparent,
                                       shadowColor: Colors.transparent,
@@ -144,8 +150,8 @@ class ProfileScreen extends StatelessWidget {
                                           color: AppColors.Slate_gray),
                                     ),
                                   ),
-                              ],
-                            )
+                                ],
+                              )
                             : SizedBox(),
                       ],
                     ),
@@ -154,9 +160,13 @@ class ProfileScreen extends StatelessWidget {
                     child: AppButton(
                       height: 30,
                       textColor: AppColors.white,
-                      text: "KPIs & Stats", onPressed: () {
-                      Get.to(KpisScreen(),transition: Transition.zoom,duration: Duration(microseconds: 300));
-                    },),
+                      text: "KPIs & Stats",
+                      onPressed: () {
+                        Get.to(KpisScreen(),
+                            transition: Transition.zoom,
+                            duration: Duration(microseconds: 300));
+                      },
+                    ),
                   )
                 ],
               ),
@@ -177,9 +187,7 @@ class ProfileScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  StatItem(
-
-                      title: 'Posts', value: controller.posts.length),
+                  StatItem(title: 'Posts', value: controller.posts.length),
                   VerticalDivider(
                     color: Colors.grey,
                     thickness: 1,
@@ -189,9 +197,15 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   StatItem(
                     onPress: () {
-                      Get.to(FollowListScreen(isFollowing: false,userID: controller.userId,isCurrentUser: true,));
+                      Get.to(FollowListScreen(
+                        isFollowing: false,
+                        userID: controller.userId,
+                        isCurrentUser: true,
+                      ));
                     },
-                      title: 'Followers', value: controller.followers.value,),
+                    title: 'Followers',
+                    value: controller.followers.value,
+                  ),
                   VerticalDivider(
                     color: Colors.grey,
                     thickness: 1,
@@ -200,10 +214,15 @@ class ProfileScreen extends StatelessWidget {
                     endIndent: 10,
                   ),
                   StatItem(
-                    onPress: () {
-                      Get.to(FollowListScreen(isFollowing: true,userID: controller.userId,isCurrentUser: true,));
-                    },
-                      title: 'Following', value: controller.following.value),
+                      onPress: () {
+                        Get.to(FollowListScreen(
+                          isFollowing: true,
+                          userID: controller.userId,
+                          isCurrentUser: true,
+                        ));
+                      },
+                      title: 'Following',
+                      value: controller.following.value),
                 ],
               ),
             )),
@@ -213,7 +232,15 @@ class ProfileScreen extends StatelessWidget {
         // StatsRow(),
 
         Divider(),
-        SizedBox(height: 8,),
+        SizedBox(
+          height: 8,
+        ),
+        Align(
+            alignment: Alignment.center,
+            child: SwitchLane(controller: controller)),
+        SizedBox(
+          height: Get.height * 0.04,
+        ),
         Obx(() {
           if (controller.isLoading.value) {
             return ProfileGridViewShimmer();
@@ -253,7 +280,7 @@ class StatItem extends StatelessWidget {
   final int value;
   final VoidCallback? onPress;
 
-  const StatItem({required this.title, required this.value,this.onPress});
+  const StatItem({required this.title, required this.value, this.onPress});
 
   @override
   Widget build(BuildContext context) {
@@ -285,13 +312,18 @@ class GridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("Media url is ${post.mediaUrls}");
+    final firstUrl = post.mediaUrls.isNotEmpty ? post.mediaUrls.first : '';
+    final isVideo = firstUrl.contains('&thumbnail=');
+    final displayImage = isVideo ? firstUrl.split('&thumbnail=')[1] : firstUrl;
+
     return Stack(
       children: [
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
-              image: NetworkImage(post.mediaUrls.first),
+              image: NetworkImage(displayImage),
               fit: BoxFit.cover,
             ),
           ),
@@ -301,7 +333,8 @@ class GridItem extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () async {
-                  final response = await HttpService.delete("/deletePost/${post.id}");
+                  final response =
+                      await HttpService.delete("/deletePost/${post.id}");
                   if (response is Map && response.containsKey('error')) {
                     ToastUtil.showToast(
                       message: "Error: ${response['error']}",
@@ -315,13 +348,14 @@ class GridItem extends StatelessWidget {
                   }
                 },
                 child: Container(
-                  margin: EdgeInsets.all(4),
-                  padding: EdgeInsets.all(4),
+                    margin: EdgeInsets.all(4),
+                    padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: AppColors.white,
-                      shape: BoxShape.circle
-                    ),
-                    child: Icon(Icons.delete,color: AppColors.red_color,)),
+                        color: AppColors.white, shape: BoxShape.circle),
+                    child: Icon(
+                      Icons.delete,
+                      color: AppColors.red_color,
+                    )),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -335,13 +369,15 @@ class GridItem extends StatelessWidget {
                         icon: Image.asset(
                           AppImages.view,
                           height: 25,
-                          color: post.views > 0 ? AppColors.green : AppColors.white,
+                          color: post.views > 0
+                              ? AppColors.green
+                              : AppColors.white,
                         ),
                         label: post.views.toString(),
                         textColor: AppColors.white,
                       ),
                       SizedBox(width: 10),
-                  
+
                       // Likes Row
                       buildStatItem(
                         icon: Image.asset(
@@ -355,7 +391,7 @@ class GridItem extends StatelessWidget {
                         textColor: AppColors.white,
                       ),
                       SizedBox(width: 10),
-                  
+
                       // Comments Row
                       buildStatItem(
                         icon: Image.asset(

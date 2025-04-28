@@ -1,10 +1,9 @@
-import 'dart:io';
 import 'dart:developer';
+
 import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
 import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/constant.dart';
 import 'package:civitante/App/utilse/toast_util.dart';
-import 'package:civitante/App/utilse/uploadImage.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -46,14 +45,14 @@ class AddCommunityController extends GetxController {
           "createdBy": userId
         };
 
-        log(data.toString());
+        log("the data for this is ==> ${data.toString()}");
         final response = await HttpService.post("/addCommunity", data);
         final controller = LocateController.myCommunities;
         controller.fetchCommunities();
         CustomLoadingDialog.closeLoadingDialog();
         Get.back();
         ToastUtil.showToast(message: "error!", backgroundColor: Colors.orange);
-        log("Response is ${response}");
+        log("Response for the add community  is ${response}");
       }
     } catch (e) {
       ToastUtil.showToast(message: "error!$e", backgroundColor: Colors.orange);

@@ -190,6 +190,7 @@ class HomeController extends GetxController
 
       // Ensure the fetched list is not null before assigning
       if (result.isNotEmpty) {
+        ratingOfPost.value = {};
         posts.assignAll(result);
         filteredPosts.assignAll(result);
       } else {
@@ -348,9 +349,12 @@ class HomeController extends GetxController
         );
         commentReplyController.clear();
       } else {
+        List<dynamic> replies = response['replies'];
+        String replyId = replies.last["_id"];
+        log("replies are ${replies.last}");
         // Create new reply object
         final newReply = Comment(
-          id: UniqueKey().toString(),
+          id: replyId,
           user:
               User(id: userId, name: name.value, profileImage: imageUrl.value),
           text: text,
@@ -382,16 +386,17 @@ class HomeController extends GetxController
   Future<void> addLikeToReply(String postId, String commentId, String replyId,
       Comment commentData) async {
     try {
-      // API Request
+      log("Comment id is $commentId and reply id is $replyId");
+
       final response = await HttpService.post(
           "/addLikeToReply/$postId/$commentId/$replyId", {});
+
       log("Response is $response");
 
-      // Parse error message
-      final errorMessage = _parseErrorMessage(response);
+      // ✅ Directly use 'message' from response
+      final errorMessage = response['message'] ?? '';
       log("Error Message: $errorMessage");
 
-      // Check if the user lacks enough points
       if (errorMessage == "Not enough points to like this reply") {
         Get.dialog(
           AlertDialog(
@@ -409,20 +414,14 @@ class HomeController extends GetxController
             ],
           ),
         );
-        return; // ✅ Exit early to prevent UI update
+        return;
       }
 
-      // ✅ Parse API Response
-      final responseData = jsonDecode(response);
-
-      // ✅ Update UI only after confirming API response
-      commentData.isReplyLikedByUser!.value = responseData['isLike'];
-
-      // Convert dynamic list to List<String> and update replyLikesCount
-      List<String> updatedLikesList =
-          List<String>.from(responseData['likes'] ?? []);
+      // ✅ Update like state
+      commentData.isReplyLikedByUser?.value = response['isLike'];
+      List<dynamic> updatedList = response['likes'] ?? [];
       commentData.replyLikesCount?.clear();
-      commentData.replyLikesCount?.addAll(updatedLikesList);
+      commentData.replyLikesCount?.addAll(updatedList);
     } catch (e) {
       log("❌ Error in addLikeToReply: $e");
     }
@@ -551,6 +550,14 @@ class HomeController extends GetxController
     }
   }
 
+  RxMap<String, dynamic> ratingOfPost = <String, dynamic>{}.obs;
+  int getEffectiveRating(String postId, RxInt? postRate) {
+    if (ratingOfPost.isNotEmpty && ratingOfPost["postId"] == postId) {
+      return ratingOfPost["rating"];
+    }
+    return postRate?.value ?? 0;
+  }
+
   Future<void> addPostRating(String postId, int rating, int index) async {
     print("Rating Submitted: $rating for Post ID: $postId");
 
@@ -569,16 +576,20 @@ class HomeController extends GetxController
         int newRating = response["rate"] ?? rating;
 
         print("New Rating here: $newRating");
-        filteredPosts[index].likesCount.value = response['likesCount'] ?? 0;
-        filteredPosts[index].isLikedByUser.value = true;
+        posts[index].likesCount.value = response['likesCount'] ?? 0;
+        posts[index].isLikedByUser.value = true;
 
         log("Response likes count is ${response['likesCount']}");
-
         // Ensure rate is reactive (RxInt)
-        if (filteredPosts[index].rate == null) {
-          filteredPosts[index].rate = RxInt(newRating); // Initialize as RxInt
+        if (posts[index].rate == null) {
+          ratingOfPost.value = {
+            "postId": postId,
+            "rating": newRating,
+          };
+          getEffectiveRating(postId, newRating.obs);
+          posts[index].rate = RxInt(newRating); // Initialize as RxInt
         } else {
-          filteredPosts[index].rate.value = newRating;
+          posts[index].rate.value = newRating;
         }
 
         print(

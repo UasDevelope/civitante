@@ -21,6 +21,7 @@ class Post {
   final RxList<String> viewedBy;
   final RxList<String> block;
   final RxList<String> ratings;
+  final String visibility;
   RxBool isRated;
   RxInt rate = 0.obs;
 
@@ -34,6 +35,7 @@ class Post {
     required this.title,
     required this.description,
     required this.tags,
+    required this.visibility,
     required this.category,
     required this.media,
     required this.mediaUrls,
@@ -71,6 +73,8 @@ class Post {
               ?.map((e) => e.toString())
               .toList() ??
           []),
+      visibility:
+          json['visibility'] ?? 'normal', // Default to 'normal' if missing
       mediaUrls: RxList<String>((json['mediaUrls'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??

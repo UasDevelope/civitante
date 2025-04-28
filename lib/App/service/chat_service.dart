@@ -1,9 +1,9 @@
 import 'dart:developer';
 
+import 'package:civitante/App/service/jwt_decoder.dart';
 import 'package:civitante/App/utilse/pref.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatService {
@@ -11,7 +11,8 @@ class ChatService {
     String userToken = PrefUtil.getString(PrefUtil.userId);
     debugPrint("Connecting to socket with token: $userToken");
 
-    IO.Socket socket = IO.io("https://civitante.onrender.com/", <String, dynamic>{
+    IO.Socket socket =
+        IO.io("https://civitante.onrender.com/", <String, dynamic>{
       "transports": ["websocket"],
       "autoConnect": false,
       "auth": {"token": userToken},
@@ -23,7 +24,7 @@ class ChatService {
 
   static String decodeToken(String userToken) {
     if (userToken.isNotEmpty) {
-      Map<String, dynamic> decodedToken = JwtDecoder.decode(userToken);
+      Map<String, dynamic> decodedToken = CustomJwtDecoder.decode(userToken);
       return decodedToken["id"];
     }
     return "";
@@ -35,8 +36,7 @@ class ChatService {
     required String userId,
     required RxList<Map<String, dynamic>> messages,
     required VoidCallback onMessagesUpdated,
-  })
-  {
+  }) {
     debugPrint("Joining community: $communityId");
     socket.emit("joinCommunityChat", {"communityId": communityId});
     log("Community joined");
@@ -86,7 +86,8 @@ class ChatService {
     required VoidCallback onMessagesLoaded,
   }) {
     debugPrint("Loading older messages for page: $page");
-    socket.emit("loadOlderMessages", {"communityId": communityId, "page": page});
+    socket
+        .emit("loadOlderMessages", {"communityId": communityId, "page": page});
 
     socket.on("olderMessages", (data) {
       if (data["messages"] != null && data["messages"].isNotEmpty) {

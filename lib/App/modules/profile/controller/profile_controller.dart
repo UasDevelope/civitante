@@ -1,18 +1,19 @@
 import 'dart:developer';
+
 import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/toast_util.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../../Models/Post.dart';
-import '../../../controller/controller_locate.dart';
-import '../../loading/custom_loading_dialogue.dart';
 
 class ProfileController extends GetxController {
   final bool currentUser;
   ProfileController(this.currentUser);
   // Reactive state
   final RxList<Post> posts = <Post>[].obs;
+  var isPrivate = false.obs;
   final RxString imageUrl = ''.obs;
   final RxString name = ''.obs;
   final RxInt totalPosts = 0.obs;
@@ -35,7 +36,6 @@ class ProfileController extends GetxController {
     _loadInitialData();
   }
 
-
   Future<void> editProfile() async {
     int costPrice = int.tryParse(costController.text.trim()) ?? 0;
     Map<String, dynamic> updatedData = {
@@ -56,23 +56,25 @@ class ProfileController extends GetxController {
       }
     } catch (e) {
       print("Exception: $e");
-    } finally{
+    } finally {
       isLoading.value = false;
     }
   }
+
   Future<void> _loadInitialData() async {
     await Future.wait([
       fetchAndAssignPosts(),
     ]);
   }
 
+  final RxInt postFree = 0.obs;
 
   Future<void> fetchAndAssignPosts() async {
     try {
       isLoading.value = true;
       isError.value = false;
       var response = await HttpService.get('/getProfile');
-      print('here is response of profile ${response} ');
+      print('here is response of profile $response');
       final postsData = response['posts'] as List<dynamic>? ?? [];
       name.value = response['name']?.toString() ?? '';
       imageUrl.value = response['profileImage']?.toString() ?? '';
@@ -86,21 +88,45 @@ class ProfileController extends GetxController {
 
       followers.value = response['followersCount'] is int
           ? response['followersCount']
-          : (response['followersCount'] is List ? response['followersCount'].length : 0);
+          : (response['followersCount'] is List
+              ? response['followersCount'].length
+              : 0);
 
       following.value = response['followingCount'] is int
           ? response['followingCount']
-          : (response['followingCount'] is List ? response['followingCount'].length : 0);
+          : (response['followingCount'] is List
+              ? response['followingCount'].length
+              : 0);
+      postFree.value = response["freePostsAvailable"] is int
+          ? response["freePostsAvailable"]
+          : 0;
+      log("Free post is ${postFree.value}");
 
       imageUrl.value = response['profileImage']?.toString() ?? '';
       nameController.text = name.value;
-      posts.assignAll(_parsePosts(postsData));
+
+      // Parse and filter posts based on visibility
+      final parsedPosts = _parsePosts(postsData);
+      final filteredPosts = parsedPosts.where((post) {
+        return isPrivate.value
+            ? post.visibility == "private"
+            : post.visibility == "normal";
+      }).toList();
+
+      posts.assignAll(filteredPosts);
     } catch (e, stackTrace) {
       isError.value = true;
       _handleError('Failed to load posts', e, stackTrace);
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void setPrivate(bool value) {
+    isPrivate.value = value;
+    print(isPrivate.value ? "Private tab selected" : "Public tab selected");
+
+    fetchAndAssignPosts();
   }
 
   List<Post> _parsePosts(List<dynamic> responseList) {

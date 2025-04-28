@@ -16,6 +16,7 @@ class SliderWithLabels extends StatelessWidget {
   Widget build(BuildContext context) {
     final homeController = Get.find<HomeController>();
     log("Post rating value is ${post.rate.value}");
+
     return Padding(
       padding: const EdgeInsets.only(left: 8.0),
       child: Column(
@@ -28,24 +29,32 @@ class SliderWithLabels extends StatelessWidget {
               const SizedBox(width: 5),
               for (int i = 1; i <= 5; i++) ...[
                 Obx(
-                  () => Dot(
-                    color: post.rate?.value != null && post.rate!.value! >= i
-                        ? AppColors.blue
-                        : AppColors.Slate_gray,
-                    onPress: () async {
-                      await homeController.addPostRating(post.id, i, index);
-                    },
-                  ),
+                  () {
+                    final effectiveRating =
+                        homeController.getEffectiveRating(post.id, post.rate);
+                    return Dot(
+                      color: effectiveRating >= i
+                          ? AppColors.blue
+                          : AppColors.Slate_gray,
+                      onPress: () async {
+                        await homeController.addPostRating(post.id, i, index);
+                      },
+                    );
+                  },
                 ),
                 if (i < 5)
                   Expanded(
                     child: Obx(
-                      () => Divider(
-                        thickness: 1,
-                        color: post.rate?.value != null && post.rate!.value! > i
-                            ? Colors.yellowAccent
-                            : AppColors.Slate_gray,
-                      ),
+                      () {
+                        final effectiveRating = homeController
+                            .getEffectiveRating(post.id, post.rate);
+                        return Divider(
+                          thickness: 1,
+                          color: effectiveRating > i
+                              ? Colors.yellowAccent
+                              : AppColors.Slate_gray,
+                        );
+                      },
                     ),
                   ),
               ],

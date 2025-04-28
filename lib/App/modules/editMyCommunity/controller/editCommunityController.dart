@@ -3,10 +3,6 @@ import 'dart:developer';
 import 'package:civitante/App/modules/loading/custom_loading_dialogue.dart';
 import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/toast_util.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
-
-import 'package:get/get.dart';
 
 import '../../../utilse/widgets.dart';
 
@@ -16,11 +12,11 @@ class EditCommunityController extends GetxController {
   final TextEditingController descriptionController = TextEditingController();
 
   // Reactive variables
-  var selectedCategory = ''.obs;
+  var selectedCategory = 'Technology'.obs;
   var imageUrl = ''.obs;
 
   // List of categories
-  final categories = ['Technology', 'Health', 'AI'];
+  final categories = ['Technology', 'Health', 'AI', 'Art & Creativity'];
 
   void assignValue({
     required String name,
