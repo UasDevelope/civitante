@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -34,6 +36,7 @@ void main() async {
   Stripe.merchantIdentifier = 'merchant.flutter.stripe.test';
   Stripe.urlScheme = 'flutterstripe';
   await Stripe.instance.applySettings();
+  HttpOverrides.global = MyHttpOverrides();
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   PrefUtil.init();
@@ -72,5 +75,14 @@ class _CivitanteAppState extends State<CivitanteApp> {
       defaultTransition:
           Transition.fadeIn, // Optional: for smoother page transitions.
     );
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

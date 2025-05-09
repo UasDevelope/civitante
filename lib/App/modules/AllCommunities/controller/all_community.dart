@@ -41,13 +41,12 @@ class AllCommunityController extends GetxController
     }
   }
 
-
   Future<void> fetchAllCommunities() async {
     try {
       isCommunityLoading.value = true;
       final response =
           await HttpService.get("/getCommunities?filter=${selectedTab.value}");
-      log("Response for all community is $response");
+      log("Response for all community is $response ");
       communities.value = (response["communities"] as List<dynamic>)
           .map(
               (data) => MyCommunityModel.fromJson(data as Map<String, dynamic>))
@@ -59,17 +58,18 @@ class AllCommunityController extends GetxController
       isCommunityLoading.value = false;
     }
   }
+
   Future<void> joinCommunity(String communityId) async {
     try {
       CustomLoadingDialog.showCustomLoadingDialog("loadingText");
       final response =
-          await HttpService.post("/joinCommunity/$communityId",{});
+          await HttpService.post("/joinCommunity/$communityId", {});
       log("Response is $response");
-fetchAllCommunities();
+      fetchAllCommunities();
     } catch (e) {
-log("Error is $e");
+      log("Error is $e");
     } finally {
-CustomLoadingDialog.closeLoadingDialog();
+      CustomLoadingDialog.closeLoadingDialog();
     }
   }
 
