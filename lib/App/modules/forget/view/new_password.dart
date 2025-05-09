@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:civitante/App/utilse/widgets.dart';
-import 'package:loading_overlay/loading_overlay.dart';
+import 'package:flutter/material.dart';
 
 class NewPassword extends StatelessWidget {
   @override
@@ -40,9 +39,9 @@ class NewPassword extends StatelessWidget {
                               height: Get.height * 0.09,
                             ),
                             customTextFormField(
-                                validatore: (value) {
-                                  return Validators.passwordValidator(value!);
-                                },
+                                // validatore: (value) {
+                                //   return Validators.passwordValidator(value!);
+                                // },
                                 borderRadius: 25,
                                 icon: controller.obsecureText.value
                                     ? Icons
@@ -94,7 +93,7 @@ class NewPassword extends StatelessWidget {
                                   radius: 30,
                                   onPressed: () {
                                     if (newPassword.currentState!.validate()) {
-                                      controller.goToRoute(AppRoutes.login);
+                                      controller.resetPassword();
                                     }
                                   }),
                             ),

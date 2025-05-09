@@ -1,10 +1,11 @@
 import 'dart:developer';
 
+import 'package:civitante/App/service/http_service.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 
 class ForgetPassworController extends GetxController {
   final Rx<TextEditingController> pinController = TextEditingController().obs;
-  RxBool  obsecureText = RxBool(false);
+  RxBool obsecureText = RxBool(false);
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController newConfirmPassword = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -14,14 +15,37 @@ class ForgetPassworController extends GetxController {
     print(obsecureText.value);
   }
 
-  void goToRoute(String routeName) {
-    showLoading.value = true;
-
-    Timer(Duration(seconds: 4), () {
-      Get.toNamed(routeName);
-      log('==============Redirecting to ${routeName}================>Routes-------->${routeName}');
-
+  Future<void> sendEmail() async {
+    try {
+      showLoading.value = true;
+      final response = await HttpService.post(
+        "/forgot-password",
+        {
+          "email": emailController.text,
+        },
+      );
+      log("Response from the user is $response");
+      Get.toNamed(AppRoutes.verifyOtp);
+    } finally {
       showLoading.value = false;
-    });
+    }
+  }
+
+  Future<void> resetPassword() async {
+    try {
+      showLoading.value = true;
+      final response = await HttpService.post(
+        "/reset-password",
+        {
+          "email": emailController.text,
+          "otp": pinController.value.text,
+          "newPassword": newPasswordController.text,
+        },
+      );
+      log("Response is $response");
+      Get.offAllNamed(AppRoutes.login);
+    } finally {
+      showLoading.value = false;
+    }
   }
 }

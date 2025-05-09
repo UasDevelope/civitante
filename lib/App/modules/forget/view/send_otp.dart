@@ -1,8 +1,5 @@
-import 'package:civitante/App/modules/forget/view/verify_otp.dart';
-import 'package:dotted_border/dotted_border.dart';
-import 'package:flutter/material.dart';
 import 'package:civitante/App/utilse/widgets.dart';
-import 'package:loading_overlay/loading_overlay.dart';
+import 'package:flutter/material.dart';
 
 class SendOtp extends StatelessWidget {
   @override
@@ -66,8 +63,7 @@ class SendOtp extends StatelessWidget {
                                     radius: 30,
                                     onPressed: () {
                                       if (key.currentState!.validate()) {
-                                        controller
-                                            .goToRoute(AppRoutes.verifyOtp);
+                                        controller.sendEmail();
                                       }
                                     }),
                               ),

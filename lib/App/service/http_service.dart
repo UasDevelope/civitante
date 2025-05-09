@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:civitante/App/utilse/constant.dart';
 import 'package:http/http.dart' as http;
 
 class HttpService {
-  static const String _baseUrl = 'http://16.170.211.87:5000/user';
+  static const String _baseUrl = 'https://16.170.211.87/user';
 
   static Future<dynamic> post(
       String endpoint, Map<String, dynamic> data) async {
@@ -25,7 +26,6 @@ class HttpService {
       return {'error': 'Something went wrong', 'details': e.toString()};
     }
   }
-
 
   static Future<dynamic> get(String endpoint) async {
     final url = Uri.parse('$_baseUrl$endpoint');

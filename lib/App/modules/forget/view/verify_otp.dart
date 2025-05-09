@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:civitante/App/utilse/widgets.dart';
-import 'package:loading_overlay/loading_overlay.dart';
+import 'package:flutter/material.dart';
+
 import '../widgets/pin_input.dart';
 
 class VerifyOtp extends StatelessWidget {
@@ -45,8 +45,9 @@ class VerifyOtp extends StatelessWidget {
                                 controller: controller.pinController.value,
                                 length: 6,
                                 onCompleted: (pin) {
-                                  controller.goToRoute(AppRoutes.newPassword);
-                                  print("Entered PIN: $pin");
+                                  Get.offNamed(AppRoutes.newPassword);
+                                  // controller.goToRoute(AppRoutes.newPassword);
+                                  // print("Entered PIN: $pin");
                                 },
                                 defaultBorderColor: Colors.blue,
                                 focusedBorderColor: Colors.green,
