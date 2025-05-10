@@ -8,7 +8,6 @@ import 'package:civitante/App/utilse/pref.dart';
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../service/auth_services.dart';
@@ -220,7 +219,7 @@ class AuthController extends GetxController {
         );
 
         // Initiate payment process
-        makePayment();
+        // makePayment();
       } else {
         // Handle error response
         loading.value = false;
@@ -265,111 +264,111 @@ class AuthController extends GetxController {
     }
   }
 
-  Map<String, dynamic>? setupIntent;
-
-  Future<void> makePayment() async {
-    try {
-      setupIntent = await createSetupIntent(); // Create setup intent
-      // Initialize the payment sheet
-      // CustomLoadingDialog.showCustomLoadingDialog("Making payment...");
-      await Stripe.instance.initPaymentSheet(
-        paymentSheetParameters: SetupPaymentSheetParameters(
-          setupIntentClientSecret:
-              setupIntent!['client_secret'], // Use setupIntentClientSecret
-          style: ThemeMode.dark,
-          merchantDisplayName: 'Adnan',
-        ),
-      );
-      //  CustomLoadingDialog.closeLoadingDialog();
-      // Display the payment sheet
-      await displayPaymentSheet();
-    } catch (e, s) {
-      // CustomLoadingDialog.closeLoadingDialog();
-      print('Exception during payment: $e $s');
-    }
-  }
-
-  Future<void> displayPaymentSheet() async {
-    try {
-      // CustomLoadingDialog.showCustomLoadingDialog(
-      //  "Displaying payment sheet...");
-      await Stripe.instance.presentPaymentSheet().then((value) async {
-        print('Card details saved successfully!');
-
-        // Fetch the updated setup intent
-        if (setupIntent != null) {
-          var updatedIntent =
-              await retrieveSetupIntent(setupIntent!['client_secret']);
-          if (updatedIntent != null) {
-            // CustomLoadingDialog.closeLoadingDialog();
-            savePaymentMethod(
-                AppConstant().userID!, updatedIntent['payment_method']);
-
-            print('Payment Method ID: ${updatedIntent['payment_method']}');
-          }
-        }
-
-        // Reset the setupIntent after successful card save
-        setupIntent = null;
-      }).onError((error, stackTrace) {
-        print('Error displaying payment sheet: $error $stackTrace');
-      });
-    } on StripeException catch (e) {
-      print('StripeException: $e');
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
-
-  Future<Map<String, dynamic>?> retrieveSetupIntent(String clientSecret) async {
-    try {
-      var response = await http.get(
-        Uri.parse(
-            'https://api.stripe.com/v1/setup_intents/${clientSecret.split("_secret")[0]}'),
-        headers: {
-          'Authorization': 'Bearer sk_test_7MtY1LY7vRDC9GYPGOMl9EZv00pM9Eku1S',
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      );
-
-      print('Updated Setup Intent Response: ${response.body}');
-      return jsonDecode(response.body);
-    } catch (err) {
-      print('Error retrieving setup intent: ${err.toString()}');
-      return null;
-    }
-  }
-
-  void savePaymentMethod(String userId, String token) async {
-    // CustomLoadingDialog.showCustomLoadingDialog("Saving payment method...");
-    var data = {
-      "userId": userId,
-      "paymentId": token,
-    };
-    print("data is $data");
-
-    var response = await HttpService.post('/savePaymentMethod', data);
-    print('response: ${response}');
-    if (response != null && response['error'] == null) {
-      // CustomLoadingDialog.closeLoadingDialog();
-      ToastUtil.showToast(
-        message: response['message'] ?? "Payment method saved successfully!",
-        backgroundColor: Colors.green,
-      );
-      upgradeToPro();
-    } else {
-      //   CustomLoadingDialog.closeLoadingDialog();
-      String errorMsg = response['details'] != null
-          ? jsonDecode(response['details'])['message']
-          : "Unknown error occurred";
-
-      ToastUtil.showToast(
-        message: "Error: $errorMsg",
-        backgroundColor: Colors.red,
-      );
-    }
-  }
-  // update Pro user
+  // Map<String, dynamic>? setupIntent;
+  //
+  // Future<void> makePayment() async {
+  //   try {
+  //     setupIntent = await createSetupIntent(); // Create setup intent
+  //     // Initialize the payment sheet
+  //     // CustomLoadingDialog.showCustomLoadingDialog("Making payment...");
+  //     await Stripe.instance.initPaymentSheet(
+  //       paymentSheetParameters: SetupPaymentSheetParameters(
+  //         setupIntentClientSecret:
+  //             setupIntent!['client_secret'], // Use setupIntentClientSecret
+  //         style: ThemeMode.dark,
+  //         merchantDisplayName: 'Adnan',
+  //       ),
+  //     );
+  //     //  CustomLoadingDialog.closeLoadingDialog();
+  //     // Display the payment sheet
+  //     await displayPaymentSheet();
+  //   } catch (e, s) {
+  //     // CustomLoadingDialog.closeLoadingDialog();
+  //     print('Exception during payment: $e $s');
+  //   }
+  // }
+  //
+  // Future<void> displayPaymentSheet() async {
+  //   try {
+  //     // CustomLoadingDialog.showCustomLoadingDialog(
+  //     //  "Displaying payment sheet...");
+  //     await Stripe.instance.presentPaymentSheet().then((value) async {
+  //       print('Card details saved successfully!');
+  //
+  //       // Fetch the updated setup intent
+  //       if (setupIntent != null) {
+  //         var updatedIntent =
+  //             await retrieveSetupIntent(setupIntent!['client_secret']);
+  //         if (updatedIntent != null) {
+  //           // CustomLoadingDialog.closeLoadingDialog();
+  //           savePaymentMethod(
+  //               AppConstant().userID!, updatedIntent['payment_method']);
+  //
+  //           print('Payment Method ID: ${updatedIntent['payment_method']}');
+  //         }
+  //       }
+  //
+  //       // Reset the setupIntent after successful card save
+  //       setupIntent = null;
+  //     }).onError((error, stackTrace) {
+  //       print('Error displaying payment sheet: $error $stackTrace');
+  //     });
+  //   } on StripeException catch (e) {
+  //     print('StripeException: $e');
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  // }
+  //
+  // Future<Map<String, dynamic>?> retrieveSetupIntent(String clientSecret) async {
+  //   try {
+  //     var response = await http.get(
+  //       Uri.parse(
+  //           'https://api.stripe.com/v1/setup_intents/${clientSecret.split("_secret")[0]}'),
+  //       headers: {
+  //         'Authorization': 'Bearer sk_test_7MtY1LY7vRDC9GYPGOMl9EZv00pM9Eku1S',
+  //         'Content-Type': 'application/x-www-form-urlencoded',
+  //       },
+  //     );
+  //
+  //     print('Updated Setup Intent Response: ${response.body}');
+  //     return jsonDecode(response.body);
+  //   } catch (err) {
+  //     print('Error retrieving setup intent: ${err.toString()}');
+  //     return null;
+  //   }
+  // }
+  //
+  // void savePaymentMethod(String userId, String token) async {
+  //   // CustomLoadingDialog.showCustomLoadingDialog("Saving payment method...");
+  //   var data = {
+  //     "userId": userId,
+  //     "paymentId": token,
+  //   };
+  //   print("data is $data");
+  //
+  //   var response = await HttpService.post('/savePaymentMethod', data);
+  //   print('response: ${response}');
+  //   if (response != null && response['error'] == null) {
+  //     // CustomLoadingDialog.closeLoadingDialog();
+  //     ToastUtil.showToast(
+  //       message: response['message'] ?? "Payment method saved successfully!",
+  //       backgroundColor: Colors.green,
+  //     );
+  //     upgradeToPro();
+  //   } else {
+  //     //   CustomLoadingDialog.closeLoadingDialog();
+  //     String errorMsg = response['details'] != null
+  //         ? jsonDecode(response['details'])['message']
+  //         : "Unknown error occurred";
+  //
+  //     ToastUtil.showToast(
+  //       message: "Error: $errorMsg",
+  //       backgroundColor: Colors.red,
+  //     );
+  //   }
+  // }
+  // // update Pro user
 
   void upgradeToPro() async {
     //   CustomLoadingDialog.showCustomLoadingDialog("Upgrading To Pro....");
