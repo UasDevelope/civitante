@@ -45,7 +45,6 @@ class VerifyOtp extends StatelessWidget {
                                 controller: controller.pinController.value,
                                 length: 6,
                                 onCompleted: (pin) {
-                                  Get.offNamed(AppRoutes.newPassword);
                                   // controller.goToRoute(AppRoutes.newPassword);
                                   // print("Entered PIN: $pin");
                                 },

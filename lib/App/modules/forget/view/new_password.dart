@@ -1,6 +1,8 @@
 import 'package:civitante/App/utilse/widgets.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/pin_input.dart';
+
 class NewPassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -31,12 +33,36 @@ class NewPassword extends StatelessWidget {
                               fit: BoxFit.cover,
                             ),
                             AppText(
-                                text: AppStrings.newPassword,
+                                text:
+                                    "${AppStrings.newPassword} & ${AppStrings.verifyCode}",
                                 color: AppColors.appColor,
-                                fontSize: 30,
+                                fontSize: 20,
                                 fontWeight: FontWeight.w500),
                             SizedBox(
-                              height: Get.height * 0.09,
+                              height: Get.height * 0.02,
+                            ),
+                            Obx(
+                              () => CustomPinInput(
+                                controller: controller.pinController.value,
+                                length: 6,
+                                onCompleted: (pin) {
+                                  // controller.goToRoute(AppRoutes.newPassword);
+                                  // print("Entered PIN: $pin");
+                                },
+                                defaultBorderColor: Colors.blue,
+                                focusedBorderColor: Colors.green,
+                                submittedBorderColor: Colors.grey,
+                                cursorColor: Colors.red,
+                                width: 50,
+                                height: 60,
+                                textStyle: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: Get.height * 0.03,
                             ),
                             customTextFormField(
                                 // validatore: (value) {

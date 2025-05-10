@@ -164,11 +164,11 @@ class TransactionHistoryScreen extends StatelessWidget {
     if (controller.pointsData.value?.paymentId == false) {
       Get.to(() => BuyPointsScreen());
     } else {
-      final success = await PaymentService().makePayment(context);
-      if (success) {
-        controller.pointsData.value?.paymentId = true;
-        Get.to(() => BuyPointsScreen());
-      }
+      // final success = await PaymentService().makePayment(context);
+      // if (success) {
+      //   controller.pointsData.value?.paymentId = true;
+      //   Get.to(() => BuyPointsScreen());
+      // }
     }
   }
 }

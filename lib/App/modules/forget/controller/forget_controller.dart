@@ -25,25 +25,30 @@ class ForgetPassworController extends GetxController {
         },
       );
       log("Response from the user is $response");
-      Get.toNamed(AppRoutes.verifyOtp);
+      Get.toNamed(AppRoutes.newPassword);
     } finally {
       showLoading.value = false;
     }
   }
 
   Future<void> resetPassword() async {
+    var data={
+      "email": emailController.text,
+      "otp": pinController.value.text,
+      "newPassword": newPasswordController.text,
+    };
+    log(data.toString());
     try {
       showLoading.value = true;
       final response = await HttpService.post(
         "/reset-password",
-        {
-          "email": emailController.text,
-          "otp": pinController.value.text,
-          "newPassword": newPasswordController.text,
-        },
+        data,
       );
       log("Response is $response");
-      Get.offAllNamed(AppRoutes.login);
+      if (response != null && response['error'] == null) {
+        Get.offAllNamed(AppRoutes.login);
+        log("Verified");
+      }
     } finally {
       showLoading.value = false;
     }
